@@ -35,6 +35,15 @@ trait AnalysesFeed
      */
     public function analyze()
     {
+        // Don't bother if feed isn't attached to any document anymore
+        if($this->documents()->count() === 0) {
+            if($this->last_checked_at->addDays(config('cyca.maxOrphanAge.feed'))->lt(now())) {
+                $this->delete();
+            }
+
+            return;
+        }
+
         $this->prepareClient();
 
         if (!$this->client->init()) {

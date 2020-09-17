@@ -93,6 +93,15 @@ trait AnalysesDocument
      */
     public function analyze()
     {
+        // Don't bother if document isn't bookmarked anymore
+        if($this->folders()->count() === 0) {
+            if($this->last_checked_at->addDays(config('cyca.maxOrphanAge.document'))->lt(now())) {
+                $this->delete();
+            }
+
+            return;
+        }
+
         $this->fetchContent();
 
         if (empty($this->response)) {

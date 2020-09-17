@@ -42,5 +42,14 @@ return [
          * Default value is 15 minutes
          */
         'feed' => 15
+    ],
+    /**
+     * For how long should we keep a document/feed in database after being
+     * removed if not attached to a bookmark anymore ?
+     * Default value is 7 days
+     */
+    'maxOrphanAge' => [
+        'document' => 7,
+        'feed' => 7
     ]
 ];
