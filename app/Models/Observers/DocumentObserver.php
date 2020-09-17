@@ -2,9 +2,11 @@
 
 namespace App\Models\Observers;
 
-use App\Models\Document;
-use Illuminate\Support\Facades\Storage;
 use App\Jobs\EnqueueDocumentUpdate;
+use App\Models\Document;
+use App\Notifications\DocumentUpdated;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Storage;
 
 class DocumentObserver
 {
@@ -27,7 +29,13 @@ class DocumentObserver
      */
     public function updated(Document $document)
     {
-        //
+        $usersToNotify = [];
+
+        foreach ($document->folders()->with('user')->get() as $folder) {
+            $usersToNotify[] = $folder->user;
+        }
+
+        Notification::send($usersToNotify, new DocumentUpdated($document));
     }
 
     /**

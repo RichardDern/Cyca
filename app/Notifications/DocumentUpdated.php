@@ -6,19 +6,28 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use App\Models\Document;
 
 class DocumentUpdated extends Notification implements ShouldQueue
 {
     use Queueable;
 
     /**
+     * Updated document
+     *
+     * @var \App\Models\Document
+     */
+    public $document = null;
+
+    /**
      * Create a new notification instance.
      *
+     * @param \App\Models\Document $document
      * @return void
      */
-    public function __construct()
+    public function __construct(Document $document)
     {
-        //
+        $this->document = $document;
     }
 
     /**
@@ -40,9 +49,9 @@ class DocumentUpdated extends Notification implements ShouldQueue
      */
     public function toArray($notifiable)
     {
-        return [
-            //
-        ];
+        $this->document->loadMissing('feeds');
+
+        return ['document' => $this->document->toArray()];
     }
 
     /**

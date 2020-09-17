@@ -34,7 +34,8 @@ if (document.getElementById("app")) {
                 dropIntoFolder: "folders/dropIntoFolder",
                 indexFeedItems: "feedItems/index",
                 selectFeedItems: "feedItems/selectFeedItems",
-                markFeedItemsAsRead: "feedItems/markAsRead"
+                markFeedItemsAsRead: "feedItems/markAsRead",
+                updateDocument: "documents/update"
             }),
 
             /**
@@ -52,6 +53,12 @@ if (document.getElementById("app")) {
                             case "App\\Notifications\\UnreadItemsChanged":
                                 self.indexFolders().then(function() {
                                     self.indexDocuments();
+                                });
+                                break;
+                            case "App\\Notifications\\DocumentUpdated":
+                                self.updateDocument({
+                                    documentId: notification.document.id,
+                                    newProperties: notification.document
                                 });
                                 break;
                         }
@@ -139,7 +146,10 @@ if (document.getElementById("app")) {
                 }
 
                 const feeds = collect(documents)
-                    .pluck("feeds").flatten(1).pluck("id").all();
+                    .pluck("feeds")
+                    .flatten(1)
+                    .pluck("id")
+                    .all();
 
                 await self.indexFeedItems(feeds);
             },
@@ -159,7 +169,10 @@ if (document.getElementById("app")) {
                             self.detailsViewComponent = null;
                         }
                     } else {
-                        if(self.selectedDocuments && self.selectedDocuments.length > 0) {
+                        if (
+                            self.selectedDocuments &&
+                            self.selectedDocuments.length > 0
+                        ) {
                             self.detailsViewComponent = "details-document";
                         } else {
                             self.detailsViewComponent = "details-folder";
@@ -188,9 +201,11 @@ if (document.getElementById("app")) {
                                     selectedDocuments = self.documents;
                                 }
 
-                                self.loadFeedItems(selectedDocuments).then(function() {
-                                    self.onSelectedFeedItemsChanged();
-                                });
+                                self.loadFeedItems(selectedDocuments).then(
+                                    function() {
+                                        self.onSelectedFeedItemsChanged();
+                                    }
+                                );
                             });
                         });
                     } else if ("feed_items" in data) {

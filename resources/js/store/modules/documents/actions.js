@@ -105,5 +105,18 @@ export default {
             });
 
         commit("setSelectedDocuments", []);
-    }
+    },
+
+    /**
+     * Update the specified resource in storage.
+     */
+    update({ commit, getters }, { documentId, newProperties }) {
+        const document = getters.documents.find(d => d.id === documentId);
+
+        if(!document) {
+            return;
+        }
+
+        commit("update", { document: document, newProperties: newProperties });
+    },
 };
