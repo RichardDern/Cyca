@@ -1,0 +1,19 @@
+/* The emerging W3C standard
+   that is currently Firefox-only */
+   * {
+    scrollbar-width: thin;
+    scrollbar-color: transparent theme("colors.gray.300");
+}
+
+/* Works on Chrome/Edge/Safari */
+*::-webkit-scrollbar {
+    width: 10px;
+}
+*::-webkit-scrollbar-track {
+    background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+    background-color: theme("colors.gray.300");
+    border-radius: 20px;
+    border: 0;
+}

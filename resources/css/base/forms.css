@@ -1,0 +1,39 @@
+button, .button {
+    @apply rounded text-white text-sm px-2 py-1 flex items-center whitespace-no-wrap;
+}
+
+button.danger, .button.danger {
+    @apply bg-red-800;
+}
+
+button.danger:hover, .button.danger:hover {
+    @apply bg-red-900;
+}
+
+button.success, .button.success {
+    @apply bg-green-600;
+}
+
+button.success:hover, .button.success:hover {
+    @apply bg-green-800;
+}
+
+button.info, .button.info {
+    @apply bg-blue-600;
+}
+
+button.info:hover, .button.info:hover {
+    @apply bg-blue-800;
+}
+
+.form-group {
+    @apply mb-2 text-white flex;
+}
+
+.form-group input, input {
+    @apply bg-gray-300 text-white rounded px-2 py-1 flex-grow outline-none;
+}
+
+label {
+    @apply block text-gray-100 mb-2 mt-6;
+}

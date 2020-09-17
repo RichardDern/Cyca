@@ -1,0 +1,99 @@
+<template>
+    <article>
+        <h1>
+            <span></span>
+            <div class="flex items-center">
+                <button
+                    v-if="totalUnreadFeedItemsCount > 0"
+                    class="button info"
+                    v-on:click="onMarkAsReadClicked"
+                >
+                    <svg fill="currentColor" width="16" height="16" class="mr-1">
+                        <use xlink:href="/images/icons.svg#unread_items" />
+                    </svg>
+                    {{ __("Mark as read") }}
+                </button>
+                <button
+                    class="info ml-2"
+                    v-on:click.left.stop.prevent="openDocuments({documents: documents, folder: selectedFolder})"
+                >
+                    <svg fill="currentColor" width="16" height="16" class="mr-1">
+                        <use xlink:href="/images/icons.svg#open" />
+                    </svg>
+                    {{ __("Open") }}
+                </button>
+            </div>
+        </h1>
+
+        <div class="body">
+            <img
+                v-for="document in documents"
+                v-bind:key="document.id"
+                v-bind:title="document.title"
+                v-bind:src="document.favicon"
+                class="favicon inline mr-1 mb-1"
+            />
+            <div class="mt-6">
+                <button class="danger" v-on:click="onDeleteDocument">
+                    <svg fill="currentColor" width="16" height="16" class="mr-1">
+                        <use xlink:href="/images/icons.svg#trash" />
+                    </svg>
+                    {{ __("Delete") }}
+                </button>
+            </div>
+        </div>
+    </article>
+</template>
+
+<script>
+import { mapGetters, mapActions } from "vuex";
+
+export default {
+    computed: {
+        ...mapGetters({
+            documents: "documents/selectedDocuments",
+            selectedFolder: "folders/selectedFolder",
+        }),
+        totalUnreadFeedItemsCount: function () {
+            const self = this;
+
+            return collect(self.documents).sum("unread_feed_items_count");
+        },
+    },
+    methods: {
+        ...mapActions({
+            deleteDocuments: "documents/destroy",
+            selectFolder: "folders/selectFolder",
+            openDocuments: "documents/openDocuments",
+            loadFolders: "folders/loadFolders",
+            refreshFolders: "folders/refreshFolders",
+            selectDocument: "documents/selectDocument"
+        }),
+
+        /**
+         * Mark as read button clicked
+         */
+        onMarkAsReadClicked: function () {
+            const self = this;
+
+            self.$emit('feeditems-read', {
+                documents: collect(self.documents).pluck("id").all()
+            });
+        },
+
+        /**
+         * Delete button clicked
+         */
+        onDeleteDocument: function () {
+            const self = this;
+
+            self.deleteDocuments({
+                documents: self.documents,
+                folder: self.selectedFolder,
+            }).then(function () {
+                self.selectFolder(self.selectedFolder);
+            });
+        },
+    },
+};
+</script>

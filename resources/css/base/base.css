@@ -1,0 +1,51 @@
+@import "fonts.css";
+@import "scrollbars.css";
+@import "forms.css";
+
+#app {
+    @apply flex h-screen flex-col;
+}
+
+#content {
+    @apply flex flex-row h-screen;
+}
+
+article {
+    @apply pb-3;
+}
+
+article h1 {
+    @apply text-white py-3 px-4 mb-4 flex justify-between items-center leading-normal text-lg bg-gray-300 border-t border-b border-gray-700 sticky top-0;
+}
+
+article h1 .title {
+    @apply flex items-center py-1;
+}
+
+article .body {
+    @apply text-white text-justify leading-normal px-4;
+}
+
+article .body a {
+    @apply text-blue-400 underline;
+}
+
+article .body a:hover {
+    @apply text-green-400;
+}
+
+article .body h2 {
+    @apply font-bold text-lg mt-4 mb-1;
+}
+
+article .body h3 {
+    @apply font-bold mt-4 mb-1;
+}
+
+article .body p {
+    @apply my-2;
+}
+
+hr {
+    @apply mb-2;
+}
