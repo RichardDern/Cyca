@@ -223,7 +223,7 @@ volumes:
   db-data:
   # Comment this line if you don't use redis
   redis-data:
-  # Unomment this line if you use memcached
+  # Uncomment this line if you use memcached
   #memcached-data:
 
 networks:
