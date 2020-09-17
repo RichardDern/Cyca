@@ -1,5 +1,7 @@
 # Cyca
 
+![](https://static.getcyca.com/getcyca.com/screenshots/cyca-0.1.0.png)
+
 ## About
 
 Cyca is a web-based, multi-user bookmarks and feeds manager.
