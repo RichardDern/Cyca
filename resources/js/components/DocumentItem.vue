@@ -14,7 +14,7 @@
     >
         <div class="list-item-label">
             <img v-bind:src="document.favicon" class="favicon" />
-            <div class="py-0.5">{{ document.title }}</div>
+            <div class="truncate flex-grow py-0.5">{{ document.title }}</div>
         </div>
         <div class="badge" v-if="document.unread_feed_items_count > 0">{{ document.unread_feed_items_count }}</div>
     </a>
