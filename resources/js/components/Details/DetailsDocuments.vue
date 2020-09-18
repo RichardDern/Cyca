@@ -13,10 +13,7 @@
                     </svg>
                     {{ __("Mark as read") }}
                 </button>
-                <button
-                    class="info ml-2"
-                    v-on:click.left.stop.prevent="openDocuments({documents: documents, folder: selectedFolder})"
-                >
+                <button class="info ml-2" v-on:click.left.stop.prevent="onOpenClicked">
                     <svg fill="currentColor" width="16" height="16" class="mr-1">
                         <use xlink:href="/images/icons.svg#open" />
                     </svg>
@@ -62,13 +59,22 @@ export default {
     },
     methods: {
         ...mapActions({
-            deleteDocuments: "documents/destroy",
-            selectFolder: "folders/selectFolder",
-            openDocuments: "documents/openDocuments",
-            loadFolders: "folders/loadFolders",
-            refreshFolders: "folders/refreshFolders",
-            selectDocument: "documents/selectDocument",
+            openDocument: "documents/openDocument",
         }),
+
+        /**
+         * Click on the "Open" button
+         */
+        onOpenClicked: function () {
+            const self = this;
+
+            self.documents.forEach(function (document) {
+                self.openDocument({
+                    document: document,
+                    folder: self.selectedFolder,
+                });
+            });
+        },
 
         /**
          * Mark as read button clicked
