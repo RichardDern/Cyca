@@ -62,7 +62,7 @@
                         class="bg-gray-400 hover:bg-gray-500"
                         v-for="dupplicateInFolder in dupplicateInFolders"
                         v-bind:key="dupplicateInFolder.id"
-                        v-on:click="setSelectedFolder(dupplicateInFolder)"
+                        v-on:click="$emit('folder-selected', dupplicateInFolder)"
                     >
                         <svg
                             fill="currentColor"
@@ -137,7 +137,6 @@ export default {
         ...mapGetters({
             document: "documents/selectedDocument",
             selectedFolder: "folders/selectedFolder",
-            getFolderById: "folders/getFolderById",
             feeds: "feeds/feeds",
         }),
 
@@ -169,7 +168,6 @@ export default {
     },
     methods: {
         ...mapActions({
-            selectFolder: "folders/selectFolder",
             incrementVisits: "documents/incrementVisits",
             openDocument: "documents/openDocument",
             loadFolders: "folders/loadFolders",
@@ -197,19 +195,6 @@ export default {
             self.$emit("documents-deleted", {
                 folder: self.selectedFolder,
                 documents: [self.document],
-            });
-        },
-
-        /**
-         * Selected folder changed
-         */
-        setSelectedFolder: function (folder) {
-            const self = this;
-
-            folder = self.getFolderById(folder.id);
-
-            self.selectFolder(folder).then(function () {
-                self.$emit("folder-selected", folder);
             });
         },
 
