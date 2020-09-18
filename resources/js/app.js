@@ -214,17 +214,25 @@ if (document.getElementById("app")) {
                     } else if ("documents" in data) {
                         self.indexFolders().then(function() {
                             self.indexDocuments().then(function() {
-                                let selectedDocuments = self.selectedDocuments;
+                                if (
+                                    self.selectedFolder.type ===
+                                    "unread_feed_items"
+                                ) {
+                                    self.onSelectedFolderChanged(
+                                        self.selectedFolder
+                                    );
+                                } else {
+                                    let selectedDocuments =
+                                        self.selectedDocuments;
 
-                                if (!selectedDocuments) {
-                                    selectedDocuments = self.documents;
-                                }
-
-                                self.loadFeedItems(selectedDocuments).then(
-                                    function() {
-                                        self.onSelectedFeedItemsChanged();
+                                    if (!selectedDocuments) {
+                                        selectedDocuments = self.documents;
                                     }
-                                );
+
+                                    self.onSelectedDocumentsChanged(
+                                        selectedDocuments
+                                    );
+                                }
                             });
                         });
                     } else if ("feed_items" in data) {
