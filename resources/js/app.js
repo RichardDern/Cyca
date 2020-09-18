@@ -35,7 +35,8 @@ if (document.getElementById("app")) {
                 indexFeedItems: "feedItems/index",
                 selectFeedItems: "feedItems/selectFeedItems",
                 markFeedItemsAsRead: "feedItems/markAsRead",
-                updateDocument: "documents/update"
+                updateDocument: "documents/update",
+                deleteDocuments: "documents/destroy"
             }),
 
             /**
@@ -110,17 +111,17 @@ if (document.getElementById("app")) {
             onSelectedDocumentsChanged: function(documents) {
                 const self = this;
 
-                self.selectDocuments(documents).then(function() {
-                    if (documents && documents.length > 0) {
-                        if (documents.length === 1) {
-                            self.detailsViewComponent = "details-document";
-                        } else {
-                            self.detailsViewComponent = "details-documents";
-                        }
+                if (documents && documents.length > 0) {
+                    if (documents.length === 1) {
+                        self.detailsViewComponent = "details-document";
                     } else {
-                        self.detailsViewComponent = "details-folder";
+                        self.detailsViewComponent = "details-documents";
                     }
+                } else {
+                    self.detailsViewComponent = "details-folder";
+                }
 
+                self.selectDocuments(documents).then(function() {
                     self.selectFeedItems();
                     self.loadFeedItems(documents);
                 });
@@ -133,6 +134,24 @@ if (document.getElementById("app")) {
                 const self = this;
 
                 self.indexDocuments();
+            },
+
+            /**
+             * Refresh documents list after deleting one (or more)
+             */
+            onDocumentsDeleted: function({ folder, documents }) {
+                const self = this;
+
+                self.onSelectedDocumentsChanged([]);
+
+                self.deleteDocuments({
+                    documents: documents,
+                    folder: folder
+                }).then(function() {
+                    self.indexFolders().then(function() {
+                        self.indexDocuments();
+                    });
+                });
             },
 
             /**

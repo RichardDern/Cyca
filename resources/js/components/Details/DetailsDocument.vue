@@ -157,19 +157,18 @@ export default {
          * Return document's initial URL instead of the real URL, unless there
          * is not attached bookmark
          */
-        url: function() {
+        url: function () {
             const self = this;
 
-            if(self.document.bookmark.initial_url) {
+            if (self.document.bookmark.initial_url) {
                 return self.document.bookmark.initial_url;
             }
 
             return self.document.url;
-        }
+        },
     },
     methods: {
         ...mapActions({
-            deleteDocuments: "documents/destroy",
             selectFolder: "folders/selectFolder",
             incrementVisits: "documents/incrementVisits",
             openDocument: "documents/openDocument",
@@ -184,8 +183,8 @@ export default {
         onMarkAsReadClicked: function () {
             const self = this;
 
-            self.$emit('feeditems-read', {
-                documents: [self.document.id]
+            self.$emit("feeditems-read", {
+                documents: [self.document.id],
             });
         },
 
@@ -195,11 +194,9 @@ export default {
         onDeleteDocument: function () {
             const self = this;
 
-            self.deleteDocuments({
-                documents: [self.document],
+            self.$emit("documents-deleted", {
                 folder: self.selectedFolder,
-            }).then(function () {
-                self.selectFolder(self.selectedFolder);
+                documents: [self.document],
             });
         },
 

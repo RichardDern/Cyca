@@ -67,7 +67,7 @@ export default {
             openDocuments: "documents/openDocuments",
             loadFolders: "folders/loadFolders",
             refreshFolders: "folders/refreshFolders",
-            selectDocument: "documents/selectDocument"
+            selectDocument: "documents/selectDocument",
         }),
 
         /**
@@ -76,8 +76,8 @@ export default {
         onMarkAsReadClicked: function () {
             const self = this;
 
-            self.$emit('feeditems-read', {
-                documents: collect(self.documents).pluck("id").all()
+            self.$emit("feeditems-read", {
+                documents: collect(self.documents).pluck("id").all(),
             });
         },
 
@@ -87,11 +87,9 @@ export default {
         onDeleteDocument: function () {
             const self = this;
 
-            self.deleteDocuments({
-                documents: self.documents,
+            self.$emit("documents-deleted", {
                 folder: self.selectedFolder,
-            }).then(function () {
-                self.selectFolder(self.selectedFolder);
+                documents: self.documents,
             });
         },
     },
