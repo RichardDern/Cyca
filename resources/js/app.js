@@ -53,7 +53,9 @@ if (document.getElementById("app")) {
                         switch (notification.type) {
                             case "App\\Notifications\\UnreadItemsChanged":
                                 self.indexFolders().then(function() {
-                                    self.indexDocuments();
+                                    self.indexDocuments().then(function() {
+                                        self.loadFeedItems();
+                                    });
                                 });
                                 break;
                             case "App\\Notifications\\DocumentUpdated":
@@ -179,25 +181,25 @@ if (document.getElementById("app")) {
             onSelectedFeedItemsChanged: function(feedItems) {
                 const self = this;
 
-                self.selectFeedItems(feedItems).then(function() {
-                    if (feedItems && feedItems.length > 0) {
-                        if (feedItems.length === 1) {
-                            self.detailsViewComponent = "details-feed-item";
-                        } else {
-                            //TODO: Handle multiple selected feed items ?
-                            self.detailsViewComponent = null;
-                        }
+                if (feedItems && feedItems.length > 0) {
+                    if (feedItems.length === 1) {
+                        self.detailsViewComponent = "details-feed-item";
                     } else {
-                        if (
-                            self.selectedDocuments &&
-                            self.selectedDocuments.length > 0
-                        ) {
-                            self.detailsViewComponent = "details-document";
-                        } else {
-                            self.detailsViewComponent = "details-folder";
-                        }
+                        //TODO: Handle multiple selected feed items ?
+                        self.detailsViewComponent = null;
                     }
-                });
+                } else {
+                    if (
+                        self.selectedDocuments &&
+                        self.selectedDocuments.length > 0
+                    ) {
+                        self.detailsViewComponent = "details-document";
+                    } else {
+                        self.detailsViewComponent = "details-folder";
+                    }
+                }
+
+                self.selectFeedItems(feedItems);
             },
 
             /**
@@ -206,62 +208,8 @@ if (document.getElementById("app")) {
             onFeedItemsRead: function(data) {
                 const self = this;
 
-                self.markFeedItemsAsRead(data).then(function() {
-                    if ("folders" in data) {
-                        self.indexFolders().then(function() {
-                            self.onSelectedFolderChanged(self.selectedFolder);
-                        });
-                    } else if ("documents" in data) {
-                        self.indexFolders().then(function() {
-                            self.indexDocuments().then(function() {
-                                if (
-                                    self.selectedFolder.type ===
-                                    "unread_feed_items"
-                                ) {
-                                    self.onSelectedFolderChanged(
-                                        self.selectedFolder
-                                    );
-                                } else {
-                                    let selectedDocuments =
-                                        self.selectedDocuments;
-
-                                    if (!selectedDocuments) {
-                                        selectedDocuments = self.documents;
-                                    }
-
-                                    self.onSelectedDocumentsChanged(
-                                        selectedDocuments
-                                    );
-                                }
-                            });
-                        });
-                    } else if ("feed_items" in data) {
-                        self.indexFolders().then(function() {
-                            self.indexDocuments().then(function() {
-                                let selectedDocuments = self.selectedDocuments;
-
-                                if (!selectedDocuments) {
-                                    selectedDocuments = self.documents;
-                                }
-
-                                self.loadFeedItems(selectedDocuments).then(
-                                    function() {
-                                        if (
-                                            self.feedItems &&
-                                            self.feedItems.length > 0
-                                        ) {
-                                            self.onSelectedFeedItemsChanged(
-                                                collect(self.feedItems).first()
-                                            );
-                                        } else {
-                                            self.onSelectedFeedItemsChanged();
-                                        }
-                                    }
-                                );
-                            });
-                        });
-                    }
-                });
+                self.onSelectedFeedItemsChanged([]);
+                self.markFeedItemsAsRead(data);
             }
         }
     });

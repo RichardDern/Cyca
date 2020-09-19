@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\FeedItem;
 use App\Models\FeedItemState;
 use Illuminate\Http\Request;
+use App\Notifications\UnreadItemsChanged;
+use Illuminate\Support\Facades\Notification;
 
 class FeedItemController extends Controller
 {
@@ -132,5 +134,7 @@ class FeedItemController extends Controller
         } else if ($request->has('feed_items')) {
             FeedItemState::where('user_id', $request->user()->id)->whereIn('feed_item_id', $request->input('feed_items'))->update(['is_read' => true]);
         }
+
+        Notification::send($request->user(), new UnreadItemsChanged());
     }
 }
