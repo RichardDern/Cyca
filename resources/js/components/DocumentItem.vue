@@ -60,8 +60,6 @@ export default {
     },
     methods: {
         ...mapActions({
-            selectDocument: "documents/selectDocument",
-            addDocumentToSelection: "documents/addDocumentToSelection",
             startDraggingDocuments: "documents/startDraggingDocuments",
             stopDraggingDocuments: "documents/stopDraggingDocuments",
             incrementVisits: "documents/incrementVisits",

@@ -20,28 +20,35 @@ export default {
     /**
      * Display the specified resource.
      */
-    async show({ commit, getters }, folder) {
-        if (!folder) {
-            return;
-        }
-
+    async show({ commit, getters, dispatch }, folder) {
         const currentSelectedFolder = getters.selectedFolder;
 
-        if (currentSelectedFolder && currentSelectedFolder.id === folder.id) {
-            // Selected folder has not changed
-            return;
+        if (!folder) {
+            folder = currentSelectedFolder;
+        }
+
+        if (currentSelectedFolder && currentSelectedFolder.id !== folder.id) {
+            commit("setSelectedFolder", folder);
+            dispatch("documents/selectDocuments", [], { root: true });
         }
 
         const response = await axios.get(route("folder.show", folder));
+        const documents = response.data;
 
-        commit("setSelectedFolder", folder);
+        dispatch("documents/index", documents, { root: true });
     },
 
     /**
      * Store a newly created resource in storage.
      */
-    async store({}, { title, parent_id }) {
-        await axios.post(route("folder.store"), { title, parent_id });
+    async store({ getters, commit }, { title, parent_id }) {
+        const parentFolder = getters.folders.find(f => f.id === parent_id);
+        const response = await axios.post(route("folder.store"), {
+            title,
+            parent_id
+        });
+
+        commit("setFolders", response.data);
     },
 
     /**
@@ -59,8 +66,10 @@ export default {
     /**
      * Remove the specified resource from storage.
      */
-    async destroy({}, folder) {
-        await axios.delete(route("folder.destroy", folder));
+    async destroy({ commit }, folder) {
+        const response = await axios.delete(route("folder.destroy", folder));
+
+        commit("setFolders", response.data);
     },
 
     /**
@@ -111,7 +120,10 @@ export default {
                 "documents/dropIntoFolder",
                 { sourceFolder: sourceFolder, targetFolder: folder },
                 { root: true }
-            );
+            ).then(function() {
+                dispatch("index");
+                dispatch("show");
+            });
 
             return;
         }
@@ -133,6 +145,9 @@ export default {
                 ...sourceFolder,
                 ...newProperties
             }
+        }).then(function() {
+            dispatch("index");
+            dispatch("show");
         });
     }
 };

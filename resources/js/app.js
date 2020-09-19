@@ -22,17 +22,57 @@ if (document.getElementById("app")) {
                 selectedFolder: "folders/selectedFolder",
                 documents: "documents/documents",
                 selectedDocuments: "documents/selectedDocuments",
-                feedItems: "feedItems/feedItems"
+                feedItems: "feedItems/feedItems",
+                selectedFeedItems: "feedItems/selectedFeedItems",
             })
+        },
+        watch: {
+            selectedFolder: function(folder) {
+                const self = this;
+
+                self.detailsViewComponent = "details-folder";
+            },
+            selectedDocuments: function(documents) {
+                const self = this;
+
+                if (documents && documents.length > 0) {
+                    if (documents.length === 1) {
+                        self.detailsViewComponent = "details-document";
+                    } else {
+                        self.detailsViewComponent = "details-documents";
+                    }
+                } else {
+                    self.detailsViewComponent = "details-folder";
+                }
+            },
+            selectedFeedItems: function(feedItems) {
+                const self = this;
+
+                if (feedItems && feedItems.length > 0) {
+                    if (feedItems.length === 1) {
+                        self.detailsViewComponent = "details-feed-item";
+                    } else {
+                        //TODO: Handle multiple selected feed items ?
+                        self.detailsViewComponent = null;
+                    }
+                } else {
+                    if (
+                        self.selectedDocuments &&
+                        self.selectedDocuments.length > 0
+                    ) {
+                        self.detailsViewComponent = "details-document";
+                    } else {
+                        self.detailsViewComponent = "details-folder";
+                    }
+                }
+            }
         },
         methods: {
             ...mapActions({
                 showFolder: "folders/show",
                 indexFolders: "folders/index",
-                indexDocuments: "documents/index",
                 selectDocuments: "documents/selectDocuments",
                 dropIntoFolder: "folders/dropIntoFolder",
-                indexFeedItems: "feedItems/index",
                 selectFeedItems: "feedItems/selectFeedItems",
                 markFeedItemsAsRead: "feedItems/markAsRead",
                 updateDocument: "documents/update",
@@ -53,9 +93,7 @@ if (document.getElementById("app")) {
                         switch (notification.type) {
                             case "App\\Notifications\\UnreadItemsChanged":
                                 self.indexFolders().then(function() {
-                                    self.indexDocuments().then(function() {
-                                        self.loadFeedItems();
-                                    });
+                                    self.showFolder();
                                 });
                                 break;
                             case "App\\Notifications\\DocumentUpdated":
@@ -83,15 +121,9 @@ if (document.getElementById("app")) {
             onSelectedFolderChanged: function(folder) {
                 const self = this;
 
-                self.detailsViewComponent = "details-folder";
+                self.showFolder(folder);
 
-                self.selectDocuments([]);
-                self.showFolder(folder).then(function() {
-                    self.indexDocuments().then(function() {
-                        self.selectFeedItems();
-                        self.loadFeedItems();
-                    });
-                });
+                self.detailsViewComponent = "details-folder";
             },
 
             /**
@@ -100,11 +132,7 @@ if (document.getElementById("app")) {
             onItemDropped: function(folder) {
                 const self = this;
 
-                self.dropIntoFolder(folder).then(function() {
-                    self.indexFolders().then(function() {
-                        self.indexDocuments();
-                    });
-                });
+                self.dropIntoFolder(folder);
             },
 
             /**
@@ -113,29 +141,14 @@ if (document.getElementById("app")) {
             onSelectedDocumentsChanged: function(documents) {
                 const self = this;
 
-                if (documents && documents.length > 0) {
-                    if (documents.length === 1) {
-                        self.detailsViewComponent = "details-document";
-                    } else {
-                        self.detailsViewComponent = "details-documents";
-                    }
-                } else {
-                    self.detailsViewComponent = "details-folder";
-                }
-
-                self.selectDocuments(documents).then(function() {
-                    self.selectFeedItems();
-                    self.loadFeedItems(documents);
-                });
+                self.selectDocuments(documents);
             },
 
             /**
              * Refresh documents list after adding one
              */
             onDocumentAdded: function() {
-                const self = this;
-
-                self.indexDocuments();
+                //
             },
 
             /**
@@ -144,35 +157,10 @@ if (document.getElementById("app")) {
             onDocumentsDeleted: function({ folder, documents }) {
                 const self = this;
 
-                self.onSelectedDocumentsChanged([]);
-
                 self.deleteDocuments({
                     documents: documents,
                     folder: folder
-                }).then(function() {
-                    self.indexFolders().then(function() {
-                        self.indexDocuments();
-                    });
                 });
-            },
-
-            /**
-             * Initial loading of feed items
-             */
-            loadFeedItems: async function(documents) {
-                const self = this;
-
-                if (!documents) {
-                    documents = self.documents;
-                }
-
-                const feeds = collect(documents)
-                    .pluck("feeds")
-                    .flatten(1)
-                    .pluck("id")
-                    .all();
-
-                await self.indexFeedItems(feeds);
             },
 
             /**
@@ -180,24 +168,6 @@ if (document.getElementById("app")) {
              */
             onSelectedFeedItemsChanged: function(feedItems) {
                 const self = this;
-
-                if (feedItems && feedItems.length > 0) {
-                    if (feedItems.length === 1) {
-                        self.detailsViewComponent = "details-feed-item";
-                    } else {
-                        //TODO: Handle multiple selected feed items ?
-                        self.detailsViewComponent = null;
-                    }
-                } else {
-                    if (
-                        self.selectedDocuments &&
-                        self.selectedDocuments.length > 0
-                    ) {
-                        self.detailsViewComponent = "details-document";
-                    } else {
-                        self.detailsViewComponent = "details-folder";
-                    }
-                }
 
                 self.selectFeedItems(feedItems);
             },
@@ -208,7 +178,6 @@ if (document.getElementById("app")) {
             onFeedItemsRead: function(data) {
                 const self = this;
 
-                self.onSelectedFeedItemsChanged([]);
                 self.markFeedItemsAsRead(data);
             }
         }

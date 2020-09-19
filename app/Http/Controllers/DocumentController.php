@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Documents\StoreRequest;
-use App\Models\Bookmark;
+use App\Models\FeedItemState;
 use App\Models\Document;
 use App\Models\Folder;
 use Illuminate\Http\Request;
@@ -130,7 +130,7 @@ class DocumentController extends Controller
             $sourceFolder->documents()->updateExistingPivot($document->id, ['folder_id' => $targetFolder->id]);
         }
 
-        return $sourceFolder->listDocuments();
+        FeedItemState::where('folder_id', $sourceFolder->id)->whereIn('document_id', $request->input('documents'))->update(['folder_id' => $targetFolder->id]);
     }
 
     /**

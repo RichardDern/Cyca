@@ -1,3 +1,6 @@
+import { collect } from "collect.js";
+import feeditems from ".";
+
 /**
  * Feed items actions
  */
@@ -5,17 +8,33 @@ export default {
     /**
      * Load feed items for specified feeds
      */
-    async index({commit}, feeds) {
-        const response = await axios
-            .get(route("feed_item.index"), {
+    async index({ commit }, documents) {
+        const feeds = collect(documents)
+            .pluck("feeds")
+            .flatten(1)
+            .pluck("id")
+            .all();
+
+        let nextPage = 0;
+        let feedItems = [];
+
+        if (feeds.length > 0) {
+            const response = await axios.get(route("feed_item.index"), {
                 params: {
                     feeds: feeds
                 }
             });
 
-        commit("setNextPage", response.data.next_page_url !== null ? response.data.current_page + 1 : 0);
+            feedItems = response.data.data;
+            nextPage =
+                response.data.next_page_url !== null
+                    ? response.data.current_page + 1
+                    : 0;
+        }
+
+        commit("setNextPage", nextPage);
         commit("setFeeds", feeds);
-        commit("setFeedItems", response.data.data);
+        commit("setFeedItems", feedItems);
     },
 
     /**
@@ -28,17 +47,21 @@ export default {
         }
 
         const items = getters.feedItems;
-        const response = await axios
-            .get(route("feed_item.index"), {
-                params: {
-                    page: getters.nextPage,
-                    feeds: getters.feeds
-                }
-            });
+        const response = await axios.get(route("feed_item.index"), {
+            params: {
+                page: getters.nextPage,
+                feeds: getters.feeds
+            }
+        });
 
         const newItems = [...items, ...response.data.data];
 
-        commit("setNextPage", response.data.next_page_url !== null ? response.data.current_page + 1 : 0);
+        commit(
+            "setNextPage",
+            response.data.next_page_url !== null
+                ? response.data.current_page + 1
+                : 0
+        );
         commit("setFeeds", getters.feeds);
         commit("setFeedItems", newItems);
     },
@@ -55,7 +78,10 @@ export default {
     /**
      * Mark feed items as read
      */
-    async markAsRead({commit}, data) {
+    async markAsRead({ dispatch, getters }, data) {
         await axios.post(route("feed_item.mark_as_read"), data);
+
+        dispatch("folders/index", null, { root: true });
+        dispatch("folders/show", null, { root: true });
     }
 };

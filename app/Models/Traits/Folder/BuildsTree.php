@@ -46,7 +46,7 @@ trait BuildsTree
      * @param integer $depth Current depth
      * @return array
      */
-    private static function buildBranch(self $folder, $allFolders, $depth)
+    public static function buildBranch(self $folder, $allFolders, $depth)
     {
         $folder->depth = $depth;
         $branch        = [];

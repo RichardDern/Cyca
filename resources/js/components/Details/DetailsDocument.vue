@@ -170,9 +170,6 @@ export default {
         ...mapActions({
             incrementVisits: "documents/incrementVisits",
             openDocument: "documents/openDocument",
-            loadFolders: "folders/loadFolders",
-            refreshFolders: "folders/refreshFolders",
-            selectDocument: "documents/selectDocument",
         }),
 
         /**

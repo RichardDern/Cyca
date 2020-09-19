@@ -44,9 +44,9 @@ class FolderController extends Controller
     {
         $validated = $request->validated();
 
-        $folder = Folder::find($validated['parent_id']);
+        $parentFolder = Folder::find($validated['parent_id']);
 
-        if ($folder->type !== 'folder' && $folder->type !== 'root') {
+        if ($parentFolder->type !== 'folder' && $parentFolder->type !== 'root') {
             abort(422);
         }
 
@@ -54,6 +54,8 @@ class FolderController extends Controller
             'title'     => $validated['title'],
             'parent_id' => $validated['parent_id'],
         ]));
+
+        return $this->index($request);
     }
 
     /**
@@ -69,6 +71,8 @@ class FolderController extends Controller
         $folder->is_selected = true;
 
         $folder->save();
+
+        return $folder->listDocuments();
     }
 
     /**
@@ -129,5 +133,7 @@ class FolderController extends Controller
         // We want to ensure at least the root folder is selected
         $request->user()->folders()->update(['is_selected' => false]);
         $request->user()->folders()->where('type', 'root')->update(['is_selected' => true]);
+
+        return $this->index($request);
     }
 }

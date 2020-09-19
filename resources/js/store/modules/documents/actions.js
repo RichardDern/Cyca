@@ -5,24 +5,41 @@ export default {
     /**
      * Display a listing of the resource.
      */
-    async index({ commit }) {
-        const response = await axios.get(route("document.index"));
+    async index({ commit, dispatch, getters }, documents) {
+        if (!documents) {
+            const response = await axios.get(route("document.index"));
+            documents = response.data;
+        }
 
-        commit("setDocuments", response.data);
+        commit("setDocuments", documents);
+
+        let selectedDocuments = getters.selectedDocuments;
+
+        if(!selectedDocuments || selectedDocuments.length === 0) {
+            selectedDocuments = documents;
+        }
+
+        dispatch("feedItems/index", selectedDocuments, { root: true });
     },
 
     /**
      * Store a newly created resource in storage.
      */
-    async store({}, { url, folder_id }) {
-        await axios.post(route("document.store"), { url: url, folder_id: folder_id });
+    async store({ dispatch }, { url, folder_id }) {
+        const response = await axios.post(route("document.store"), {
+            url: url,
+            folder_id: folder_id
+        });
+
+        dispatch("index", response.data);
     },
 
     /**
      * Mark specified documents as selected.
      */
-    selectDocuments({ commit }, documents) {
+    selectDocuments({ commit, dispatch }, documents) {
         commit("setSelectedDocuments", documents);
+        dispatch("feedItems/index", documents, { root: true });
     },
 
     /**
@@ -42,7 +59,7 @@ export default {
     /**
      * Move selected documents into specified folder
      */
-    dropIntoFolder(
+    async dropIntoFolder(
         { getters, commit, dispatch },
         { sourceFolder, targetFolder }
     ) {
@@ -52,7 +69,7 @@ export default {
             return;
         }
 
-        axios
+        await axios
             .post(
                 route("document.move", {
                     sourceFolder: sourceFolder,
@@ -67,6 +84,7 @@ export default {
             .then(function(response) {
                 commit("setDraggedDocuments", []);
                 commit("setSelectedDocuments", []);
+                dispatch("feedItems/index", getters.feeds, { root: true });
             });
     },
 
@@ -96,15 +114,18 @@ export default {
     /**
      * Remove specified documents from specified folder
      */
-    async destroy({commit}, {folder, documents}) {
-        await axios
-            .post(route("document.destroy_bookmarks", folder), {
-                documents: collect(documents)
-                    .pluck("id")
-                    .all()
-            });
-
+    async destroy({ commit, getters, dispatch }, { folder, documents }) {
         commit("setSelectedDocuments", []);
+
+        const response = await axios.post(route("document.destroy_bookmarks", folder), {
+            documents: collect(documents)
+                .pluck("id")
+                .all()
+        });
+
+        dispatch("folders/index", null, { root: true });
+        dispatch("index", response.data);
+        dispatch("feedItems/index", getters.feeds, { root: true });
     },
 
     /**
@@ -113,10 +134,10 @@ export default {
     update({ commit, getters }, { documentId, newProperties }) {
         const document = getters.documents.find(d => d.id === documentId);
 
-        if(!document) {
+        if (!document) {
             return;
         }
 
         commit("update", { document: document, newProperties: newProperties });
-    },
+    }
 };

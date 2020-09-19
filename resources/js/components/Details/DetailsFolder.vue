@@ -183,8 +183,6 @@ export default {
                 title: self.addFolderTitle,
             }).then(function () {
                 self.addFolderTitle = null;
-
-                self.index();
             });
         },
         /**
