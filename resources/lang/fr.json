@@ -49,5 +49,7 @@
     "Update folder": "Mettre à jour le dossier",
     "User Name": "Nom d'utilisateur",
     "Visits": "Visites",
-    "You can import the following types of file": "Vous pouvez importer des fichiers de type"
+    "You can import the following types of file": "Vous pouvez importer des fichiers de type",
+    "Awaiting e-mail address confirmation": "En attente de confirmation de votre adresse e-mail",
+    "E-mail address verified on :email_verified_at": "Adresse e-mail vérifiée le :email_verified_at"
 }

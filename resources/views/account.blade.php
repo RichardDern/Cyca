@@ -24,12 +24,12 @@
                 ->user()
                 ->hasVerifiedEmail()
         ))
-                <p class="text-green-500 text-xs italic mt-4">{{ __('Votre adresse e-mail a été confirmée le :email_verified_at', [
+                <p class="text-green-500 text-xs italic mt-4">{{ __('E-mail address verified on :email_verified_at', [
                         'email_verified_at' => auth()->user()->email_verified_at->isoFormat('LLLL'),
                     ]) }}</p>
             @else
                 <p class="text-yellow-500 text-xs italic mt-4">
-                    {{ __('Votre adresse e-mail est en attente de confirmation') }}</p>
+                    {{ __('Awaiting e-mail address confirmation') }}</p>
             @endif
 
             <button type="submit" class="info p-2 mt-6">{{ __('Save') }}</button>
