@@ -55,7 +55,7 @@ trait AnalysesFeed
             $this->url = $this->client->subscribe_url();
         }
 
-        $this->title       = $this->cleanupString($this->client->get_title(), true);
+        $this->title       = $this->cleanupString($this->client->get_title(), true, true);
         $this->description = $this->cleanupString($this->client->get_description());
         $this->checked_at  = now();
 
