@@ -98,7 +98,7 @@ trait AnalysesFeed
             $feedItem = new FeedItem();
 
             $feedItem->hash         = $item->get_id(true);
-            $feedItem->title        = $this->cleanupString($item->get_title(), true);
+            $feedItem->title        = $this->cleanupString($item->get_title(), true, true);
             $feedItem->url          = $item->get_permalink();
             $feedItem->description  = $this->formatText($item->get_description(true));
             $feedItem->content      = $this->formatText($item->get_content(true));
@@ -122,13 +122,17 @@ trait AnalysesFeed
      *
      * @param string $string
      * @param boolean $stripTags If true, HTML tags will be suppressed
+     * @param boolean $removeExtraSpaces If true, a regex will be applied to remove unnecessary white-spaces
      * @return string
      */
-    protected function cleanupString($string, $stripTags = false)
+    protected function cleanupString($string, $stripTags = false, $removeExtraSpaces = false)
     {
         $string = UTF8::toUTF8($string, UTF8::ICONV_TRANSLIT);
         $string = html_entity_decode($string, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-        $string = preg_replace('#[\s\t\r\n]+#', ' ', $string);
+
+        if($removeExtraSpaces) {
+            $string = preg_replace('#[\s\t\r\n]+#', ' ', $string);
+        }
 
         if ($stripTags) {
             $string = strip_tags(trim($string));
