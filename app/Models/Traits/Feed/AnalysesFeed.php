@@ -55,8 +55,8 @@ trait AnalysesFeed
             $this->url = $this->client->subscribe_url();
         }
 
-        $this->title       = $this->client->get_title();
-        $this->description = $this->client->get_description();
+        $this->title       = $this->cleanupString($this->client->get_title(), true);
+        $this->description = $this->cleanupString($this->client->get_description());
         $this->checked_at  = now();
 
         $this->save();
@@ -128,6 +128,7 @@ trait AnalysesFeed
     {
         $string = UTF8::toUTF8($string, UTF8::ICONV_TRANSLIT);
         $string = html_entity_decode($string, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $string = preg_replace('#[\s\t\r\n]+#', ' ', $string);
 
         if ($stripTags) {
             $string = strip_tags(trim($string));
