@@ -4,6 +4,10 @@
             <div class="title">
                 <img v-bind:src="document.favicon" class="favicon" />
                 <span>{{ document.title }}</span>
+                <div
+                    class="badge"
+                    v-if="document.unread_feed_items_count > 0"
+                >{{ document.unread_feed_items_count }}</div>
             </div>
             <div class="flex items-center">
                 <button

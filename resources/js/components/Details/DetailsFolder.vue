@@ -12,6 +12,10 @@
                     <use v-bind:xlink:href="'/images/icons.svg#' + folder.icon" />
                 </svg>
                 <span>{{ folder.title }}</span>
+                <div
+                    class="badge"
+                    v-if="folder.unread_feed_items_count > 0"
+                >{{ folder.unread_feed_items_count }}</div>
             </div>
             <button
                 v-if="folder.unread_feed_items_count > 0"

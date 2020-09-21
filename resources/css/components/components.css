@@ -78,6 +78,10 @@
     @apply flex flex-none items-center py-0.5 bg-gray-300 rounded text-xs text-white px-2 ml-2;
 }
 
+article .badge {
+    @apply bg-gray-500;
+}
+
 .url {
     @apply text-green-600 text-sm truncate block;
 }
