@@ -72,6 +72,7 @@ if (document.getElementById("app")) {
                 showFolder: "folders/show",
                 indexFolders: "folders/index",
                 selectDocuments: "documents/selectDocuments",
+                indexDocuments: "documents/index",
                 dropIntoFolder: "folders/dropIntoFolder",
                 selectFeedItems: "feedItems/selectFeedItems",
                 markFeedItemsAsRead: "feedItems/markAsRead",
@@ -93,7 +94,7 @@ if (document.getElementById("app")) {
                         switch (notification.type) {
                             case "App\\Notifications\\UnreadItemsChanged":
                                 self.indexFolders().then(function() {
-                                    self.showFolder();
+                                    self.indexDocuments();
                                 });
                                 break;
                             case "App\\Notifications\\DocumentUpdated":
@@ -115,19 +116,17 @@ if (document.getElementById("app")) {
             },
 
             /**
-             * Selected folder has changed
+             * User-action - Selected folder has changed
              * @param {*} folder
              */
             onSelectedFolderChanged: function(folder) {
                 const self = this;
 
                 self.showFolder(folder);
-
-                self.detailsViewComponent = "details-folder";
             },
 
             /**
-             * Something has been dropped into a folder
+             * User-action - Something has been dropped into a folder
              */
             onItemDropped: function(folder) {
                 const self = this;
@@ -136,7 +135,7 @@ if (document.getElementById("app")) {
             },
 
             /**
-             * Selected documents has changed
+             * User-action - Selected documents has changed
              */
             onSelectedDocumentsChanged: function(documents) {
                 const self = this;
@@ -145,14 +144,14 @@ if (document.getElementById("app")) {
             },
 
             /**
-             * Refresh documents list after adding one
+             * User-action - Refresh documents list after adding one
              */
             onDocumentAdded: function() {
                 //
             },
 
             /**
-             * Refresh documents list after deleting one (or more)
+             * User-action - Refresh documents list after deleting one (or more)
              */
             onDocumentsDeleted: function({ folder, documents }) {
                 const self = this;
@@ -164,7 +163,7 @@ if (document.getElementById("app")) {
             },
 
             /**
-             * Selected feed items has changed
+             * User-action - Selected feed items has changed
              */
             onSelectedFeedItemsChanged: function(feedItems) {
                 const self = this;
@@ -173,7 +172,7 @@ if (document.getElementById("app")) {
             },
 
             /**
-             * Feed items marked as read
+             * User-action - Feed items marked as read
              */
             onFeedItemsRead: function(data) {
                 const self = this;
