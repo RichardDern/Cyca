@@ -79,7 +79,7 @@
 }
 
 article .badge {
-    @apply bg-gray-500;
+    @apply bg-gray-500 mr-2;
 }
 
 .url {
