@@ -6,12 +6,9 @@ window._ = require('lodash');
 window.axios = require('axios');
 window.Vue = require('vue');
 window.collect = require('collect.js');
-window.moment = require('moment');
 window.io = require('socket.io-client');
 
 import Echo from "laravel-echo"
-
-moment.locale(document.querySelector('html').getAttribute('lang'));
 
 /**
  * Preparing axios

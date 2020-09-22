@@ -5,37 +5,17 @@
 </template>
 <script>
 export default {
-    props: ['datetime', 'only-date', 'only-time', 'with-seconds', 'calendar'],
+    props: ['datetime'],
     computed: {
         iso: function() {
             if(!this.datetime) {
                 return null;
             }
 
-            return moment(this.datetime).toISOString();
+            return new Date(this.datetime).toISOString();
         },
         formatted: function() {
-            if(!this.datetime) {
-                return null;
-            }
-
-            if(this.calendar) {
-                return moment(this.datetime).calendar();
-            }
-
-            let format = "LLLL";
-
-            if(this.onlyDate) {
-                format = 'LL';
-            } else if(this.onlyTime) {
-                if(this.withSeconds) {
-                    format = 'LTS';
-                } else {
-                    format = 'LT';
-                }
-            }
-
-            return moment(this.datetime).format(format);
+            return new Date(this.datetime).toLocaleString();
         }
     }
 }
