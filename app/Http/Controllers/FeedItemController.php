@@ -134,5 +134,7 @@ class FeedItemController extends Controller
         } else if ($request->has('feed_items')) {
             FeedItemState::where('user_id', $request->user()->id)->whereIn('feed_item_id', $request->input('feed_items'))->update(['is_read' => true]);
         }
+
+        return $request->user()->getFlatTree();
     }
 }

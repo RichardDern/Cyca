@@ -15,11 +15,13 @@ export default {
 
         let selectedDocuments = getters.selectedDocuments;
 
-        if(!selectedDocuments || selectedDocuments.length === 0) {
+        if (!selectedDocuments || selectedDocuments.length === 0) {
             selectedDocuments = documents;
         }
 
-        dispatch("feedItems/index", selectedDocuments, { root: true });
+        await dispatch("feedItems/index", selectedDocuments, {
+            root: true
+        });
     },
 
     /**
@@ -37,9 +39,18 @@ export default {
     /**
      * Mark specified documents as selected.
      */
-    selectDocuments({ commit, dispatch }, documents) {
+    async selectDocuments({ commit, dispatch }, documents) {
         commit("setSelectedDocuments", documents);
-        dispatch("feedItems/index", documents, { root: true });
+        await dispatch("feedItems/index", documents, { root: true });
+    },
+
+    /**
+     * Select first document in currently displayed list
+     */
+    selectFirstDocument({ getters, dispatch }) {
+        const document = collect(getters.documents).first();
+
+        dispatch("selectDocuments", [document]);
     },
 
     /**
@@ -117,11 +128,14 @@ export default {
     async destroy({ commit, getters, dispatch }, { folder, documents }) {
         commit("setSelectedDocuments", []);
 
-        const response = await axios.post(route("document.destroy_bookmarks", folder), {
-            documents: collect(documents)
-                .pluck("id")
-                .all()
-        });
+        const response = await axios.post(
+            route("document.destroy_bookmarks", folder),
+            {
+                documents: collect(documents)
+                    .pluck("id")
+                    .all()
+            }
+        );
 
         dispatch("folders/index", null, { root: true });
         dispatch("index", response.data);
