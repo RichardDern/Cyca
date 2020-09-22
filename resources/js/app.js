@@ -123,6 +123,8 @@ if (document.getElementById("app")) {
                 const self = this;
 
                 self.showFolder(folder);
+
+                self.detailsViewComponent = "details-folder";
             },
 
             /**
