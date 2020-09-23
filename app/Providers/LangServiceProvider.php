@@ -24,13 +24,15 @@ class LangServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $strings = '';
-        $langFile = resource_path(sprintf('lang/%s.json', config('app.locale')));
+        view()->composer('*', function($view) {
+            $strings = '';
+            $langFile = resource_path(sprintf('lang/%s.json', auth()->user()->lang));
 
-        if(file_exists($langFile)) {
-            $strings = json_decode(file_get_contents($langFile));
-        }
+            if(file_exists($langFile)) {
+                $strings = json_decode(file_get_contents($langFile));
+            }
 
-        View::share('langStrings', $strings);
+            View::share('langStrings', $strings);
+        });
     }
 }
