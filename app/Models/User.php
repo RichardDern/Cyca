@@ -5,8 +5,9 @@ namespace App\Models;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Contracts\Translation\HasLocalePreference;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable implements MustVerifyEmail, HasLocalePreference
 {
     use Notifiable;
 
@@ -91,5 +92,15 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getFlatTree() {
         return Folder::getFlatTreeFor($this);
+    }
+
+    /**
+     * Get the user's preferred locale.
+     *
+     * @return string
+     */
+    public function preferredLocale()
+    {
+        return $this->lang;
     }
 }

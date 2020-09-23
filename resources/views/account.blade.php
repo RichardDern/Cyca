@@ -33,6 +33,16 @@
                     {{ __('Awaiting e-mail address confirmation') }}</p>
             @endif
 
+            <label for="lang">
+                {{ __('Language') }}:
+            </label>
+
+            <select name="lang" id="lang">
+                @foreach(config('lang') as $code => $name)
+                <option value="{{ $code }}" {{ auth()->user()->lang === $code ? 'selected' : '' }}>{{ $name }}</option>
+                @endforeach
+            </select>
+
             <button type="submit" class="info p-2 mt-6">{{ __('Save') }}</button>
 
             @error('name')
