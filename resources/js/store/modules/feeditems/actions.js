@@ -1,5 +1,4 @@
 import { collect } from "collect.js";
-import feeditems from ".";
 
 /**
  * Feed items actions
@@ -73,66 +72,39 @@ export default {
     },
 
     /**
+     * Select first unread item in current list
+     */
+    selectFirstUnreadFeedItem({ getters, dispatch }, exclude) {
+        if(!exclude) {
+            exclude = [];
+        }
+
+        const nextFeedItem = collect(getters.feedItems).where('unread_feed_items_count', '>', 0).whereNotIn('id', exclude).first();
+
+        if (nextFeedItem) {
+            dispatch("selectFeedItems", [nextFeedItem]);
+        } else {
+            dispatch("selectFeedItems", []);
+            dispatch("documents/selectFirstDocumentWithUnreadItems", null, { root: true });
+        }
+    },
+
+    /**
      * Mark feed items as read
      */
-    //TODO: While this code seems to works, it probably could be simplified
-    async markAsRead({ dispatch, commit, getters, rootGetters }, data) {
+    async markAsRead({ dispatch, commit }, data) {
+        if ("feed_items" in data) {
+            dispatch("selectFirstUnreadFeedItem", data.feed_items);
+        } else if ("documents" in data) {
+            dispatch("documents/selectFirstDocumentWithUnreadItems", data.documents, { root: true });
+        }
+
         const response = await axios.post(
             route("feed_item.mark_as_read"),
             data
         );
 
         commit("folders/setFolders", response.data, { root: true });
-        dispatch("documents/index", null, { root: true });
-
-        if ("documents" in data) {
-            const nextDocument = collect(rootGetters["documents/documents"])
-                .whereNotIn("id", data.documents)
-                .first();
-
-            if (nextDocument) {
-                dispatch("documents/selectDocuments", [nextDocument], {
-                    root: true
-                }).then(function() {
-                    const nextFeedItem = collect(getters.feedItems).first();
-
-                    if (nextFeedItem) {
-                        dispatch("selectFeedItems", [nextFeedItem]);
-                    } else {
-                        dispatch("selectFeedItems", []);
-                    }
-                });
-            } else {
-                dispatch("documents/selectDocuments", [], { root: true });
-            }
-        } else if ("feed_items" in data) {
-            const nextFeedItem = collect(getters.feedItems)
-                .whereNotIn("id", data.feed_items)
-                .first();
-
-            if (nextFeedItem) {
-                dispatch("selectFeedItems", [nextFeedItem]);
-            } else {
-                const nextDocument = collect(
-                    rootGetters["documents/documents"]
-                ).first();
-
-                if (nextDocument) {
-                    dispatch("documents/selectDocuments", [nextDocument], {
-                        root: true
-                    }).then(function() {
-                        const nextFeedItem = collect(getters.feedItems).first();
-
-                        if (nextFeedItem) {
-                            dispatch("selectFeedItems", [nextFeedItem]);
-                        } else {
-                            dispatch("selectFeedItems", []);
-                        }
-                    });
-                } else {
-                    dispatch("documents/selectDocuments", [], { root: true });
-                }
-            }
-        }
+        await dispatch("documents/index", null, { root: true });
     }
 };

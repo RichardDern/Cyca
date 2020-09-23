@@ -27,10 +27,12 @@ if (document.getElementById("app")) {
             })
         },
         watch: {
-            selectedFolder: function(folder) {
+            selectedFolder: function(oldFolder, newFolder) {
                 const self = this;
 
-                self.detailsViewComponent = "details-folder";
+                if(oldFolder && newFolder && oldFolder.id !== newFolder.id) {
+                    self.detailsViewComponent = "details-folder";
+                }
             },
             selectedDocuments: function(documents) {
                 const self = this;

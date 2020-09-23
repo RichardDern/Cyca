@@ -54,6 +54,26 @@ export default {
     },
 
     /**
+     * Select first document containing unread feed items in currently displayed
+     * list
+     */
+    selectFirstDocumentWithUnreadItems({ getters, dispatch, rootGetters }, exclude) {
+        if(!exclude) {
+            exclude = collect(getters.selectedDocuments).pluck('id').all();
+        }
+
+        const document = collect(getters.documents).where('unread_feed_items_count', '>', 0).whereNotIn('id', exclude).first();
+
+        if(document) {
+            dispatch("selectDocuments", [document]);
+        } else {
+            if(rootGetters["folders/selectedFolder"].type === 'unread_feed_items') {
+                dispatch("selectDocuments", []);
+            }
+        }
+    },
+
+    /**
      * Remember documents being dragged
      */
     startDraggingDocuments({ commit }, documents) {
