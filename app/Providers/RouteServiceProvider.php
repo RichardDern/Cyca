@@ -30,10 +30,6 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if(config('app.force_https_urls')) {
-            resolve(\Illuminate\Routing\UrlGenerator::class)->forceScheme('https');
-        }
-
         parent::boot();
     }
 

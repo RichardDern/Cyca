@@ -47,22 +47,10 @@ class HomeController extends Controller
         $validated = $request->validated();
         $user      = $request->user();
 
-        $sendEmailVerificationLink = $user->email !== $validated['email'];
-
         $user->name  = $validated['name'];
         $user->email = $validated['email'];
 
-        if ($sendEmailVerificationLink) {
-            $user->email_verified_at = null;
-        }
-
         $user->save();
-
-        $user->fresh();
-
-        if($sendEmailVerificationLink) {
-            return redirect()->route('verification.notice');
-        }
 
         return redirect()->route('account');
     }

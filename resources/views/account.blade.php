@@ -2,7 +2,8 @@
 
 @section('content')
     <div class="w-full flex flex-col">
-        <form method="POST" class="w-full flex flex-col" action="{{ route('account.store') }}">
+        <form method="POST" class="w-full flex flex-col" action="user/profile-information">
+            @method('PUT')
             @csrf
 
             <label for="name">
@@ -41,13 +42,61 @@
             @enderror
         </form>
 
-        <a href="#" class="button info p-2 mt-12"
-            onclick="event.preventDefault(); document.getElementById('resend-verification-form').submit();">{{ __('Send email verification link') }}</a>
+        @if(!auth()->user()->hasVerifiedEmail())
+            <a href="#" class="button info p-2 mt-12"
+                onclick="event.preventDefault(); document.getElementById('resend-verification-form').submit();">{{ __('Send email verification link') }}</a>
 
-        <form id="resend-verification-form" method="POST" action="{{ route('verification.resend') }}" class="hidden">
+            <form id="resend-verification-form" method="POST" action="{{ route('verification.send') }}" class="hidden">
+                @csrf
+            </form>
+        @endif
+
+        <form method="POST" class="w-full flex flex-col mt-12" action="user/password">
+            @method('PUT')
             @csrf
-        </form>
 
-        <a href="{{ route('password.request') }}" class="button info p-2 mt-2">{{ __('Send Password Reset Link') }}</a>
+            <label for="current-password">
+                {{ __('Current password') }}:
+            </label>
+
+            <input id="current-password" type="password" class="@error('current_password') border-red-500 @enderror" name="current_password" required />
+
+            <label for="new-password">
+                {{ __('New password') }}:
+            </label>
+
+            <input id="new-password" type="password" class="@error('password') border-red-500 @enderror" name="password" required
+                autocomplete="new-password">
+
+            <label for="password-confirm">
+                {{ __('Confirm Password') }}:
+            </label>
+
+            <input id="password-confirm" type="password" class="" name="password_confirmation" required
+                autocomplete="new-password">
+
+            <button type="submit" class="info p-2 mt-6">
+                {{ __('Update password') }}
+            </button>
+
+            @if (session('status'))
+                <p class="text-sm text-green-500 mt-4"
+                    role="alert">
+                    {{ session('status') }}
+                </p>
+            @endif
+
+            @error('current_password')
+            <p class="text-red-500 text-xs italic mt-4">
+                {{ $message }}
+            </p>
+            @enderror
+
+            @error('password_confirmation')
+            <p class="text-red-500 text-xs italic mt-4">
+                {{ $message }}
+            </p>
+            @enderror
+        </form>
     </div>
 @endsection

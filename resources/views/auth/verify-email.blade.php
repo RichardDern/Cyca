@@ -10,28 +10,19 @@
             </div>
         @endif
 
-        <div class="flex flex-col break-words bg-white border-2 rounded shadow-md">
-            <div class="font-semibold bg-gray-200 text-gray-700 py-3 px-6 mb-0">
-                {{ __('Verify Your Email Address') }}
-            </div>
-
-            <div class="w-full flex flex-wrap p-6">
-                <p class="leading-normal">
+                <p class="leading-normal text-white">
                     {{ __('Before proceeding, please check your email for a verification link.') }}
                 </p>
 
-                <p class="leading-normal mt-6">
+                <p class="leading-normal mt-6 text-white">
                     {{ __('If you did not receive the email') }}, <a
                         class="text-blue-500 hover:text-blue-700 no-underline cursor-pointer"
                         onclick="event.preventDefault(); document.getElementById('resend-verification-form').submit();">{{ __('click here to request another') }}</a>.
                 </p>
 
-                <form id="resend-verification-form" method="POST" action="{{ route('verification.resend') }}"
+                <form id="resend-verification-form" method="POST" action="{{ route('verification.send') }}"
                     class="hidden">
                     @csrf
                 </form>
-            </div>
-
-        </div>
     </div>
 @endsection

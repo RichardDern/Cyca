@@ -1,14 +1,6 @@
 @extends('layouts.auth')
 
 @section('content')
-
-    @if (session('status'))
-        <div class="text-sm border border-t-8 rounded text-green-700 border-green-600 bg-green-100 px-3 py-4 mb-4"
-            role="alert">
-            {{ session('status') }}
-        </div>
-    @endif
-
     <form class="w-full flex flex-col" method="POST" action="{{ route('password.email') }}">
         @csrf
 
@@ -28,5 +20,12 @@
         <button type="submit" class="info p-2 mt-6">
             {{ __('Send Password Reset Link') }}
         </button>
+
+        @if (session('status'))
+            <p class="text-sm text-green-500 mt-4"
+                role="alert">
+                {{ session('status') }}
+            </p>
+        @endif
     </form>
 @endsection
