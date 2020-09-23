@@ -6,7 +6,7 @@
             </div>
             <div class="flex items-center">
                 <button
-                    v-if="details && details.unread_feed_items_count > 0"
+                    v-if="feedItem.unread_feed_items_count > 0"
                     class="button info"
                     v-on:click="onMarkAsReadClicked"
                 >
@@ -31,7 +31,7 @@
         </h1>
 
         <div class="body">
-            <div v-if="details" v-html="details.content ? details.content : details.description"></div>
+            <div v-html="feedItem.content ? feedItem.content : feedItem.description"></div>
 
             <dl class="details">
                 <dt>{{ __("URL") }}</dt>
@@ -70,14 +70,6 @@
 import { mapGetters, mapActions } from "vuex";
 
 export default {
-    data: function () {
-        return {
-            /**
-             * Feed item details, dynamically loaded
-             */
-            details: null,
-        };
-    },
     /**
      * Computed properties
      */
@@ -86,27 +78,13 @@ export default {
             feedItem: "feedItems/selectedFeedItem",
         }),
     },
-    mounted: function () {
-        const self = this;
-
-        self.loadDetails(self.feedItem);
-    },
-    /**
-     * Watchers
-     */
-    watch: {
-        feedItem: function (feedItem) {
-            const self = this;
-
-            self.loadDetails(feedItem);
-        },
-    },
     /**
      * Methods
      */
     methods: {
         ...mapActions({
             loadFolders: "folders/loadFolders",
+            loadFeedItemDetails: "feedItems/loadDetails"
         }),
 
         /**
@@ -120,22 +98,6 @@ export default {
             });
         },
 
-        /**
-         * Load all details about specified feed item
-         */
-        loadDetails: function (feedItem) {
-            const self = this;
-
-            if (!feedItem) {
-                return;
-            }
-
-            axios
-                .get(route("feed_item.show", feedItem))
-                .then(function (response) {
-                    self.details = response.data;
-                });
-        },
         /**
          * Share button clicked
          */

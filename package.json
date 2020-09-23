@@ -13,7 +13,6 @@
         "@tailwindcss/typography": "^0.2",
         "@tailwindcss/ui": "^0.4",
         "autoprefixer": "^9.6",
-        "axios": "^0.20.0",
         "collect.js": "^4.28.2",
         "cross-env": "^7.0",
         "laravel-echo": "^1.8.1",
@@ -30,7 +29,6 @@
         "vuex": "^3.5.1"
     },
     "dependencies": {
-        "share-api-polyfill": "^1.0.18",
         "socket.io-client": "^2.3.0"
     }
 }

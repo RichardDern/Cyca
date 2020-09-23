@@ -7,6 +7,7 @@ export default {
     setFeedItems(state, feedItems) {
         state.feedItems = feedItems;
     },
+
     /**
      * Set next page #
      * @param {*} state
@@ -15,6 +16,7 @@ export default {
     setNextPage(state, page) {
         state.nextPage = page;
     },
+
     /**
      * Set feeds associated to current feed items
      * @param {*} state
@@ -23,6 +25,7 @@ export default {
     setFeeds(state, feeds) {
         state.feeds = feeds;
     },
+
     /**
      * Set selected feed items
      * @param {*} state
@@ -34,5 +37,17 @@ export default {
         }
 
         state.selectedFeedItems = feedItems;
-    }
+    },
+
+    /**
+     * Update feed item's properties
+     * @param {*} state
+     * @param {*} param1
+     */
+    update(state, {feedItem, newProperties}) {
+        for(var property in newProperties) {
+            feedItem[property] = newProperties[property];
+        }
+        console.log(feedItem);
+    },
 };

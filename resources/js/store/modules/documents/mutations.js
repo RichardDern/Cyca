@@ -39,4 +39,8 @@ export default {
             document[property] = newProperties[property];
         }
     },
+
+    ignoreFeed(state, {feed, ignored}) {
+        feed.is_ignored = ignored;
+    }
 }

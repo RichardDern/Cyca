@@ -7,8 +7,7 @@ export default {
      */
     async index({ commit, dispatch, getters }, documents) {
         if (!documents) {
-            const response = await axios.get(route("document.index"));
-            documents = response.data;
+            documents = await apiGet(route("document.index"));
         }
 
         commit("setDocuments", documents);
@@ -28,12 +27,12 @@ export default {
      * Store a newly created resource in storage.
      */
     async store({ dispatch }, { url, folder_id }) {
-        const response = await axios.post(route("document.store"), {
+        const data = await apiPost(route("document.store"), {
             url: url,
             folder_id: folder_id
         });
 
-        dispatch("index", response.data);
+        dispatch("index", data);
     },
 
     /**
@@ -100,8 +99,7 @@ export default {
             return;
         }
 
-        await axios
-            .post(
+        const data = await apiPost(
                 route("document.move", {
                     sourceFolder: sourceFolder,
                     targetFolder: targetFolder
@@ -111,19 +109,18 @@ export default {
                         .pluck("id")
                         .all()
                 }
-            )
-            .then(function(response) {
-                commit("setDraggedDocuments", []);
-                commit("setSelectedDocuments", []);
-                dispatch("feedItems/index", getters.feeds, { root: true });
-            });
+            );
+
+        commit("setDraggedDocuments", []);
+        commit("setSelectedDocuments", []);
+        dispatch("feedItems/index", getters.feeds, { root: true });
     },
 
     /**
      * Increment visits for specified document
      */
     async incrementVisits({ commit }, { document, folder }) {
-        const response = await axios.post(
+        const response = await apiPost(
             route("document.visit", { document: document, folder: folder })
         );
 
@@ -148,7 +145,7 @@ export default {
     async destroy({ commit, getters, dispatch }, { folder, documents }) {
         commit("setSelectedDocuments", []);
 
-        const response = await axios.post(
+        const response = await apiPost(
             route("document.destroy_bookmarks", folder),
             {
                 documents: collect(documents)
@@ -173,5 +170,15 @@ export default {
         }
 
         commit("update", { document: document, newProperties: newProperties });
+    },
+
+    followFeed({commit}, feed) {
+        apiPost(route("feed.follow", feed.id));
+        commit("ignoreFeed", {feed: feed, ignored: false});
+    },
+
+    ignoreFeed({commit}, feed) {
+        apiPost(route("feed.ignore", feed.id));
+        commit("ignoreFeed", {feed: feed, ignored: true});
     }
 };

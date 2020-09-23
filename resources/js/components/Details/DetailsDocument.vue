@@ -174,6 +174,8 @@ export default {
         ...mapActions({
             incrementVisits: "documents/incrementVisits",
             openDocument: "documents/openDocument",
+            ignoreFeed: "documents/ignoreFeed",
+            followFeed: "documents/followFeed"
         }),
 
         /**
@@ -221,18 +223,18 @@ export default {
          * Follow specified feed
          */
         follow: function (feed) {
-            axios.post(route("feed.follow", feed.id)).then(function (response) {
-                feed.is_ignored = false;
-            });
+            const self = this;
+
+            self.followFeed(feed);
         },
 
         /**
          * Ignore specified feed
          */
         ignore: function (feed) {
-            axios.post(route("feed.ignore", feed.id)).then(function (response) {
-                feed.is_ignored = true;
-            });
+            const self = this;
+
+            self.ignoreFeed(feed);
         },
     },
 };
