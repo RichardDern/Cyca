@@ -120,13 +120,13 @@ export default {
      * Increment visits for specified document
      */
     async incrementVisits({ commit }, { document, folder }) {
-        const response = await apiPost(
+        const data = await apiPost(
             route("document.visit", { document: document, folder: folder })
         );
 
         commit("update", {
             document: document,
-            newProperties: response.data
+            newProperties: data
         });
     },
 
@@ -145,7 +145,7 @@ export default {
     async destroy({ commit, getters, dispatch }, { folder, documents }) {
         commit("setSelectedDocuments", []);
 
-        const response = await apiPost(
+        const data = await apiPost(
             route("document.destroy_bookmarks", folder),
             {
                 documents: collect(documents)
@@ -155,7 +155,7 @@ export default {
         );
 
         dispatch("folders/index", null, { root: true });
-        dispatch("index", response.data);
+        dispatch("index", data);
         dispatch("feedItems/index", getters.feeds, { root: true });
     },
 

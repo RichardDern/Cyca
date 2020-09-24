@@ -42,33 +42,33 @@ export default {
      */
     async store({ getters, commit }, { title, parent_id }) {
         const parentFolder = getters.folders.find(f => f.id === parent_id);
-        const response = await apiPost(route("folder.store"), {
+        const data = await apiPost(route("folder.store"), {
             title,
             parent_id
         });
 
-        commit("setFolders", response.data);
+        commit("setFolders", data);
     },
 
     /**
      * Update the specified resource in storage.
      */
     async update({ commit }, { folder, newProperties }) {
-        const response = await apiPut(
+        const data = await apiPut(
             route("folder.update", folder),
             newProperties
         );
 
-        commit("update", { folder: folder, newProperties: response.data });
+        commit("update", { folder: folder, newProperties: data });
     },
 
     /**
      * Remove the specified resource from storage.
      */
     async destroy({ commit }, folder) {
-        const response = await apiDelete(route("folder.destroy", folder));
+        const data = await apiDelete(route("folder.destroy", folder));
 
-        commit("setFolders", response.data);
+        commit("setFolders", data);
     },
 
     /**
