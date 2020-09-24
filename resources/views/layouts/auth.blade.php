@@ -10,6 +10,8 @@
     <title>{{ config('app.name', 'Cyca') }}</title>
 
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+
+    <link rel="shortcut icon" href="{{ asset('images/favicon.png') }}" />
 </head>
 
 <body class="bg-gray-700 h-screen antialiased leading-none">

@@ -19,6 +19,8 @@
     <script src="{{ asset('js/app.js') }}" defer></script>
 
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+
+    <link rel="shortcut icon" href="{{ asset('images/favicon.png') }}" />
 </head>
 
 <body class="bg-gray-900 h-screen antialiased leading-none">
