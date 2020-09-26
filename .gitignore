@@ -15,3 +15,5 @@ ROADMAP.md
 CHANGELOG.md
 ISSUES.md
 ._.DS_Store
+docker-compose.yml
+resources/docker
