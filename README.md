@@ -51,7 +51,7 @@ most comfortable with.
 ### Via Docker
 
 Please read docker specific documentation from 
-[Cyca's docker repository](https://hub.docker.com/r/richarddern/cyca).
+[Cyca's docker repository](https://github.com/RichardDern/cyca_docker_compose).
 
 ### Manually
 
