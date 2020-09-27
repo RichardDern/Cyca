@@ -5,7 +5,7 @@
 window._ = require('lodash');
 window.Vue = require('vue');
 window.collect = require('collect.js');
-window.io = require('socket.io-client');
+window.Pusher = require('pusher-js');
 
 import Echo from "laravel-echo"
 
@@ -86,8 +86,12 @@ window.apiDelete = async (url, params) => {
  */
 
 window.Echo = new Echo({
-    broadcaster: 'socket.io',
-    host: window.location.hostname
+    broadcaster: 'pusher',
+    key: 'cyca',
+    wsHost: window.location.hostname,
+    wsPort: 6001,
+    forceTLS: false,
+    disableStats: true,
 });
 
 /**

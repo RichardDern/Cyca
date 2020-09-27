@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.3.0",
+        "beyondcode/laravel-websockets": "^1.8",
         "doctrine/dbal": "^2.10",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^2.0",
@@ -21,6 +22,7 @@
         "league/uri": "^6.3",
         "lordelph/icofileloader": "^2.0",
         "neitanod/forceutf8": "^2.0",
+        "pusher/pusher-php-server": "~3.0",
         "simplepie/simplepie": "^1.5",
         "tightenco/ziggy": "^0.9.4"
     },

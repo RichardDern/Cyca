@@ -1,8 +1,9 @@
 /*!
- * The buffer module from node.js, for the browser.
+ * Pusher JavaScript Library v7.0.0
+ * https://pusher.com/
  *
- * @author   Feross Aboukhadijeh <http://feross.org>
- * @license  MIT
+ * Copyright 2020, Pusher
+ * Released under the MIT licence.
  */
 
 /*!
@@ -16,8 +17,6 @@
  * (c) 2020 Evan You
  * @license MIT
  */
-
-/*! https://mths.be/utf8js v2.1.2 by @mathias */
 
 /**
  * @license
