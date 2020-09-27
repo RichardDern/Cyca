@@ -14,8 +14,6 @@
         const lang = @json($langStrings);
     </script>
 
-    @routes
-
     <script src="{{ asset('js/app.js') }}" defer></script>
 
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">

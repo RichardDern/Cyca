@@ -8,6 +8,11 @@ window.collect = require('collect.js');
 window.Pusher = require('pusher-js');
 
 import Echo from "laravel-echo"
+import route from 'ziggy';
+import { Ziggy } from './routes';
+
+window.route = route;
+window.Ziggy = Ziggy;
 
 /**
  * Preparing fetch
