@@ -7,6 +7,7 @@ return [
         'document.index',
         'document.move',
         'document.store',
+        'document.show',
         'document.visit',
         'feed.follow',
         'feed.ignore',

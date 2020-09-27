@@ -43,27 +43,6 @@ class FeedItemController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param  \App\Models\FeedItem  $feedItem
@@ -76,40 +55,6 @@ class FeedItemController extends Controller
         }]);
 
         return $feedItem;
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\FeedItem  $feedItem
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(FeedItem $feedItem)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\FeedItem  $feedItem
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, FeedItem $feedItem)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\FeedItem  $feedItem
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(FeedItem $feedItem)
-    {
-        //
     }
 
     /**

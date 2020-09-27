@@ -20,10 +20,24 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/feed/{feed}/ignore', 'FeedController@ignore')->name('feed.ignore');
         Route::post('/feed/{feed}/follow', 'FeedController@follow')->name('feed.follow');
 
-        Route::resources([
-            'folder'   => 'FolderController',
-            'document' => 'DocumentController',
-            'feed_item' => 'FeedItemController'
+        Route::resource('folder', 'FolderController')->only([
+            'destroy',
+            'index',
+            'store',
+            'show',
+            'update'
+        ]);
+
+        Route::resource('document' , 'DocumentController')->only([
+            'index',
+            'show',
+            'store',
+            'visit'
+        ]);
+
+        Route::resource('feed_item',  'FeedItemController')->only([
+            'index',
+            'show'
         ]);
     });
 });

@@ -25,16 +25,6 @@ class FolderController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create(Request $request)
-    {
-        abort(404);
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \App\Http\Requests\Folder\StoreRequest  $request
@@ -73,17 +63,6 @@ class FolderController extends Controller
         $folder->save();
 
         return $folder->listDocuments();
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Folder  $folder
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Request $request, Folder $folder)
-    {
-        abort(404);
     }
 
     /**
