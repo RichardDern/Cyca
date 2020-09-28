@@ -7,7 +7,7 @@ export default {
      */
     async index({ commit, dispatch, getters }, documents) {
         if (!documents) {
-            documents = await apiGet(route("document.index"));
+            documents = await api.get(route("document.index"));
         }
 
         commit("setDocuments", documents);
@@ -27,7 +27,7 @@ export default {
      * Store a newly created resource in storage.
      */
     async store({ dispatch }, { url, folder_id }) {
-        const data = await apiPost(route("document.store"), {
+        const data = await api.post(route("document.store"), {
             url: url,
             folder_id: folder_id
         });
@@ -99,7 +99,7 @@ export default {
             return;
         }
 
-        const data = await apiPost(
+        const data = await api.post(
                 route("document.move", {
                     sourceFolder: sourceFolder,
                     targetFolder: targetFolder
@@ -120,7 +120,7 @@ export default {
      * Increment visits for specified document
      */
     async incrementVisits({ commit }, { document, folder }) {
-        const data = await apiPost(
+        const data = await api.post(
             route("document.visit", { document: document, folder: folder })
         );
 
@@ -145,7 +145,7 @@ export default {
     async destroy({ commit, getters, dispatch }, { folder, documents }) {
         commit("setSelectedDocuments", []);
 
-        const data = await apiPost(
+        const data = await api.post(
             route("document.destroy_bookmarks", folder),
             {
                 documents: collect(documents)
@@ -173,12 +173,12 @@ export default {
     },
 
     followFeed({commit}, feed) {
-        apiPost(route("feed.follow", feed.id));
+        api.post(route("feed.follow", feed.id));
         commit("ignoreFeed", {feed: feed, ignored: false});
     },
 
     ignoreFeed({commit}, feed) {
-        apiPost(route("feed.ignore", feed.id));
+        api.post(route("feed.ignore", feed.id));
         commit("ignoreFeed", {feed: feed, ignored: true});
     }
 };

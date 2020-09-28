@@ -10,81 +10,11 @@ window.Pusher = require('pusher-js');
 import Echo from "laravel-echo"
 import route from 'ziggy';
 import { Ziggy } from './routes';
+import api from './api';
 
 window.route = route;
 window.Ziggy = Ziggy;
-
-/**
- * Preparing fetch
- */
-
-var defaultFetchHeaders = {
-    'Content-Type': 'application/json',
-    'X-Requested-With': 'XMLHttpRequest',
-    'X-CSRF-TOKEN' : document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-};
-
-/**
- * Sent a GET request
- * @param {*} url
- */
-window.apiGet = async (url) => {
-    const response = await fetch(url, {
-        headers: defaultFetchHeaders
-    });
-
-    const json = await response.json();
-
-    return json;
-};
-
-/**
- * Sent a generic request
- * @param {*} url
- */
-window.apiSend = async(url, params, method = 'POST') => {
-    let options = {
-        method: method,
-        headers: defaultFetchHeaders
-    };
-
-    if(params) {
-        options['body'] = JSON.stringify(params);
-    }
-
-    const response = await fetch(url, options);
-
-    try {
-        const json = await response.json();
-        return json;
-    } catch {
-        return response;
-    }
-}
-
-/**
- * Sent a POST request
- * @param {*} url
- */
-window.apiPost = async (url, params) => {
-    return await apiSend(url, params, 'POST');
-};
-
-/**
- * Sent a PUT request
- * @param {*} url
- */
-window.apiPut = async (url, params) => {
-    return await apiSend(url, params, 'PUT');
-};
-
-/**
- * Sent a DELETE request
- * @param {*} url
- */
-window.apiDelete = async (url, params) => {
-    return await apiSend(url, params, 'DELETE');
-};
+window.api = api;
 
 /**
  * Laravel Echo

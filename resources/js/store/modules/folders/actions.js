@@ -12,7 +12,7 @@ export default {
      * Display a listing of the resource.
      */
     async index({ commit }) {
-        const data = await apiGet(route("folder.index"));
+        const data = await api.get(route("folder.index"));
 
         commit("setFolders", data);
     },
@@ -32,7 +32,7 @@ export default {
             dispatch("documents/selectDocuments", [], { root: true });
         }
 
-        const documents = await apiGet(route("folder.show", folder));
+        const documents = await api.get(route("folder.show", folder));
 
         dispatch("documents/index", documents, { root: true });
     },
@@ -42,7 +42,7 @@ export default {
      */
     async store({ getters, commit }, { title, parent_id }) {
         const parentFolder = getters.folders.find(f => f.id === parent_id);
-        const data = await apiPost(route("folder.store"), {
+        const data = await api.post(route("folder.store"), {
             title,
             parent_id
         });
@@ -54,7 +54,7 @@ export default {
      * Update the specified resource in storage.
      */
     async update({ commit }, { folder, newProperties }) {
-        const data = await apiPut(
+        const data = await api.put(
             route("folder.update", folder),
             newProperties
         );
@@ -66,7 +66,7 @@ export default {
      * Remove the specified resource from storage.
      */
     async destroy({ commit }, folder) {
-        const data = await apiDelete(route("folder.destroy", folder));
+        const data = await api.delete(route("folder.destroy", folder));
 
         commit("setFolders", data);
     },

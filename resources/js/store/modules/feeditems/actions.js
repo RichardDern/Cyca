@@ -18,7 +18,7 @@ export default {
         let feedItems = [];
 
         if (feeds.length > 0) {
-            const data = await apiGet(
+            const data = await api.get(
                 route("feed_item.index", {
                     feeds: feeds
                 })
@@ -42,7 +42,7 @@ export default {
         }
 
         const items = getters.feedItems;
-        const data = await apiGet(
+        const data = await api.get(
             route("feed_item.index", {
                 page: getters.nextPage,
                 feeds: getters.feeds
@@ -65,7 +65,7 @@ export default {
      */
     async selectFeedItems({ commit }, feedItems) {
         if (feedItems.length === 1) {
-            const data = await apiGet(route("feed_item.show", feedItems[0]));
+            const data = await api.get(route("feed_item.show", feedItems[0]));
             commit("update", { feedItem: feedItems[0], newProperties: data });
         }
 
@@ -109,7 +109,7 @@ export default {
             );
         }
 
-        const response = await apiPost(route("feed_item.mark_as_read"), data);
+        const response = await api.post(route("feed_item.mark_as_read"), data);
 
         commit("folders/setFolders", response, { root: true });
         await dispatch("documents/index", null, { root: true });
