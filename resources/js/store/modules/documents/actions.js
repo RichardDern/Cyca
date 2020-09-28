@@ -66,7 +66,7 @@ export default {
         if(document) {
             dispatch("selectDocuments", [document]);
         } else {
-            if(rootGetters["folders/selectedFolder"].type === 'unread_feed_items') {
+            if(rootGetters["folders/selectedFolder"].type === 'unread_items') {
                 dispatch("selectDocuments", []);
             }
         }
