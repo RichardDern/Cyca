@@ -85,6 +85,10 @@ VOLUME /app
 
 COPY resources/container/entrypoint.sh /usr/local/bin
 
+RUN set -ex; \
+        \
+        chmod +x /usr/local/bin/entrypoint.sh
+
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
 CMD ["php-fpm"]
