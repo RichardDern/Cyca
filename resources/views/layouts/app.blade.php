@@ -7,6 +7,7 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="user-id" content="{{ auth()->user()->id }}">
+    <meta name="theme" content="{{ auth()->user()->theme }}">
 
     <title>{{ config('app.name', 'Cyca') }}</title>
 

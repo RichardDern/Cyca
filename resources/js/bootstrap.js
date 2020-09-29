@@ -43,6 +43,18 @@ Vue.mixin({
          */
         route: (name, params, absolute) => route(name, params, absolute, Ziggy),
         /**
+         * Return url to an icon
+         */
+        icon: (name) => {
+            const theme = document
+            .querySelector('meta[name="theme"]')
+            .getAttribute("content")
+
+            const url = '/themes/' + theme + '/images/icons.svg#' + name;
+
+            return url;
+        },
+        /**
          * Translate specified string
          * @param {*} langString
          */

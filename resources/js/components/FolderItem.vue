@@ -20,7 +20,7 @@
                     v-on:click.capture.stop="toggleExpanded(folder)"
                     v-if="folder.type === 'folder' && folder.children_count > 0"
                 >
-                    <use v-bind:xlink:href="'/images/icons.svg#' + expanderIcon" />
+                    <use v-bind:xlink:href="icon(expanderIcon)" />
                 </svg>
             </span>
             <svg
@@ -30,7 +30,7 @@
                 class="favicon"
                 v-bind:class="folder.iconColor"
             >
-                <use v-bind:xlink:href="'/images/icons.svg#' + folder.icon" />
+                <use v-bind:xlink:href="icon(folder.icon)" />
             </svg>
             <div class="truncate flex-grow py-0.5">{{ folder.title }}</div>
         </div>

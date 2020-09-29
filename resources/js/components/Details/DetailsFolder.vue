@@ -9,7 +9,7 @@
                     class="mr-1"
                     v-bind:class="folder.iconColor"
                 >
-                    <use v-bind:xlink:href="'/images/icons.svg#' + folder.icon" />
+                    <use v-bind:xlink:href="icon(folder.icon)" />
                 </svg>
                 <span>{{ folder.title }}</span>
                 <div
@@ -23,7 +23,7 @@
                 v-on:click="onMarkAsReadClicked"
             >
                 <svg fill="currentColor" width="16" height="16" class="mr-1">
-                    <use xlink:href="/images/icons.svg#unread_items" />
+                    <use v-bind:xlink:href="icon('unread_items')" />
                 </svg>
                 {{ __("Mark as read") }}
             </button>
@@ -44,7 +44,7 @@
                     />
                     <button type="submit" class="success ml-2">
                         <svg fill="currentColor" width="16" height="16" class="mr-1">
-                            <use xlink:href="/images/icons.svg#update" />
+                            <use v-bind:xlink:href="icon('update')" />
                         </svg>
                         {{ __("Update folder") }}
                     </button>
@@ -60,7 +60,7 @@
                     <input type="text" v-model="addFolderTitle" />
                     <button type="submit" class="success ml-2">
                         <svg fill="currentColor" width="16" height="16" class="mr-1">
-                            <use xlink:href="/images/icons.svg#add" />
+                            <use v-bind:xlink:href="icon('add')" />
                         </svg>
                         {{ __("Add folder") }}
                     </button>
@@ -76,7 +76,7 @@
                     <input type="url" v-model="addDocumentUrl" />
                     <button type="submit" class="success ml-2">
                         <svg fill="currentColor" width="16" height="16" class="mr-1">
-                            <use xlink:href="/images/icons.svg#add" />
+                            <use v-bind:xlink:href="icon('add')" />
                         </svg>
                         {{ __("Add document") }}
                     </button>
@@ -86,7 +86,7 @@
             <div class="mt-6" v-if="folder.type === 'folder'">
                 <button class="danger" v-on:click="onDeleteFolder">
                     <svg fill="currentColor" width="16" height="16" class="mr-1">
-                        <use xlink:href="/images/icons.svg#trash" />
+                        <use v-bind:xlink:href="icon('trash')" />
                     </svg>
                     {{ __("Delete") }}
                 </button>

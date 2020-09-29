@@ -9,13 +9,13 @@
                     v-on:click="onMarkAsReadClicked"
                 >
                     <svg fill="currentColor" width="16" height="16" class="mr-1">
-                        <use xlink:href="/images/icons.svg#unread_items" />
+                        <use v-bind:xlink:href="icon('unread_items')" />
                     </svg>
                     {{ __("Mark as read") }}
                 </button>
                 <button class="info ml-2" v-on:click.left.stop.prevent="onOpenClicked">
                     <svg fill="currentColor" width="16" height="16" class="mr-1">
-                        <use xlink:href="/images/icons.svg#open" />
+                        <use v-bind:xlink:href="icon('open')" />
                     </svg>
                     {{ __("Open") }}
                 </button>
@@ -33,7 +33,7 @@
             <div class="mt-6">
                 <button class="danger" v-on:click="onDeleteDocument">
                     <svg fill="currentColor" width="16" height="16" class="mr-1">
-                        <use xlink:href="/images/icons.svg#trash" />
+                        <use v-bind:xlink:href="icon('trash')" />
                     </svg>
                     {{ __("Delete") }}
                 </button>
