@@ -1,6 +1,6 @@
 # Cyca
 
-![](https://static.getcyca.com/getcyca.com/screenshots/cyca-0.2.0.png)
+![](https://static.getcyca.com/getcyca.com/screenshots/cyca-0.3.png)
 
 ## About
 
