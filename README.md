@@ -105,9 +105,9 @@ Generate an application key (you can read [Laravel's installation page](https://
 And modify the ```.env``` file to suit your needs. Be sure to set ```APP_URL```
 to the URL Cyca will be reached.
 
-Other important settings are ```LARAVEL_ECHO_SERVER_REDIS_HOST```, 
-```DB_CONNECTION``` and ```REDIS_HOST``` which must be set to serving hostname 
-(```localhost``` if you run everything on the same server).
+Other important settings are ```DB_CONNECTION``` and ```REDIS_HOST``` which must 
+be set to serving hostname (```localhost``` if you run everything on the same 
+server).
 
 Everything else should have sensible defaults. You can also walk through the
 ```/config``` directory to customize your installation further, but defaults
@@ -120,7 +120,8 @@ before you copy them in the ```/etc/supervisor.d/conf``` directory, especially
 the paths to Cyca's directory.
 
 You can get more informations about installing and using Supervisor from 
-[Laravel Horizon documentation](https://laravel.com/docs/8.x/horizon#deploying-horizon), Horizon being Cyca's queue manager.
+[Laravel Horizon documentation](https://laravel.com/docs/8.x/horizon#deploying-horizon), 
+Horizon being Cyca's queue manager.
 
 You should be now ready to point your browser to Cyca's URL and create your
 first user !
