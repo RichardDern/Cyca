@@ -169,7 +169,7 @@ return [
             'supervisor-1' => [
                 'connection' => 'redis',
                 'queue' => ['notifications', 'default'],
-                'balance' => 'auto',
+                'balance' => false,
                 'processes' => 8,
                 'tries' => 1,
                 'nice' => 0,
@@ -180,7 +180,7 @@ return [
             'supervisor-1' => [
                 'connection' => 'redis',
                 'queue' => ['notifications', 'default'],
-                'balance' => 'auto',
+                'balance' => false,
                 'processes' => 8,
                 'tries' => 1,
                 'nice' => 0,
