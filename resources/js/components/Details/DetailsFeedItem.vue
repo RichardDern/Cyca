@@ -33,11 +33,10 @@
         <div class="body">
             <div v-html="feedItem.content ? feedItem.content : feedItem.description"></div>
 
-            <dl class="details">
+            <dl>
                 <dt>{{ __("URL") }}</dt>
                 <dd>
                     <a
-                        class="url"
                         v-bind:href="feedItem.url"
                         rel="noopener noreferrer"
                     >{{ feedItem.url }}</a>

@@ -1,0 +1,48 @@
+/* -------------------------------------------------------------------------- */
+/* ----| Definition list |--------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+
+/* Main wrapper */
+dl {
+    @apply mt-6 rounded grid grid-cols-3 gap-1 text-sm;
+
+    color: theme("colors.dl.text");
+}
+
+/* Definition term */
+dl dt {
+    @apply truncate p-2;
+
+    background-color: theme("colors.dt.bg");
+}
+
+/* Definition */
+dl dd {
+    @apply col-span-2 p-2;
+
+    background-color: theme("colors.dd.bg");
+}
+
+/*
+The following classes are used to add rounded corners in a definition list
+*/
+
+/* Top-left */
+dl dt:first-of-type {
+    @apply rounded-tl;
+}
+
+/* Bottom-left */
+dl dt:last-of-type {
+    @apply rounded-bl;
+}
+
+/* Top-right */
+dl dd:first-of-type {
+    @apply rounded-tr;
+}
+
+/* Bottom right */
+dl dd:last-of-type {
+    @apply rounded-br;
+}

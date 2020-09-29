@@ -1,8 +1,12 @@
+/* -------------------------------------------------------------------------- */
+/* ----| Scrollbars |-------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+
 /* The emerging W3C standard
    that is currently Firefox-only */
-   * {
+* {
     scrollbar-width: thin;
-    scrollbar-color: transparent theme("colors.gray.300");
+    scrollbar-color: transparent theme("colors.scrollbar");
 }
 
 /* Works on Chrome/Edge/Safari */
@@ -13,7 +17,7 @@
     background: transparent;
 }
 *::-webkit-scrollbar-thumb {
-    background-color: theme("colors.gray.300");
+    background-color: theme("colors.scrollbar");
     border-radius: 20px;
     border: 0;
 }

@@ -43,6 +43,16 @@
                 @endforeach
             </select>
 
+            <label for="theme">
+                {{ __('Theme') }}:
+            </label>
+
+            <select name="theme" id="theme">
+                @foreach($themes as $theme)
+                <option value="{{ $theme }}" {{ auth()->user()->theme === $theme ? 'selected' : '' }}>{{ $theme }}</option>
+                @endforeach
+            </select>
+
             <button type="submit" class="info p-2 mt-6">{{ __('Save') }}</button>
 
             @error('name')

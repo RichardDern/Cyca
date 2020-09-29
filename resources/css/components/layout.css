@@ -1,0 +1,55 @@
+/* -------------------------------------------------------------------------- */
+/* ----| Layout elements |--------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+
+/* Folders tree - the left panel */
+#folders-tree {
+    @apply w-2/12 h-screen overflow-auto;
+
+    background-color: theme("colors.folders-tree");
+}
+
+/* Documents list - the middle panel */
+#documents-list {
+    @apply w-3/12 h-screen overflow-auto;
+
+    background-color: theme("colors.documents-list");
+}
+
+/* Right panel */
+#right-panel {
+    @apply w-7/12 h-screen flex flex-col;
+}
+
+/* Feed items list - top right panel */
+#feeditems-list {
+    @apply h-4/12 overflow-auto;
+
+    background-color: theme("colors.feeditems-list");
+}
+
+/* Details panel - bottom right panel */
+#details-view {
+    @apply h-8/12 overflow-auto;
+
+    background-color: theme("colors.details-view");
+}
+
+/* Left part of account-related pages */
+#account-menu {
+    @apply h-screen w-1/3 pr-6 flex items-center text-right;
+
+    background-color: theme("colors.account.menu.bg");
+}
+
+/* Right part of account-related pages */
+#account-content {
+    @apply h-screen flex items-center pl-6 w-2/3;
+
+    background-color: theme("colors.account.content.bg");
+}
+
+/* Right part of account-related pages - Wrapper */
+#account-content-wrapper {
+    @apply w-1/4;
+}

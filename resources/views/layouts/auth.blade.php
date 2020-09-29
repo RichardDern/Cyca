@@ -1,3 +1,9 @@
+@section('menu')
+<a href="{{ route('login') }}" class="{{ url()->current() === route('login') ? 'selected' : '' }}">{{ __('Login') }}</a>
+<a href="{{ route('register') }}" class="{{ url()->current() === route('register') ? 'selected' : '' }}">{{ __('Register') }}</a>
+<a href="{{ route('password.request') }}" class="{{ url()->current() === route('password.request') ? 'selected' : '' }}">{{ __('Password lost') }}</a>
+@endsection
+
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -9,29 +15,33 @@
 
     <title>{{ config('app.name', 'Cyca') }}</title>
 
-    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+    @auth
+        <link href="{{ mix(sprintf('themes/%s.css', auth()->user()->theme)) }}" rel="stylesheet">
+    @else
+        <link href="{{ mix(sprintf('themes/%s.css', config('app.theme'))) }}" rel="stylesheet">
+    @endauth
 
     <link rel="shortcut icon" href="{{ asset('images/favicon.png') }}" />
 </head>
 
-<body class="bg-gray-700 h-screen antialiased leading-none">
-    <div class="flex h-screen">
-        <div class="h-screen bg-gray-800 w-1/3 pr-6 flex items-center text-right">
+<body>
+    <main>
+        <div id="account-menu">
             <div class="w-full">
                 <h1 class="text-white tracking-wide text-4xl">
                     {{ config('app.name') }}
                 </h1>
-                <div class="mt-12 flex items-stretch flex-col">
-                    <a href="{{ route('login') }}" class="text-{{ url()->current() === route('login') ? 'blue-500' : 'gray-300' }} py-2">{{ __('Login') }}</a>
-                    <a href="{{ route('register') }}" class="text-{{ url()->current() === route('register') ? 'blue-500' : 'gray-300' }} py-2">{{ __('Register') }}</a>
-                    <a href="{{ route('password.request') }}" class="text-{{ url()->current() === route('password.request') ? 'blue-500' : 'gray-300' }} py-2">{{ __('Password lost') }}</a>
+                <div id="account-menu-items">
+                    @yield('menu')
                 </div>
             </div>
         </div>
-        <div class="w-1/4 h-screen flex items-center pl-6">
-            @yield('content')
+        <div id="account-content">
+            <div id="account-content-wrapper">
+                @yield('content')
+            </div>
         </div>
-    </div>
+    </main>
 </body>
 
 </html>

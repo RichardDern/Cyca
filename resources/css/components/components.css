@@ -1,119 +1,39 @@
-#folders-tree {
-    @apply h-screen w-2/12 bg-gray-800 overflow-auto;
-}
+/* -------------------------------------------------------------------------- */
+/* ----| Components |-------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 
-#documents-list {
-    @apply h-screen w-3/12 bg-gray-700 overflow-auto;
-}
+@import "layout.css";
+@import "list-items.css";
+@import "badge.css";
+@import "folders.css";
 
-#right-panel {
-    @apply flex h-screen w-7/12 flex-col;
-}
-
-#feeditems-list {
-    @apply h-4/12 bg-gray-600 overflow-auto;
-}
-
-#details-view {
-    @apply h-8/12 bg-gray-500 overflow-auto;
-}
-
-.list-item {
-    @apply text-white text-sm p-1 w-full flex items-center justify-between rounded-none text-left;
-}
-
-.list-item-label {
-    @apply flex flex-grow items-center pl-1 truncate;
-}
-
-.list-item:hover,
-.list-item.selected {
-    @apply bg-gray-400;
-}
-
-.list-item.dragged-over {
-    @apply bg-green-900;
-}
-
-.list-item.dragged-over.cannot-drop {
-    @apply bg-red-900 cursor-not-allowed;
-}
-
-.feed-item {
-    @apply text-white px-2 py-1 w-full rounded-none text-left block;
-}
-
-.feed-item:hover,
-.feed-item.selected {
-    @apply bg-gray-400;
-}
-
-.feed-item.read {
-    @apply text-gray-100;
-}
-
-.feed-item-label {
-    @apply leading-normal text-justify tracking-wide;
-}
-
-.feed-item-meta {
-    @apply text-xs flex items-center text-cool-gray-500 mt-1;
-}
-
+/* Caret - icon used to expand/collapse elements */
 .caret {
-    @apply block mr-1 text-gray-100 flex-none;
+    @apply block mr-1 flex-none w-4 h-4;
 
-    width: 1em;
-    height: 1em;
+    color: theme("colors.caret");
 }
 
+/* Favicon */
 .favicon {
-    @apply block mr-1 flex-none rounded-sm;
-
-    width: 16px;
-    height: 16px;
+    @apply block mr-1 flex-none rounded-sm w-4 h-4;
 }
 
-.badge {
-    @apply flex flex-none items-center py-0.5 bg-gray-300 rounded text-xs text-white px-2 ml-2;
+/* Elements of the menu in account-related pages */
+#account-menu-items {
+    @apply mt-12 flex items-stretch flex-col;
 }
 
-article .badge {
-    @apply bg-gray-500 mr-2;
+#account-menu-items a {
+    @apply py-2 no-underline;
+
+    color: theme("colors.account.menu.item.text");
 }
 
-.url {
-    @apply text-green-600 text-sm truncate block;
+#account-menu-items a.selected {
+    color: theme("colors.account.menu.item.selected.text");
 }
 
-.url:hover {
-    @apply text-green-700;
-}
-
-dl.details {
-    @apply text-white mt-6 rounded grid grid-cols-3 gap-1 text-sm;
-}
-
-dl.details dt {
-    @apply truncate p-2 bg-gray-700;
-}
-
-dl.details dt:first-of-type {
-    @apply rounded-tl;
-}
-
-dl.details dt:last-of-type {
-    @apply rounded-bl;
-}
-
-dl.details dd:first-of-type {
-    @apply rounded-tr;
-}
-
-dl.details dd:last-of-type {
-    @apply rounded-br;
-}
-
-dl.details dd {
-    @apply col-span-2 p-2 bg-gray-400;
+#account-menu-items a:hover {
+    color: theme("colors.account.menu.item.hovered");
 }

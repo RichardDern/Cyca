@@ -36,7 +36,15 @@ class HomeController extends Controller
      */
     public function account()
     {
-        return view('account');
+        $availableThemes = [];
+
+        foreach(glob(resource_path('themes/*')) as $path) {
+            if(is_dir($path)) {
+                $availableThemes[] = basename($path);
+            }
+        }
+
+        return view('account')->with(['themes' => $availableThemes]);
     }
 
     /**

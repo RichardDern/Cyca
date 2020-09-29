@@ -44,11 +44,10 @@
         <div class="body">
             <div v-if="document.description" v-html="document.description"></div>
 
-            <dl class="details">
+            <dl>
                 <dt>{{ __("Real URL") }}</dt>
                 <dd>
                     <a
-                        class="url"
                         v-bind:href="document.url"
                         rel="noopener noreferrer"
                         v-on:click.left.stop.prevent="openDocument({document: document, folder: selectedFolder})"
@@ -109,10 +108,10 @@
                 </div>
                 <div v-if="feed.description" v-html="feed.description"></div>
 
-                <dl class="details">
+                <dl>
                     <dt>{{ __("Real URL") }}</dt>
                     <dd>
-                        <div class="url">{{ feed.url }}</div>
+                        <div>{{ feed.url }}</div>
                     </dd>
                     <dt>{{__("Date of document's last check")}}</dt>
                     <dd>

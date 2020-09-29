@@ -1,0 +1,42 @@
+/* -------------------------------------------------------------------------- */
+/* ----| Article |----------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+
+/* Article wrapper */
+article {
+    @apply pb-3;
+}
+
+/* Main title */
+article h1 {
+    @apply py-3 px-4 mb-4 flex justify-between items-center leading-normal text-lg border-t border-b sticky top-0;
+
+    color: theme("colors.article.text");
+    background-color: theme("colors.article.bg");
+    border-color: theme("colors.article.border");
+}
+
+article h1 .title {
+    @apply flex items-center py-1;
+}
+
+/* Article body */
+article .body {
+    @apply text-justify leading-normal px-4;
+
+    color: theme("colors.article.body");
+}
+
+article .body p {
+    @apply my-2;
+}
+
+/* Sub-titles */
+
+article .body h2 {
+    @apply font-bold text-lg mt-4 mb-1;
+}
+
+article .body h3 {
+    @apply font-bold mt-4 mb-1;
+}

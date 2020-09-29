@@ -16,12 +16,12 @@
 
     <script src="{{ asset('js/app.js') }}" defer></script>
 
-    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+    <link href="{{ mix(sprintf('themes/%s.css', auth()->user()->theme)) }}" rel="stylesheet">
 
     <link rel="shortcut icon" href="{{ asset('images/favicon.png') }}" />
 </head>
 
-<body class="bg-gray-900 h-screen antialiased leading-none">
+<body>
     @yield('content')
 </body>
 

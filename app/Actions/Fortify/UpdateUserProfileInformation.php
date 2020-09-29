@@ -18,6 +18,14 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
      */
     public function update($user, array $input)
     {
+        $availableThemes = [];
+
+        foreach(glob(resource_path('themes/*')) as $path) {
+            if(is_dir($path)) {
+                $availableThemes[] = basename($path);
+            }
+        }
+
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
 
@@ -32,6 +40,11 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             'lang' => [
                 'required',
                 Rule::in(array_keys(config('lang')))
+            ],
+
+            'theme' => [
+                'required',
+                Rule::in($availableThemes)
             ]
         ])->validateWithBag('updateProfileInformation');
 
@@ -42,7 +55,8 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             $user->forceFill([
                 'name' => $input['name'],
                 'email' => $input['email'],
-                'lang' => $input['lang']
+                'lang' => $input['lang'],
+                'theme' => $input['theme']
             ])->save();
         }
     }

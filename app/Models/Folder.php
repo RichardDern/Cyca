@@ -100,7 +100,7 @@ class Folder extends Model
     }
 
     /**
-     * Return icon's color
+     * Return icon's color as a CSS class
      *
      * @return string
      */
@@ -109,27 +109,27 @@ class Folder extends Model
         switch ($this->type) {
             // Unspecified type of folder
             default:
-                return 'text-yellow-500';
+                return 'folder-common';
 
             // Unread items
             case 'unread_items':
                 if($this->unread_feed_items_count) {
-                    return 'text-purple-500';
+                    return 'folder-unread-not-empty';
                 }
 
-                return 'text-gray-100';
+                return 'folder-unread';
 
             // Root folder
             case 'root':
-                return 'text-blue-500';
+                return 'folder-root';
 
             // My account link
             case 'account':
-                return 'text-green-500';
+                return 'folder-account';
 
             // Log out link
             case 'logout':
-                return 'text-red-500';
+                return 'folder-logout';
         }
     }
 

@@ -1,39 +1,63 @@
+/* -------------------------------------------------------------------------- */
+/* ----| Form elements |----------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+
+/* Generic button - normal state */
 button, .button {
-    @apply rounded text-white text-sm px-2 py-1 flex items-center whitespace-no-wrap;
+    @apply rounded text-sm px-2 py-1 flex items-center whitespace-no-wrap no-underline;
+
+    color: theme("colors.button.text");
 }
 
+/* Generic button - hovered */
+button:hover, .button:hover {
+    color: theme("colors.button.text");
+}
+
+/* Danger style of button */
 button.danger, .button.danger {
-    @apply bg-red-800;
+    background-color: theme("colors.button.danger.bg");
 }
 
 button.danger:hover, .button.danger:hover {
-    @apply bg-red-900;
+    background-color: theme("colors.button.danger.bg-hover");
 }
 
+/* Success style of button */
 button.success, .button.success {
-    @apply bg-green-600;
+    background-color: theme("colors.button.success.bg");
 }
 
 button.success:hover, .button.success:hover {
-    @apply bg-green-800;
+    background-color: theme("colors.button.success.bg-hover");
 }
 
+/* Informational style of button */
 button.info, .button.info {
-    @apply bg-blue-600;
+    background-color: theme("colors.button.info.bg");
 }
 
 button.info:hover, .button.info:hover {
-    @apply bg-blue-800;
+    background-color: theme("colors.button.info.bg-hover");
 }
 
-.form-group {
-    @apply mb-2 text-white flex;
-}
-
-.form-group input, input {
-    @apply bg-gray-300 text-white rounded px-2 py-1 flex-grow outline-none;
-}
-
+/* Form label */
 label {
-    @apply block text-gray-100 mb-2 mt-6;
+    @apply block mb-2 mt-6;
+
+    color: theme("colors.label.text");
+}
+
+/* Group of form elements */
+.form-group {
+    @apply mb-2 flex;
+
+    color: theme("colors.formGroup.text");
+}
+
+.form-group input, input, select {
+    @apply rounded px-2 py-1 flex-grow outline-none;
+
+    color: theme("colors.input.text");
+    background-color: theme("colors.input.bg");
 }

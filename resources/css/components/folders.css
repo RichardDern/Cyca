@@ -1,0 +1,35 @@
+/* -------------------------------------------------------------------------- */
+/* ----| Folders-specific classes |------------------------------------------ */
+/* -------------------------------------------------------------------------- */
+
+/* This file defines colors for folders icons */
+
+/* Regular folder */
+.folder-common {
+    color: theme("colors.folders.common");
+}
+
+/* Unread items folder - with unread items */
+.folder-unread-not-empty {
+    color: theme("colors.folders.unread.not-empty");
+}
+
+/* Unread items folder - empty */
+.folder-unread {
+    color: theme("colors.folders.unread.empty");
+}
+
+/* Root folder */
+.folder-root {
+    color: theme("colors.folders.root");
+}
+
+/* Account link */
+.folder-account {
+    color: theme("colors.folders.account");
+}
+
+/* Logout link */
+.folder-logout {
+    color: theme("colors.folders.logout");
+}
