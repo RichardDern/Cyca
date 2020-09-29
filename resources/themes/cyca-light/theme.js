@@ -20,9 +20,9 @@ const theme = {
  */
 module.exports = {
     purge: [
-        "../../views/**/*.blade.php",
-        "../../css/**/*.css",
-        "../../js/components/**/*.vue"
+        "resources/views/**/*.blade.php",
+        "resources/css/**/*.css",
+        "resources/js/components/**/*.vue"
     ],
     theme: theme,
     variants: {},
