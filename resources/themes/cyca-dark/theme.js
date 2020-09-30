@@ -19,11 +19,14 @@ const theme = {
  * Rest of tailwind's config
  */
 module.exports = {
-    purge: [
-        "resources/views/**/*.blade.php",
-        "resources/css/**/*.css",
-        "resources/js/components/**/*.vue"
-    ],
+    purge: {
+        mode: 'all',
+        content: [
+            "resources/views/**/*.blade.php",
+            "resources/css/**/*.css",
+            "resources/js/components/**/*.vue"
+        ]
+    },
     theme: theme,
     variants: {},
     plugins: [
