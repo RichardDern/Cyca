@@ -65,7 +65,7 @@ COPY . /app/
 
 RUN set -ex; \
         \
-        cp .env.docker .env; \
+        cp .env.example .env; \
         composer update; \
         chown -R www-data:www-data ./
 
