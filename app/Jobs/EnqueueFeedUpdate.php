@@ -15,6 +15,13 @@ class EnqueueFeedUpdate implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
+     * Delete the job if its models no longer exist.
+     *
+     * @var bool
+     */
+    public $deleteWhenMissingModels = true;
+
+    /**
      * Feed to update
      *
      * @var \App\Models\Feed

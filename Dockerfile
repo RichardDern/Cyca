@@ -24,9 +24,9 @@ RUN set -ex; \
                 zlib1g-dev; \
         \
         # Install PHP dependencies
-        pecl install redis; \
-        pecl install memcached; \
         pecl install imagick; \
+        pecl install memcached; \
+        pecl install redis; \
         \
         docker-php-ext-enable \
                 imagick \
