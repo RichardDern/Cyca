@@ -1,2 +1,6 @@
 vendor/
 node_modules/
+storage/logs
+storage/framework/cache/data
+storage/framework/views/*.php
+storage/app/public/*

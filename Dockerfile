@@ -94,7 +94,7 @@ COPY . /app/
 
 RUN set -ex; \
     \
-    cp .env.example .env; \
+    [ ! -e ".env" ] && cp .env.example .env; \
     composer update; \
     chown -R www-data:www-data ./
 
