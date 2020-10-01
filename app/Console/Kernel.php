@@ -26,7 +26,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('document:update')->everyMinute()->withoutOverlapping();
         $schedule->command('feed:update')->everyMinute()->withoutOverlapping();
-        $schedule->command('feeditems:purgeread')->everyDay();
+        $schedule->command('feeditems:purgeread')->daily();
     }
 
     /**
