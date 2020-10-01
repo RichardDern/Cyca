@@ -30,7 +30,7 @@ trait BuildsTree
 
         foreach ($roots as $root) {
             if($root->type === 'unread_items') {
-                $root->unread_feed_items_count = FeedItemState::where('user_id', $root->user_id)->where('is_read', false)->count();
+                $root->feed_item_states_count = FeedItemState::where('user_id', $root->user_id)->where('is_read', false)->count();
             }
 
             $branch = self::buildBranch($root, $folders, 0);
