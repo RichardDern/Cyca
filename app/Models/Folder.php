@@ -182,9 +182,9 @@ class Folder extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function unreadFeedItems()
+    public function feedItemStates()
     {
-        return $this->hasMany(FeedItemState::class)->where('user_id', auth()->user()->id)->where('is_read', false);
+        return $this->hasMany(FeedItemState::class);
     }
 
     # --------------------------------------------------------------------------
@@ -215,13 +215,13 @@ class Folder extends Model
         $self = $this;
 
         if ($this->type === 'unread_items') {
-            return Document::with(['feeds.ignored', 'bookmark'])->withCount(['unreadFeedItems' => function ($query) use ($self) {
+            return Document::with(['feeds.ignored', 'bookmark'])->withCount(['feedItemStates' => function ($query) use ($self) {
                 $query->where('is_read', false)->where('user_id', $self->user_id);
-            }])->whereHas('unreadFeedItems', function ($query) use ($self) {
+            }])->whereHas('feedItemStates', function ($query) use ($self) {
                 $query->where('is_read', false)->where('user_id', $self->user_id);
             })->get();
         } else {
-            return $this->documents()->withCount(['unreadFeedItems' => function ($query) use ($self) {
+            return $this->documents()->withCount(['feedItemStates' => function ($query) use ($self) {
                 $query->where('is_read', false)->where('user_id', $self->user_id);
             }])->with('feeds.ignored')->get();
         }

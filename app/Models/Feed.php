@@ -115,8 +115,8 @@ class Feed extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function unreadFeedItems() {
-        return $this->hasMany(FeedItemState::class)->where('user_id', auth()->user()->id)->where('is_read', false);
+    public function feedItemStates() {
+        return $this->hasMany(FeedItemState::class);
     }
 
     /**

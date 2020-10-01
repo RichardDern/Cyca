@@ -60,8 +60,8 @@ class DocumentController extends Controller
     {
         $document->findDupplicatesFor($request->user());
 
-        $document->loadMissing('feeds')->loadCount(['unreadFeedItems' => function ($query) {
-                $query->where('is_read', false)->where('user_id', auth()->user()->id);
+        $document->loadMissing('feeds')->loadCount(['feedItemStates' => function ($query) use ($request) {
+                $query->where('is_read', false)->where('user_id', $request->user()->id);
             }]);
 
         return $document;

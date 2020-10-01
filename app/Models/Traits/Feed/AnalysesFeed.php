@@ -104,6 +104,10 @@ trait AnalysesFeed
             $feedItem->content      = $this->formatText($item->get_content(true));
             $feedItem->published_at = $item->get_gmdate();
 
+            if($feedItem->published_at->addDays(config('cyca.maxOrphanAge.feeditems'))->lt(now())) {
+                continue;
+            }
+
             $feedItem->save();
 
             if (!in_array($feedItem->id, $toSync)) {

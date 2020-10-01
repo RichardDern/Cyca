@@ -19,7 +19,9 @@ trait BuildsTree
     public static function getFlatTreeFor(User $user)
     {
         $tree  = [];
-        $query = $user->folders()->withCount(['children', 'unreadFeedItems'])->orderBy('parent_id', 'asc')->orderBy('position', 'asc')->orderBy('title', 'asc');
+        $query = $user->folders()->withCount(['children', 'feedItemStates' => function($query) {
+            $query->where('is_read', false);
+        }])->orderBy('parent_id', 'asc')->orderBy('position', 'asc')->orderBy('title', 'asc');
         $folders = $query->get();
 
         $roots = $folders->collect()->filter(function ($folder) {

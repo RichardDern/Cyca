@@ -61,7 +61,7 @@ export default {
             exclude = collect(getters.selectedDocuments).pluck('id').all();
         }
 
-        const document = collect(getters.documents).where('unread_feed_items_count', '>', 0).whereNotIn('id', exclude).first();
+        const document = collect(getters.documents).where('feed_item_states_count', '>', 0).whereNotIn('id', exclude).first();
 
         if(document) {
             dispatch("selectDocuments", [document]);

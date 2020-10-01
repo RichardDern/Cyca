@@ -54,7 +54,7 @@ export default {
         totalUnreadFeedItemsCount: function () {
             const self = this;
 
-            return collect(self.documents).sum("unread_feed_items_count");
+            return collect(self.documents).sum("feed_item_states_count");
         },
     },
     methods: {

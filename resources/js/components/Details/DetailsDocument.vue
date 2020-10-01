@@ -6,12 +6,12 @@
                 <span>{{ document.title }}</span>
                 <div
                     class="badge"
-                    v-if="document.unread_feed_items_count > 0"
-                >{{ document.unread_feed_items_count }}</div>
+                    v-if="document.feed_item_states_count > 0"
+                >{{ document.feed_item_states_count }}</div>
             </div>
             <div class="flex items-center">
                 <button
-                    v-if="document.unread_feed_items_count > 0"
+                    v-if="document.feed_item_states_count > 0"
                     class="button info"
                     v-on:click="onMarkAsReadClicked"
                 >

@@ -1,7 +1,7 @@
 <template>
     <a
         class="feed-item"
-        v-bind:class="{'selected': is_selected, 'read': feedItem.unread_feed_items_count === 0}"
+        v-bind:class="{'selected': is_selected, 'read': feedItem.feed_item_states_count === 0}"
         v-bind:href="feedItem.url"
         rel="noopener noreferrer"
         v-on:click.left.exact.stop.prevent="onClicked"

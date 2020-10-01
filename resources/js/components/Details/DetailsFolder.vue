@@ -14,11 +14,11 @@
                 <span>{{ folder.title }}</span>
                 <div
                     class="badge"
-                    v-if="folder.unread_feed_items_count > 0"
-                >{{ folder.unread_feed_items_count }}</div>
+                    v-if="folder.feed_item_states_count > 0"
+                >{{ folder.feed_item_states_count }}</div>
             </div>
             <button
-                v-if="folder.unread_feed_items_count > 0"
+                v-if="folder.feed_item_states_count > 0"
                 class="button info"
                 v-on:click="onMarkAsReadClicked"
             >

@@ -36,8 +36,8 @@
         </div>
         <div
             class="badge"
-            v-if="folder.unread_feed_items_count > 0"
-        >{{ folder.unread_feed_items_count }}</div>
+            v-if="folder.feed_item_states_count > 0"
+        >{{ folder.feed_item_states_count }}</div>
     </button>
 </template>
 

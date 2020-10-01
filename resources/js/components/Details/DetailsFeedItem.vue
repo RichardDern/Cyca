@@ -6,7 +6,7 @@
             </div>
             <div class="flex items-center">
                 <button
-                    v-if="feedItem.unread_feed_items_count > 0"
+                    v-if="feedItem.feed_item_states_count > 0"
                     class="button info"
                     v-on:click="onMarkAsReadClicked"
                 >

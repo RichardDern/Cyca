@@ -44,12 +44,26 @@ return [
         'feed' => 15
     ],
     /**
-     * For how long should we keep a document/feed in database after being
-     * removed if not attached to a bookmark anymore ?
-     * Default value is 7 days
+     * For how long should we keep old documents, feeds and feed items in
+     * database ?
+     *
+     * What we mean by "old" depends on the type of considered object:
+     * - An old document is a document with no attached bookmarks
+     * - An old feed is a feed with no attached document
+     * - An old feed item is a feed item marked as read by all users following
+     *   its parent feed
+     *
+     * Values are expressed in days. So, by default:
+     * - old documents are kept for a maximum of 7 days
+     * - old feeds are kept for a maximum of 7 days
+     * - old feed items are kept for a maximum of 30 days
+     *
+     * (If, for some reason, new feed items are published before 30 days from
+     * now, they will simply be ignored by Cyca)
      */
     'maxOrphanAge' => [
         'document' => 7,
-        'feed' => 7
+        'feed' => 7,
+        'feeditems' => 30
     ]
 ];

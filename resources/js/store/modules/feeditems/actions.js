@@ -81,7 +81,7 @@ export default {
         }
 
         const nextFeedItem = collect(getters.feedItems)
-            .where("unread_feed_items_count", ">", 0)
+            .where("feed_item_states_count", ">", 0)
             .whereNotIn("id", exclude)
             .first();
 

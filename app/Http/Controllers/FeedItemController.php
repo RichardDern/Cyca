@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\FeedItem;
 use App\Models\FeedItemState;
 use Illuminate\Http\Request;
-use App\Notifications\UnreadItemsChanged;
-use Illuminate\Support\Facades\Notification;
 
 class FeedItemController extends Controller
 {
@@ -32,13 +30,13 @@ class FeedItemController extends Controller
         $folder = $request->user()->folders()->where('is_selected', true)->first();
 
         if ($folder->type === 'unread_items') {
-            $queryBuilder->whereHas('unreadFeedItems', function ($query) {
-                $query->where('feed_item_states.user_id', auth()->user()->id)->where('is_read', false);
+            $queryBuilder->whereHas('feedItemStates', function ($query) use ($request) {
+                $query->where('feed_item_states.user_id', $request->user()->id)->where('is_read', false);
             });
         }
 
-        return $queryBuilder->withCount(['unreadFeedItems' => function ($query) {
-            $query->where('is_read', false)->where('user_id', auth()->user()->id);
+        return $queryBuilder->withCount(['feedItemStates' => function ($query) use ($request) {
+            $query->where('is_read', false)->where('user_id', $request->user()->id);
         }])->orderBy('published_at', 'desc')->simplePaginate(15);
     }
 
@@ -48,10 +46,10 @@ class FeedItemController extends Controller
      * @param  \App\Models\FeedItem  $feedItem
      * @return \Illuminate\Http\Response
      */
-    public function show(FeedItem $feedItem)
+    public function show(Request $request, FeedItem $feedItem)
     {
-        $feedItem->loadCount(['unreadFeedItems' => function ($query) {
-            $query->where('is_read', false)->where('user_id', auth()->user()->id);
+        $feedItem->loadCount(['feedItemStates' => function ($query) use ($request) {
+            $query->where('is_read', false)->where('user_id', $request->user()->id);
         }]);
 
         return $feedItem;
