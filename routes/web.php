@@ -5,8 +5,11 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/account', 'HomeController@account')->name('account');
 
+    Route::post('/account/theme', 'HomeController@setTheme')->name('account.setTheme');
+
     Route::group(['middleware' => 'verified'], function () {
         Route::get('/', 'HomeController@index')->name('home');
+        Route::get('/theme', 'HomeController@theme')->name('theme');
 
         Route::get('/export', 'HomeController@export')->name('export');
         Route::get('/import', 'HomeController@showImportForm')->name('import.form');

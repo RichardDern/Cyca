@@ -2,47 +2,36 @@
 /* ----| Dark (default) theme |---------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 
-const themeName = "cyca-dark";
-const fonts = require('./fonts');
-const colors = require('./colors');
-const plugin = require('tailwindcss/plugin');
+const _ = require('lodash');
+const plugin = require("tailwindcss/plugin");
 
-/**
- * Theme definition
- */
-const theme = {
-    fontFamily: fonts,
-    colors: colors
-};
-
-/**
- * Rest of tailwind's config
- */
-module.exports = {
-    purge: {
-        mode: 'all',
-        content: [
-            "resources/views/**/*.blade.php",
-            "resources/css/**/*.css",
-            "resources/js/components/**/*.vue"
-        ]
+const theme = _.merge(require("../baseTheme.js"), {
+    /**
+     * Adding theme-specifics
+     */
+    theme: {
+        fontFamily: {
+            sans:
+                'Quicksand, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
+        },
+        colors: require("./colors")
     },
-    theme: theme,
-    variants: {},
     plugins: [
         /**
          * Plugin to add custom font
          */
-        plugin(function({addBase, config}) {
-            const fontUrl = "/themes/" + themeName + "/fonts/Quicksand-Medium.ttf";
+        plugin(function({ addBase, config }) {
+            const fontUrl =
+                "/themes/cyca-dark/fonts/Quicksand-Medium.ttf";
 
             addBase({
-                '@font-face': {
+                "@font-face": {
                     fontFamily: "Quicksand",
-                    src: 'url(' + fontUrl + ')'
+                    src: "url(" + fontUrl + ")"
                 }
-            })
-        }),
-        require("@tailwindcss/ui")
+            });
+        })
     ]
-};
+});
+
+module.exports = theme;

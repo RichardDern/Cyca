@@ -122,5 +122,16 @@ module.exports = {
         root: baseColors.blue[500],
         account: baseColors.green[600],
         logout: baseColors.red[800]
+    },
+    "themes-browser": {
+        card: {
+            "border-color": baseColors.gray[300],
+            selected: {
+                "border-color": baseColors.green[600],
+            },
+            hovered: {
+                "border-color": baseColors.blue[500],
+            }
+        }
     }
 };

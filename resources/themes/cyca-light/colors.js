@@ -10,7 +10,6 @@ const baseColors = require('./colorScheme');
  * ```theme("colors.button.danger.bg-hover")```
  */
 module.exports = {
-    baseColors,
     /**
      * Base
      */
@@ -28,35 +27,8 @@ module.exports = {
         text: baseColors.black,
         bg: baseColors.gray[100]
     },
-    dl: {
-        text: baseColors.white
-    },
-    dt: {
-        bg: baseColors.gray[700]
-    },
-    dd: {
-        bg: baseColors.gray[400]
-    },
-    button: {
-        text: baseColors.white,
-        danger: {
-            bg: baseColors.red[800],
-            "bg-hover": baseColors.red[900]
-        },
-        success: {
-            bg: baseColors.green[600],
-            "bg-hover": baseColors.green[800]
-        },
-        info: {
-            bg: baseColors.blue[700],
-            "bg-hover": baseColors.blue[800]
-        }
-    },
     label: {
         text: baseColors.gray[900]
-    },
-    formGroup: {
-        text: baseColors.white
     },
     input: {
         text: baseColors.black,
@@ -82,12 +54,6 @@ module.exports = {
             text: baseColors.black,
             bg: baseColors.gray[700]
         },
-        "dragged-over": {
-            bg: baseColors.green[900]
-        },
-        "cannot-drop": {
-            bg: baseColors.red[900]
-        }
     },
     "feed-item": {
         text: baseColors.black,
@@ -103,7 +69,6 @@ module.exports = {
             bg: baseColors.gray[300],
             item: {
                 text: baseColors.gray[900],
-                hovered: baseColors.blue[500],
                 selected: {
                     text: baseColors.black
                 }
@@ -113,14 +78,4 @@ module.exports = {
             bg: baseColors.gray[200]
         }
     },
-    folders: {
-        common: baseColors.yellow[500],
-        unread: {
-            "not-empty": baseColors.purple[500],
-            empty: baseColors.gray[100]
-        },
-        root: baseColors.blue[500],
-        account: baseColors.green[600],
-        logout: baseColors.red[800]
-    }
 };

@@ -1,5 +1,7 @@
 {
-    "/js/app.js": "/js/app.js?id=3b9c504a26b69f22404e",
-    "/themes/cyca-dark.css": "/themes/cyca-dark.css?id=6c44545d520fed608be0",
-    "/themes/cyca-light.css": "/themes/cyca-light.css?id=03160640c2a5e5f51a1c"
+    "/js/app.js": "/js/app.js?id=36915df2505a05c7f7d5",
+    "/themes/cyca-dark/theme.css": "/themes/cyca-dark/theme.css?id=eb10588a637afd07ffa9",
+    "/themes/cyca-light/theme.css": "/themes/cyca-light/theme.css?id=bac02a9cb6a63d2a1a44",
+    "/themes/cyca-dark/theme.json": "/themes/cyca-dark/theme.json?id=bfbf5d41f1e69d715d51",
+    "/themes/cyca-light/theme.json": "/themes/cyca-light/theme.json?id=999106e25505fca293d8"
 }

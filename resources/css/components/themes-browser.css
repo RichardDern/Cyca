@@ -1,0 +1,37 @@
+/**
+ * Interface from browsing and setting theme
+ */
+#themes-browser {
+    @apply w-full grid grid-cols-1 gap-6 my-6;
+}
+
+/**
+ * Theme card
+ */
+#themes-browser .card {
+    @apply rounded border border-2 p-2 cursor-pointer;
+
+    border-color: theme("colors.themes-browser.card.border-color");
+}
+
+#themes-browser .card:hover {
+    border-color: theme("colors.themes-browser.card.hovered.border-color");
+}
+
+#themes-browser .card.selected {
+    border-color: theme("colors.themes-browser.card.selected.border-color");
+}
+
+/**
+ * Theme card title
+ */
+#themes-browser .card h2 {
+    @apply mb-2 flex justify-between;
+}
+
+/**
+ * Theme card meta
+ */
+ #themes-browser .card .meta {
+    @apply mt-2 text-xs;
+}

@@ -3,7 +3,6 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use View;
 
 class LangServiceProvider extends ServiceProvider
 {
@@ -35,7 +34,7 @@ class LangServiceProvider extends ServiceProvider
                 }
             }
 
-            View::share('langStrings', $strings);
+            view()->share('langStrings', $strings);
         });
     }
 }

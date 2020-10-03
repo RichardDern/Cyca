@@ -1,48 +1,16 @@
 /* -------------------------------------------------------------------------- */
-/* ----| Dark (default) theme |---------------------------------------------- */
+/* ----| Light theme |------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 
-const themeName = "cyca-dark";
-const fonts = require('./fonts');
-const colors = require('./colors');
-const plugin = require('tailwindcss/plugin');
+const _ = require('lodash');
 
-/**
- * Theme definition
- */
-const theme = {
-    fontFamily: fonts,
-    colors: colors
-};
+const theme = _.merge(require("../cyca-dark/theme"), {
+    /**
+     * Theme specifics
+     */
+    theme: {
+        colors: require("./colors")
+    }
+});
 
-/**
- * Rest of tailwind's config
- */
-module.exports = {
-    purge: {
-        mode: 'all',
-        content: [
-            "resources/views/**/*.blade.php",
-            "resources/css/**/*.css",
-            "resources/js/components/**/*.vue"
-        ]
-    },
-    theme: theme,
-    variants: {},
-    plugins: [
-        /**
-         * Plugin to add custom font
-         */
-        plugin(function({addBase, config}) {
-            const fontUrl = "/themes/" + themeName + "/fonts/Quicksand-Medium.ttf";
-
-            addBase({
-                '@font-face': {
-                    fontFamily: "Quicksand",
-                    src: 'url(' + fontUrl + ')'
-                }
-            })
-        }),
-        require("@tailwindcss/ui")
-    ]
-};
+module.exports = theme;

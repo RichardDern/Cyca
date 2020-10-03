@@ -18,7 +18,7 @@ themes.forEach(theme => {
     if (fs.lstatSync(dir).isDirectory()) {
         mix.postCss(
             dir + "/theme.css",
-            "public/themes/" + theme + ".css",
+            "public/themes/" + theme + "/theme.css",
             [
                 require("postcss-import"),
                 require("tailwindcss")(dir + "/theme.js"),
@@ -27,6 +27,7 @@ themes.forEach(theme => {
             ]
         );
 
+        mix.copy(dir + "/theme.json", "public/themes/" + theme + "/");
         mix.copy(dir + "/resources/", "public/themes/" + theme + "/");
     }
 });

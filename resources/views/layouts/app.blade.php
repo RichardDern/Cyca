@@ -8,6 +8,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="user-id" content="{{ auth()->user()->id }}">
     <meta name="theme" content="{{ auth()->user()->theme }}">
+    <meta name="icons-file-url" content="{{ $iconsFileUrl }}">
 
     <title>{{ config('app.name', 'Cyca') }}</title>
 
@@ -17,7 +18,7 @@
 
     <script src="{{ asset('js/app.js') }}" defer></script>
 
-    <link href="{{ mix(sprintf('themes/%s.css', auth()->user()->theme)) }}" rel="stylesheet">
+    <link href="{{ $css }}" rel="stylesheet">
 
     <link rel="shortcut icon" href="{{ asset('images/favicon.png') }}" />
 </head>

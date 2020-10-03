@@ -189,6 +189,8 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\ObserversServiceProvider::class,
         App\Providers\LangServiceProvider::class,
+        App\Providers\BladeServiceProvider::class,
+        App\Providers\ThemeManagerServiceProvider::class,
     ],
 
     /*

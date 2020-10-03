@@ -46,11 +46,11 @@ Vue.mixin({
          * Return url to an icon
          */
         icon: (name) => {
-            const theme = document
-            .querySelector('meta[name="theme"]')
+            const iconsFileUrl = document
+            .querySelector('meta[name="icons-file-url"]')
             .getAttribute("content")
 
-            const url = '/themes/' + theme + '/images/icons.svg#' + name;
+            const url = iconsFileUrl + '#' + name;
 
             return url;
         },

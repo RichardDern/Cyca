@@ -12,14 +12,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="icons-file-url" content="{{ $iconsFileUrl }}">
 
     <title>{{ config('app.name', 'Cyca') }}</title>
 
-    @auth
-        <link href="{{ mix(sprintf('themes/%s.css', auth()->user()->theme)) }}" rel="stylesheet">
-    @else
-        <link href="{{ mix(sprintf('themes/%s.css', config('app.theme'))) }}" rel="stylesheet">
-    @endauth
+    <link href="{{ $css }}" rel="stylesheet">
 
     <link rel="shortcut icon" href="{{ asset('images/favicon.png') }}" />
 </head>

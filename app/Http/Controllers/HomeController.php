@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreAccountRequest;
 use Illuminate\Http\Request;
 use App\Models\Folder;
 use App\Models\Document;
 use App\Models\Feed;
 use App\Models\IgnoredFeed;
+use App\Facades\ThemeManager;
 
 class HomeController extends Controller
 {
@@ -36,31 +36,32 @@ class HomeController extends Controller
      */
     public function account()
     {
-        $availableThemes = [];
-
-        foreach(glob(resource_path('themes/*')) as $path) {
-            if(is_dir($path)) {
-                $availableThemes[] = basename($path);
-            }
-        }
-
-        return view('account')->with(['themes' => $availableThemes]);
+        return view('account');
     }
 
     /**
-     * Save account's settings
+     * Theme selection page
      */
-    public function accountStore(StoreAccountRequest $request)
-    {
-        $validated = $request->validated();
-        $user      = $request->user();
+    public function theme() {
+        $availableThemes = ThemeManager::listAvailableThemes();
 
-        $user->name  = $validated['name'];
-        $user->email = $validated['email'];
+        return view('account.themes')->with(['availableThemes' => $availableThemes]);
+    }
 
-        $user->save();
+    /**
+     * Save theme to user's profile
+     */
+    public function setTheme(Request $request) {
+        $availableThemes = ThemeManager::listAvailableThemes();
 
-        return redirect()->route('account');
+        if(!array_key_exists($request->input('theme'), $availableThemes)) {
+            abort(422);
+        }
+
+        $request->user()->theme = $request->input('theme');
+        $request->user()->save();
+
+        return redirect()->back();
     }
 
     /**
