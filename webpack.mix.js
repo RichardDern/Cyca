@@ -33,6 +33,7 @@ themes.forEach(theme => {
 });
 
 mix.js("resources/js/app.js", "public/js");
+mix.js("resources/js/themes-browser.js", "public/js");
 
 if (mix.inProduction()) {
     mix.version();

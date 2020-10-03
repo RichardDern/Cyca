@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/account', 'HomeController@account')->name('account');
 
+    Route::get('/account/themes', 'HomeController@getThemes')->name('account.getThemes');
     Route::post('/account/theme', 'HomeController@setTheme')->name('account.setTheme');
 
     Route::group(['middleware' => 'verified'], function () {

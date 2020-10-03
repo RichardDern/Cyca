@@ -13,16 +13,23 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="icons-file-url" content="{{ $iconsFileUrl }}">
+    <meta name="theme" content="{{ auth()->user()->theme }}">
 
     <title>{{ config('app.name', 'Cyca') }}</title>
 
-    <link href="{{ $css }}" rel="stylesheet">
+    <link href="{{ $css }}" rel="stylesheet" id="main-stylesheet">
+
+    <script>
+        const lang = @json($langStrings);
+    </script>
+
+    <script src="{{ asset('js/themes-browser.js') }}" defer></script>
 
     <link rel="shortcut icon" href="{{ asset('images/favicon.png') }}" />
 </head>
 
 <body>
-    <main>
+    <main id="app">
         <div id="account-menu">
             <div class="w-full">
                 <h1 class="text-white tracking-wide text-4xl">

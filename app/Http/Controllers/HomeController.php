@@ -48,6 +48,10 @@ class HomeController extends Controller
         return view('account.themes')->with(['availableThemes' => $availableThemes]);
     }
 
+    public function getThemes() {
+        return ThemeManager::listAvailableThemes();
+    }
+
     /**
      * Save theme to user's profile
      */

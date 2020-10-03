@@ -3,6 +3,8 @@
 return [
     'whitelist' => [
         'account',
+        'account.getThemes',
+        'account.setTheme',
         'document.destroy_bookmarks',
         'document.index',
         'document.move',
@@ -19,5 +21,6 @@ return [
         'folder.show',
         'folder.store',
         'folder.update',
+        'home'
     ],
 ];

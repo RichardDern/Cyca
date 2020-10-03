@@ -30,7 +30,7 @@ class BladeServiceProvider extends ServiceProvider
                 $theme = auth()->user()->theme;
             }
 
-            $css = mix(sprintf('themes/%s/theme.css', $theme));
+            $css = mix(sprintf('themes/%s/theme.css', request()->input('theme', $theme)));
 
             view()->share('iconsFileUrl', $this->getIconsFile($theme));
             view()->share('css', $css);
