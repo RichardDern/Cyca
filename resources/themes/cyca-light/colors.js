@@ -78,4 +78,18 @@ module.exports = {
             bg: baseColors.gray[200]
         }
     },
+    alerts: {
+        success: {
+            bg: baseColors.green[100],
+            text: baseColors.green[900]
+        },
+        error: {
+            bg: baseColors.red[100],
+            text: baseColors.red[900]
+        },
+        warning: {
+            bg: baseColors.yellow[100],
+            text: baseColors.yellow[500]
+        }
+    }
 };

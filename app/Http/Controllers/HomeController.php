@@ -36,7 +36,15 @@ class HomeController extends Controller
      */
     public function account()
     {
-        return view('account');
+        return view('account.my_account');
+    }
+
+    /**
+     * Show user's password update page
+     */
+    public function password()
+    {
+        return view('account.password');
     }
 
     /**
@@ -142,7 +150,7 @@ class HomeController extends Controller
      * Show the import form
      */
     public function showImportForm() {
-        return view('import');
+        return view('account.import');
     }
 
     /**

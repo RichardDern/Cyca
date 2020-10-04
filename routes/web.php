@@ -5,16 +5,21 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/account', 'HomeController@account')->name('account');
 
-    Route::get('/account/themes', 'HomeController@getThemes')->name('account.getThemes');
-    Route::post('/account/theme', 'HomeController@setTheme')->name('account.setTheme');
-
     Route::group(['middleware' => 'verified'], function () {
         Route::get('/', 'HomeController@index')->name('home');
-        Route::get('/theme', 'HomeController@theme')->name('theme');
 
-        Route::get('/export', 'HomeController@export')->name('export');
-        Route::get('/import', 'HomeController@showImportForm')->name('import.form');
-        Route::post('/import', 'HomeController@import')->name('import');
+        Route::prefix('account')->group(function() {
+            Route::get('/password', 'HomeController@password')->name('account.password');
+
+            Route::get('/theme', 'HomeController@theme')->name('account.theme');
+            Route::get('/themes', 'HomeController@getThemes')->name('account.getThemes');
+            Route::post('/theme', 'HomeController@setTheme')->name('account.setTheme');
+
+            Route::get('/import', 'HomeController@showImportForm')->name('account.import.form');
+            Route::post('/import', 'HomeController@import')->name('account.import');
+
+            Route::get('/export', 'HomeController@export')->name('account.export');
+        });
 
         Route::post('/document/move/{sourceFolder}/{targetFolder}', 'DocumentController@move')->name('document.move');
         Route::post('/document/delete_bookmarks/{folder}', 'DocumentController@destroyBookmarks')->name('document.destroy_bookmarks');

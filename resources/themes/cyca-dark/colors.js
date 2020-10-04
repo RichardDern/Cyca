@@ -133,5 +133,19 @@ module.exports = {
                 "border-color": baseColors.blue[500],
             }
         }
+    },
+    alerts: {
+        success: {
+            bg: baseColors.green[600],
+            text: baseColors.white
+        },
+        error: {
+            bg: baseColors.red[900],
+            text: baseColors.white
+        },
+        warning: {
+            bg: baseColors.yellow[500],
+            text: baseColors.white
+        }
     }
 };

@@ -1,0 +1,22 @@
+/* -------------------------------------------------------------------------- */
+/* ----| Alerts |------------------------------------------------------------ */
+/* -------------------------------------------------------------------------- */
+
+.alert {
+    @apply p-4 my-2 rounded;
+}
+
+.alert.success {
+    background-color: theme("colors.alerts.success.bg");
+    color: theme("colors.alerts.success.text");
+}
+
+.alert.error {
+    background-color: theme("colors.alerts.error.bg");
+    color: theme("colors.alerts.error.text");
+}
+
+.alert.warning {
+    background-color: theme("colors.alerts.warning.bg");
+    color: theme("colors.alerts.warning.text");
+}

@@ -7,6 +7,7 @@
 @import "badge.css";
 @import "folders.css";
 @import "themes-browser.css";
+@import "alerts.css";
 
 /* Caret - icon used to expand/collapse elements */
 .caret {
