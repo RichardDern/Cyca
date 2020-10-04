@@ -32,6 +32,7 @@ class BladeServiceProvider extends ServiceProvider
 
             $css = mix(sprintf('themes/%s/theme.css', request()->input('theme', $theme)));
 
+            view()->share('activeTheme', $theme);
             view()->share('iconsFileUrl', $this->getIconsFile($theme));
             view()->share('css', $css);
         });

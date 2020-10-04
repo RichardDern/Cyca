@@ -13,7 +13,7 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="icons-file-url" content="{{ $iconsFileUrl }}">
-    <meta name="theme" content="{{ auth()->user()->theme }}">
+    <meta name="theme" content="{{ $activeTheme }}">
 
     <title>{{ config('app.name', 'Cyca') }}</title>
 
