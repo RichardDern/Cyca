@@ -36,7 +36,8 @@
         <div id="account-menu">
             <div class="w-full">
                 <h1 class="text-white tracking-wide text-4xl">
-                    {{ config('app.name') }}
+                    {{ config('app.name') }}<br />
+                    <small class="text-sm">@version('compact')</small>
                 </h1>
                 <div id="account-menu-items">
                     @yield('menu')

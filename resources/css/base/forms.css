@@ -55,7 +55,7 @@ label {
     color: theme("colors.formGroup.text");
 }
 
-.form-group input, input, select {
+.form-group input, input, select, textarea {
     @apply rounded px-2 py-1 flex-grow outline-none;
 
     color: theme("colors.input.text");

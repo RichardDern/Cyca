@@ -9,6 +9,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/', 'HomeController@index')->name('home');
 
         Route::prefix('account')->group(function() {
+            Route::get('/about', 'HomeController@about')->name('account.about');
+
             Route::get('/password', 'HomeController@password')->name('account.password');
 
             Route::get('/theme', 'HomeController@theme')->name('account.theme');

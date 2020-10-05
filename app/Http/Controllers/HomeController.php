@@ -32,6 +32,16 @@ class HomeController extends Controller
     }
 
     /**
+     * Show application's about page'.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function about()
+    {
+        return view('account.about');
+    }
+
+    /**
      * Show user's account page
      */
     public function account()
