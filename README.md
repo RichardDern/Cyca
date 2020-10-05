@@ -65,8 +65,9 @@ Redis extension](https://github.com/phpredis/phpredis), a database server (Cyca
 support SQLite, MySQL/MariaDB and SQLServer - use of SQLite is not recommanded
 for large instances), and the following extra libraries:
 
-- imagick
 - curl
+- git
+- imagick
 - php-gd
 - php-intl
 
