@@ -5,9 +5,9 @@ current:
   major: 0
   minor: 3
   patch: 17
-  prerelease: 5-g651d1ee
+  prerelease: 6-g01d0dca
   buildmetadata: ''
-  commit: 651d1e
+  commit: 01d0dc
   timestamp:
     year: 2020
     month: 10

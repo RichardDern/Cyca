@@ -10,25 +10,29 @@ mix.webpackConfig({
     }
 });
 
-const themes = fs.readdirSync("resources/themes/");
+const publicDir = "public/themes";
+const themesDir = "resources/themes";
+const themes = fs.readdirSync(themesDir);
 
 themes.forEach(theme => {
-    const dir = "resources/themes/" + theme;
+    const themeDir = themesDir + "/" + theme;
+    const publicThemeDir = publicDir + "/" + theme;
 
-    if (fs.lstatSync(dir).isDirectory()) {
+    if (fs.lstatSync(themeDir).isDirectory()) {
         mix.postCss(
-            dir + "/theme.css",
-            "public/themes/" + theme + "/theme.css",
+            themeDir + "/theme.css",
+            publicThemeDir + "/theme.css",
             [
                 require("postcss-import"),
-                require("tailwindcss")(dir + "/theme.js"),
+                require("tailwindcss")(themeDir + "/theme.js"),
                 require("postcss-nested"),
                 require("autoprefixer")
             ]
         );
 
-        mix.copy(dir + "/theme.json", "public/themes/" + theme + "/");
-        mix.copy(dir + "/resources/", "public/themes/" + theme + "/");
+        mix.copy(themeDir + "/theme.json", publicThemeDir + "/");
+        mix.copy(themeDir + "/resources/", publicThemeDir + "/");
+        mix.copy(publicThemeDir, themeDir + "/dist");
     }
 });
 
