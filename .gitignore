@@ -18,3 +18,7 @@ ISSUES.md
 docker-compose.yml
 resources/docker
 .DS_Store
+.gitmodules
+resources/themes/cyca_theme_dark
+resources/themes/cyca_theme_light
+public/themes

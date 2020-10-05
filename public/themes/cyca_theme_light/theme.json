@@ -1,9 +1,0 @@
-{
-    "author": "Richard Dern",
-    "name": "Cyca Light",
-    "description": "Cyca's default theme - Light colors",
-    "url": "https://github.com/RichardDern/cyca_theme_light",
-    "screenshot": "images/screenshot.png",
-    "icons": null,
-    "inherits": "cyca_theme_dark"
-}

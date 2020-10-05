@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\ServiceProvider;
 
 class BladeServiceProvider extends ServiceProvider
@@ -35,11 +36,15 @@ class BladeServiceProvider extends ServiceProvider
             if(!file_exists(public_path($cssRelPath))) {
                 $theme = 'cyca-dark';
                 $cssRelPath = sprintf('themes/%s/theme.css', $theme);
+
+                if(!file_exists(public_path($cssRelPath))) {
+                    throw new \Exception("You need to install a theme !");
+                }
             }
 
             view()->share('activeTheme', $theme);
             view()->share('iconsFileUrl', $this->getIconsFile($theme));
-            view()->share('css', mix($cssRelPath));
+            view()->share('css', asset($cssRelPath));
         });
     }
 

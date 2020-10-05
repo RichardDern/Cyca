@@ -1,8 +1,4 @@
 {
     "/js/app.js": "/js/app.js?id=49b8fcece6c13be01347",
-    "/themes/cyca_theme_dark/theme.css": "/themes/cyca_theme_dark/theme.css?id=d15e9d53ef7aca3f00c4",
-    "/themes/cyca_theme_light/theme.css": "/themes/cyca_theme_light/theme.css?id=a94a3e5540f3c4dd3364",
-    "/js/themes-browser.js": "/js/themes-browser.js?id=ff151c98b8877e51462e",
-    "/themes/cyca_theme_dark/theme.json": "/themes/cyca_theme_dark/theme.json?id=e6af9f523b70bc467aa4",
-    "/themes/cyca_theme_light/theme.json": "/themes/cyca_theme_light/theme.json?id=e55338493fb0f35db50c"
+    "/js/themes-browser.js": "/js/themes-browser.js?id=ff151c98b8877e51462e"
 }
