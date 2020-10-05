@@ -30,11 +30,16 @@ class BladeServiceProvider extends ServiceProvider
                 $theme = auth()->user()->theme;
             }
 
-            $css = mix(sprintf('themes/%s/theme.css', request()->input('theme', $theme)));
+            $cssRelPath = sprintf('themes/%s/theme.css', request()->input('theme', $theme));
+
+            if(!file_exists(public_path($cssRelPath))) {
+                $theme = 'cyca-dark';
+                $cssRelPath = sprintf('themes/%s/theme.css', $theme);
+            }
 
             view()->share('activeTheme', $theme);
             view()->share('iconsFileUrl', $this->getIconsFile($theme));
-            view()->share('css', $css);
+            view()->share('css', mix($cssRelPath));
         });
     }
 
@@ -50,6 +55,11 @@ class BladeServiceProvider extends ServiceProvider
         }
 
         $jsonPath = public_path(sprintf('themes/%s/theme.json', $theme));
+
+        if(!file_exists($jsonPath)) {
+            return null;
+        }
+
         $json = json_decode(file_get_contents($jsonPath), true);
 
         if(!empty($json['icons'])) {
