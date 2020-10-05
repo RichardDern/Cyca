@@ -61,5 +61,14 @@
     "Visits": "Visites",
     "We have emailed your password reset link!": "Nous vous avons envoyé un lien de réinitialisation par email!",
     "You can import the following types of file": "Vous pouvez importer des fichiers de type",
-    "Your profile has been updated": "Votre profil a été mis à jour"
+    "Your profile has been updated": "Votre profil a été mis à jour",
+    "Official website": "Site officiel",
+    "GitHub repository": "Dépôt GitHub",
+    "If you like Cyca, maybe you could consider donating": "Si vous aimez Cyca, peut-être pourriez-vous considérer faire un don",
+    "Via PayPal": "Par PayPal",
+    "Via Buy me a coffee": "Par Buy me a coffee",
+    "Thank you for using Cyca !": "Merci d'utiliser Cyca !",
+    "Licenses": "Licences",
+    "Cyca is a Free and Open Source Software released under the :license license in its most recent version.": "Cyca est un Logiciel Libre sous licence :license dans sa version la plus récente.",
+    "Software used by Cyca can be released under different licenses. Please see below for more informations.": "Les logiciels utilisés par Cyca peuvent être diffusés sous une licence différente. Vous trouverez plus d'informations ci-dessous."
 }

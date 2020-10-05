@@ -17,7 +17,7 @@
 
         <ul>
             <li><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=GFZ3SAY3Y8NAS">{{ __("Via PayPal") }}</a></li>
-            <li><a href="https://www.buymeacoffee.com/richarddern">{{ __("Via Pay me a coffee") }}</a></li>
+            <li><a href="https://www.buymeacoffee.com/richarddern">{{ __("Via Buy me a coffee") }}</a></li>
         </ul>
 
         <p>{{ __("Thank you for using Cyca !") }}</p>
