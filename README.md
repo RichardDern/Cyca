@@ -128,6 +128,20 @@ You can get more informations about installing and using Supervisor from
 [Laravel Horizon documentation](https://laravel.com/docs/horizon#deploying-horizon), 
 Horizon being Cyca's queue manager.
 
+Install the base theme:
+
+```
+php artisan theme:install https://github.com/RichardDern/cyca_theme_dark
+```
+
+Or:
+
+```
+php artisan theme:install https://github.com/RichardDern/cyca_theme_light
+````
+
+If you prefer a bright theme.
+
 You should be now ready to point your browser to Cyca's URL and create your
 first user !
 
