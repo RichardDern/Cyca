@@ -14,10 +14,10 @@ laravel-echo-server.lock
 ROADMAP.md
 CHANGELOG.md
 ISSUES.md
-*.DS_Store
 docker-compose.yml
 resources/docker
 .DS_Store
+._.DS_Store
 .gitmodules
 resources/themes/cyca_theme_dark
 resources/themes/cyca_theme_light

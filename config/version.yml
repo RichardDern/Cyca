@@ -4,10 +4,10 @@ current:
   label: ''
   major: 0
   minor: 3
-  patch: 17
-  prerelease: 7-g6460c76
+  patch: 18
+  prerelease: 1-g19880eb
   buildmetadata: ''
-  commit: 6460c7
+  commit: 19880e
   timestamp:
     year: 2020
     month: 10
