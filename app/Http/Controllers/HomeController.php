@@ -187,7 +187,7 @@ class HomeController extends Controller
 
         $this->importData($data);
 
-        return redirect()->route('import');
+        return ['ok' => true];
     }
 
     protected function importData($data) {

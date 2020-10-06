@@ -13,14 +13,24 @@ export default {
     /**
      * Send a request and return resulting JSON
      */
-    async send(url, params, method = "POST") {
+    async send(url, params, method = "POST", upload = false) {
+        let headers = defaultHeaders;
+
+        if(upload) {
+            headers['Content-Type'] = 'multipart/form-data';
+        }
+
         let options = {
             method: method,
-            headers: defaultHeaders
+            headers: headers
         };
 
         if (params) {
-            options["body"] = JSON.stringify(params);
+            if(upload) {
+                options.body = params;
+            } else {
+                options.body = JSON.stringify(params);
+            }
         }
 
         const response = await fetch(url, options);
@@ -43,8 +53,8 @@ export default {
     /**
      * Send a POST request and return resulting JSON
      */
-    async post(url, params) {
-        return this.send(url, params, "POST");
+    async post(url, params, upload = false) {
+        return this.send(url, params, "POST", upload);
     },
 
     /**
