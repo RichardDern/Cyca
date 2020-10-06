@@ -1,9 +1,9 @@
 {
-    "/js/app.js": "/js/app.js",
-    "/themes/cyca-dark/theme.css": "/themes/cyca-dark/theme.css",
-    "/themes/cyca-light/theme.css": "/themes/cyca-light/theme.css",
-    "/js/import.js": "/js/import.js",
-    "/js/themes-browser.js": "/js/themes-browser.js",
-    "/themes/cyca-dark/theme.json": "/themes/cyca-dark/theme.json",
-    "/themes/cyca-light/theme.json": "/themes/cyca-light/theme.json"
+    "/js/app.js": "/js/app.js?id=a330ddc891f614142a2c",
+    "/themes/cyca-dark/theme.css": "/themes/cyca-dark/theme.css?id=e355873e2524087e1005",
+    "/themes/cyca-light/theme.css": "/themes/cyca-light/theme.css?id=ea68c16ad9e77709ef49",
+    "/js/import.js": "/js/import.js?id=f877a82ec4da259bec43",
+    "/js/themes-browser.js": "/js/themes-browser.js?id=6f4084082dafb397d46b",
+    "/themes/cyca-dark/theme.json": "/themes/cyca-dark/theme.json?id=e6af9f523b70bc467aa4",
+    "/themes/cyca-light/theme.json": "/themes/cyca-light/theme.json?id=bb59033be8f29999311e"
 }

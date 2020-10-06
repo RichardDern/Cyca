@@ -1,41 +1,33 @@
 <template>
     <div id="themes-browser">
-        <div
-            class="card"
-            v-bind:class="{ selected: dirname === selected }"
-            v-for="(data, dirname) in themes"
-            v-bind:key="dirname"
-            v-on:click.capture="selectTheme($event, dirname)"
-        >
-            <h2>
-                <div>{{ data["name"] }}</div>
-                <div>
-                    <a
-                        v-bind:title="__('Preview')"
-                        v-bind:href="route('home', { theme: dirname })"
-                        target="_blank"
-                        ><svg
-                            fill="currentColor"
-                            width="16"
-                            height="16"
-                            class="favicon"
-                        >
-                            <use
-                                v-bind:xlink:href="icon('unread_items')"
-                            /></svg
-                    ></a>
-                </div>
-            </h2>
-            <img v-bind:src="'/themes/' + dirname + '/' + data['screenshot']" />
-            <p class="meta">
-                {{ __("Created by") }}:
-                <a
-                    v-bind:href="data['url']"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    >{{ data["author"] }}</a
-                >
-            </p>
+        <h2>{{ __("Official themes") }}</h2>
+
+        <div class="themes-category">
+            <theme-card
+                v-for="(repository_url, name) in themes.official"
+                v-bind:repository_url="repository_url"
+                v-bind:name="name"
+                v-bind:key="name"
+                v-bind:is_selected="name === selected"
+                v-on:selected="useTheme(name)"
+            ></theme-card>
+        </div>
+
+        <div v-if="themes.community.length > 0">
+            <h2>{{ __("Community themes") }}</h2>
+
+            <p>{{ __("These themes were hand-picked by Cyca's author.") }}</p>
+
+            <div class="themes-category">
+                <theme-card
+                    v-for="(repository_url, name) in themes.community"
+                    v-bind:repository_url="repository_url"
+                    v-bind:name="name"
+                    v-bind:key="name"
+                    v-bind:is_selected="name === selected"
+                    v-on:selected="useTheme(name)"
+                ></theme-card>
+            </div>
         </div>
     </div>
 </template>
@@ -47,7 +39,7 @@ export default {
             themes: [],
             selected: document
                 .querySelector('meta[name="theme"]')
-                .getAttribute("content")
+                .getAttribute("content"),
         };
     },
     mounted: function () {
@@ -61,22 +53,20 @@ export default {
 
             self.themes = await api.get(route("account.getThemes"));
         },
-        selectTheme: function (event, theme) {
+        useTheme: function (theme) {
             const self = this;
 
-            if (
-                event.target.tagName === "A" ||
-                event.target.tagName === "use"
-            ) {
-                return false;
-            }
+            api.post(route("account.setTheme"), {
+                theme: theme,
+            }).then(function () {
+                document
+                    .querySelector('meta[name="theme"]')
+                    .setAttribute("content", theme);
+                document
+                    .getElementById("main-stylesheet")
+                    .setAttribute("href", "/themes/" + theme + "/theme.css");
 
-            api.post(route('account.setTheme'), {
-                theme: theme
-            }).then(function() {
                 self.selected = theme;
-
-                document.getElementById('main-stylesheet').setAttribute('href', '/themes/' + theme + '/theme.css');
             });
         },
     },

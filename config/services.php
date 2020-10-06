@@ -2,6 +2,10 @@
 
 return [
 
+    'themes' => [
+        'database_url' => 'https://raw.githubusercontent.com/RichardDern/cyca_themes_database/main/themes.json'
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Third Party Services

@@ -74,16 +74,12 @@ class HomeController extends Controller
      * Save theme to user's profile
      */
     public function setTheme(Request $request) {
-        $availableThemes = ThemeManager::listAvailableThemes();
-
-        if(!array_key_exists($request->input('theme'), $availableThemes)) {
+        if(!ThemeManager::themeExists($request->input('theme'))) {
             abort(422);
         }
 
         $request->user()->theme = $request->input('theme');
         $request->user()->save();
-
-        return redirect()->back();
     }
 
     /**

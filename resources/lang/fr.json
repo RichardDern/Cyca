@@ -5,6 +5,7 @@
     "Also exists in": "Existe aussi dans",
     "Awaiting e-mail address confirmation": "En attente de confirmation de votre adresse e-mail",
     "Back": "Retour",
+    "Community themes": "Thèmes de la communauté",
     "Confirm Password": "Confirmation du mot de passe",
     "Created by": "Créé par",
     "Current password": "Mot de passe actuel",
@@ -41,6 +42,7 @@
     "MIME type": "Type MIME",
     "My account": "Mon compte",
     "New password": "Nouveau mot de passe",
+    "Official themes": "Thèmes officiels",
     "Official website": "Site officiel",
     "Open": "Ouvrir",
     "Password": "Mot de passe",
@@ -63,6 +65,7 @@
     "Software used by Cyca can be released under different licenses. Please see below for more informations.": "Les logiciels utilisés par Cyca peuvent être diffusés sous une licence différente. Vous trouverez plus d'informations ci-dessous.",
     "Thank you for using Cyca !": "Merci d'utiliser Cyca !",
     "Theme": "Thème",
+    "These themes were hand-picked by Cyca's author.": "Ces thèmes ont été sélectionnés par l'auteur de Cyca.",
     "Unread items": "Éléments non-lus",
     "Update folder": "Mettre à jour le dossier",
     "Update password": "Mettre à jour le mot de passe",
@@ -72,5 +75,6 @@
     "Visits": "Visites",
     "We have emailed your password reset link!": "Nous vous avons envoyé un lien de réinitialisation par email!",
     "You can import the following types of file": "Vous pouvez importer des fichiers de type",
-    "Your profile has been updated": "Votre profil a été mis à jour"
+    "Your profile has been updated": "Votre profil a été mis à jour",
+    "Use this theme": "Utiliser ce thème"
 }

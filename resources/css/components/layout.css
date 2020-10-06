@@ -44,12 +44,12 @@
 
 /* Right part of account-related pages */
 #account-content {
-    @apply h-screen flex items-center pl-6 w-2/3;
+    @apply h-screen flex items-center w-2/3;
 
     background-color: theme("colors.account.content.bg");
 }
 
 /* Right part of account-related pages - Wrapper */
 #account-content-wrapper {
-    @apply w-1/4;
+    @apply w-1/4 pl-6;
 }

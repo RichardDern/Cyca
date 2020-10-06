@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Artisan;
+use App\Facades\ThemeManager;
 use Illuminate\Support\ServiceProvider;
 
 class BladeServiceProvider extends ServiceProvider
@@ -34,12 +34,7 @@ class BladeServiceProvider extends ServiceProvider
             $cssRelPath = sprintf('themes/%s/theme.css', request()->input('theme', $theme));
 
             if(!file_exists(public_path($cssRelPath))) {
-                $theme = 'cyca-dark';
-                $cssRelPath = sprintf('themes/%s/theme.css', $theme);
-
-                if(!file_exists(public_path($cssRelPath))) {
-                    throw new \Exception("You need to install a theme !");
-                }
+                ThemeManager::installTheme($theme);
             }
 
             view()->share('activeTheme', $theme);

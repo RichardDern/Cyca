@@ -5,7 +5,5 @@
 @endpush
 
 @section('content')
-    <div id="account-content-wrapper">
-        <themes-browser></themes-browser>
-    </div>
+    <themes-browser></themes-browser>
 @endsection

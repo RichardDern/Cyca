@@ -13,9 +13,13 @@ Route::group(['middleware' => 'auth'], function () {
 
             Route::get('/password', 'HomeController@password')->name('account.password');
 
-            Route::get('/theme', 'HomeController@theme')->name('account.theme');
-            Route::get('/themes', 'HomeController@getThemes')->name('account.getThemes');
-            Route::post('/theme', 'HomeController@setTheme')->name('account.setTheme');
+            Route::prefix('theme')->group(function() {
+                Route::get('/', 'HomeController@theme')->name('account.theme');
+                Route::post('/', 'HomeController@setTheme')->name('account.setTheme');
+                Route::get('/details/{name}', 'ThemeController@details')->name('account.theme.details');
+
+                Route::get('/themes', 'ThemeController@index')->name('account.getThemes');
+            });
 
             Route::get('/import', 'HomeController@showImportForm')->name('account.import.form');
             Route::post('/import', 'HomeController@import')->name('account.import');

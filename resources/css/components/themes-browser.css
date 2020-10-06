@@ -2,18 +2,23 @@
 /* ----| Themes browser |---------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 
-/**
- * Interface from browsing and setting theme
- */
 #themes-browser {
-    @apply w-full grid grid-cols-1 gap-6 my-6;
+    @apply h-screen w-full overflow-auto p-6;
+}
+
+#themes-browser p {
+    @apply my-2;
+}
+
+.themes-category {
+    @apply grid grid-cols-3 gap-6 my-3;
 }
 
 /**
  * Theme card
  */
 #themes-browser .card {
-    @apply rounded border border-2 p-2 cursor-pointer;
+    @apply rounded border border-2 p-2;
 
     border-color: theme("colors.themes-browser.card.border-color");
 }
@@ -29,13 +34,30 @@
 /**
  * Theme card title
  */
-#themes-browser .card h2 {
-    @apply mb-2 flex justify-between;
+#themes-browser .card header h2 {
+    @apply text-xl;
+}
+
+#themes-browser .card header,
+#themes-browser .card footer {
+    @apply flex justify-between items-center;
+}
+
+#themes-browser .checkmark {
+    margin-top: -15px;
+    color: theme("colors.themes-browser.card.selected.border-color");
 }
 
 /**
  * Theme card meta
  */
- #themes-browser .card .meta {
+#themes-browser .card .card-body {
+    @apply my-2;
+}
+
+/**
+ * Theme card meta
+ */
+#themes-browser .card .meta {
     @apply mt-2 text-xs;
 }

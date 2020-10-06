@@ -2,8 +2,22 @@ require("./bootstrap");
 
 import store from "./store";
 import { mapGetters, mapActions } from "vuex";
+import Echo from "laravel-echo"
 
 if (document.getElementById("app")) {
+    /**
+     * Laravel Echo
+     */
+
+    window.Echo = new Echo({
+        broadcaster: 'pusher',
+        key: 'cyca',
+        wsHost: window.location.hostname,
+        wsPort: 6001,
+        forceTLS: false,
+        disableStats: true,
+    });
+
     const app = new Vue({
         el: "#app",
         store,

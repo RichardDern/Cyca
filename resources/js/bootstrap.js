@@ -7,7 +7,6 @@ window.Vue = require('vue');
 window.collect = require('collect.js');
 window.Pusher = require('pusher-js');
 
-import Echo from "laravel-echo"
 import route from 'ziggy';
 import { Ziggy } from './routes';
 import api from './api';
@@ -15,19 +14,6 @@ import api from './api';
 window.route = route;
 window.Ziggy = Ziggy;
 window.api = api;
-
-/**
- * Laravel Echo
- */
-
-window.Echo = new Echo({
-    broadcaster: 'pusher',
-    key: 'cyca',
-    wsHost: window.location.hostname,
-    wsPort: 6001,
-    forceTLS: false,
-    disableStats: true,
-});
 
 /**
  * Preparing Vue

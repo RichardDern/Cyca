@@ -12,14 +12,14 @@ class InstallTheme extends Command
      *
      * @var string
      */
-    protected $signature = 'theme:install { url : Url to the repository to install the theme from }';
+    protected $signature = 'theme:install { name : Name of the theme to install }';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Install a theme for Cyca from specified URL';
+    protected $description = 'Install a theme for Cyca';
 
     /**
      * Create a new command instance.
@@ -38,12 +38,14 @@ class InstallTheme extends Command
      */
     public function handle()
     {
-        $url = $this->argument('url');
+        $name = $this->argument('name');
+
+        ThemeManager::updateCache();
 
         $this->comment("Please be careful when installing themes.");
         $this->comment("It is highly recommended to check the repository files before installation.");
 
-        ThemeManager::installFromUrl($url);
+        //ThemeManager::installFromName($name);
 
         $this->info("Theme installed !");
 

@@ -5,6 +5,7 @@ return [
         'account',
         'account.password',
         'account.theme',
+        'account.theme.details',
         'account.getThemes',
         'account.setTheme',
         'account.import.form',

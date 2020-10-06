@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use Cache;
+use Http;
 use Str;
 
 /**
@@ -10,11 +12,30 @@ use Str;
 class ThemeManager
 {
     /**
-     * List of available themes, along with their meta data
-     *
-     * @var array
+     * List of available themes
      */
-    private $availableThemes = [];
+    private $allThemes = [];
+
+    /**
+     * Download themes database and cache it
+     */
+    public function updateCache($force = false)
+    {
+        if ($force || !Cache::has('themes_database')) {
+            $dbUrl = config('services.themes.database_url');
+
+            $response = Http::get($dbUrl);
+            $response->throw();
+
+            $contents = $response->json();
+
+            Cache::forever('themes_database', $contents);
+        } else {
+            $contents = Cache::get('themes_database');
+        }
+
+        $this->allThemes = collect($contents);
+    }
 
     /**
      * Return a list of available themes, along with their meta data
@@ -23,37 +44,78 @@ class ThemeManager
      */
     public function listAvailableThemes()
     {
-        if (!empty($this->availableThemes)) {
-            return $this->availableThemes;
-        }
+        $this->updateCache();
 
-        $this->availableThemes = [];
-
-        foreach (glob(public_path('themes/*')) as $path) {
-            $jsonPath = $path . '/theme.json';
-
-            if (!is_dir($path) || !file_exists($jsonPath)) {
-                continue;
-            }
-
-            $json = json_decode(file_get_contents($jsonPath), true);
-
-            $this->availableThemes[basename($path)] = $json;
-        }
-
-        return $this->availableThemes;
+        return $this->allThemes;
     }
 
     /**
-     * Install theme from a URL
+     * Return URL to download specified theme
+     *
+     * @param string $theme
+     * @return string
      */
-    public function installFromUrl($url)
-    {
-        // Name of the directory we'll put files in
-        $dirname = sprintf('cyca_theme_%s', substr(md5($url), 0, 5));
+    public function getThemeUrl($theme) {
+        $url = null;
+
+        if(empty($this->allThemes)) {
+            $this->updateCache();
+        }
+
+        if(array_key_exists($theme, $this->allThemes['official'])) {
+            $url = $this->allThemes['official'][$theme];
+        } else if(array_key_exists($theme, $this->allThemes['community'])) {
+            $url = $this->allThemes['community'][$theme];
+        }
+
+        return $url;
+    }
+
+    /**
+     * Return a boolean value indicating if specified theme exists
+     *
+     * @param string $theme
+     * @return boolean
+     */
+    public function themeExists($theme) {
+        if(empty($this->allThemes)) {
+            $this->updateCache();
+        }
+
+        return array_key_exists($theme, $this->allThemes['official']) || array_key_exists($theme, $this->allThemes['community']);
+    }
+
+    /**
+     * Return theme's details.
+     *
+     * @param string $theme
+     * @return array
+     */
+    public function getThemeDetails($theme) {
+        $meta = null;
+        $jsonPath = public_path(sprintf('themes/%s/theme.json', $theme));
+
+        if(!file_exists($jsonPath)) {
+            $this->installTheme($theme);
+        }
+
+        $meta = json_decode(file_get_contents($jsonPath), true);
+
+        $meta['screenshot'] = sprintf('/themes/%s/%s', $theme, $meta['screenshot']);
+
+        return $meta;
+    }
+
+    /**
+     * Install specified theme locally
+     *
+     * @param string $theme
+     */
+    public function installTheme($theme) {
+        $url = $this->getThemeUrl($theme);
 
         // Physical path to the directory
-        $targetDir = storage_path('app/themes/' . $dirname);
+        $targetDir = storage_path('app/themes/' . $theme);
 
         $command = sprintf('git clone "%s" %s', $url, $targetDir);
 
@@ -85,13 +147,28 @@ class ThemeManager
         $target    = public_path(sprintf('/themes/%s', $themeName));
 
         $this->copyDir($distPath, $target);
+
+        if(!empty($json['inherits'])) {
+            $this->installTheme($json['inherits']);
+        }
     }
 
+    /**
+     * Remove specified directory
+     *
+     * @param string $dir
+     */
     protected function cleanup($dir)
     {
         exec(sprintf("rf -rm %s", $dir));
     }
 
+    /**
+     * Recursively copy one directory to another
+     *
+     * @param string $src
+     * @param string $dst
+     */
     protected function copyDir($src, $dst)
     {
         $dir = opendir($src);
