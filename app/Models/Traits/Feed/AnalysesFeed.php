@@ -37,7 +37,7 @@ trait AnalysesFeed
     {
         // Don't bother if feed isn't attached to any document anymore
         if($this->documents()->count() === 0) {
-            if($this->checked_at->addDays(config('cyca.maxOrphanAge.feed'))->lt(now())) {
+            if(!empty($this->checked_at) && $this->checked_at->addDays(config('cyca.maxOrphanAge.feed'))->lt(now())) {
                 $this->delete();
             }
 
