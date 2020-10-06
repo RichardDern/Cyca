@@ -16,19 +16,24 @@ const themes = fs.readdirSync(themesDir);
 
 themes.forEach(theme => {
     const themeDir = themesDir + "/" + theme;
-    const publicThemeDir = publicDir + "/" + theme;
 
     if (fs.lstatSync(themeDir).isDirectory()) {
-        mix.postCss(
-            themeDir + "/theme.css",
-            publicThemeDir + "/theme.css",
-            [
-                require("postcss-import"),
-                require("tailwindcss")(themeDir + "/theme.js"),
-                require("postcss-nested"),
-                require("autoprefixer")
-            ]
-        );
+        const json = require("./" + themeDir + "/theme.json");
+        const themeName = json["name"]
+            .match(
+                /[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g
+            )
+            .map(x => x.toLowerCase())
+            .join("-");
+
+        const publicThemeDir = publicDir + "/" + themeName;
+
+        mix.postCss(themeDir + "/theme.css", publicThemeDir + "/theme.css", [
+            require("postcss-import"),
+            require("tailwindcss")(themeDir + "/theme.js"),
+            require("postcss-nested"),
+            require("autoprefixer")
+        ]);
 
         mix.copy(themeDir + "/theme.json", publicThemeDir + "/");
         mix.copy(themeDir + "/resources/", publicThemeDir + "/");
