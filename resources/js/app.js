@@ -1,202 +1,188 @@
-require("./bootstrap");
+require("./modules/bootstrap");
+require("./modules/websockets");
+require("./modules/components")("app");
 
 import store from "./store";
 import { mapGetters, mapActions } from "vuex";
-import Echo from "laravel-echo"
 
-if (document.getElementById("app")) {
-    /**
-     * Laravel Echo
-     */
+const app = new Vue({
+    el: "#app",
+    store,
+    data: function() {
+        return {
+            detailsViewComponent: null
+        };
+    },
+    mounted: function() {
+        const self = this;
 
-    window.Echo = new Echo({
-        broadcaster: 'pusher',
-        key: 'cyca',
-        wsHost: window.location.hostname,
-        wsPort: 6001,
-        forceTLS: false,
-        disableStats: true,
-    });
-
-    const app = new Vue({
-        el: "#app",
-        store,
-        data: function() {
-            return {
-                detailsViewComponent: null
-            };
-        },
-        mounted: function() {
+        self.listenToBroadcast();
+    },
+    computed: {
+        ...mapGetters({
+            selectedFolder: "folders/selectedFolder",
+            documents: "documents/documents",
+            selectedDocuments: "documents/selectedDocuments",
+            feedItems: "feedItems/feedItems",
+            selectedFeedItems: "feedItems/selectedFeedItems"
+        })
+    },
+    watch: {
+        selectedFolder: function(oldFolder, newFolder) {
             const self = this;
 
-            self.listenToBroadcast();
-        },
-        computed: {
-            ...mapGetters({
-                selectedFolder: "folders/selectedFolder",
-                documents: "documents/documents",
-                selectedDocuments: "documents/selectedDocuments",
-                feedItems: "feedItems/feedItems",
-                selectedFeedItems: "feedItems/selectedFeedItems",
-            })
-        },
-        watch: {
-            selectedFolder: function(oldFolder, newFolder) {
-                const self = this;
-
-                if(oldFolder && newFolder && oldFolder.id !== newFolder.id) {
-                    self.detailsViewComponent = "details-folder";
-                }
-            },
-            selectedDocuments: function(documents) {
-                const self = this;
-
-                if (documents && documents.length > 0) {
-                    if (documents.length === 1) {
-                        self.detailsViewComponent = "details-document";
-                    } else {
-                        self.detailsViewComponent = "details-documents";
-                    }
-                } else {
-                    self.detailsViewComponent = "details-folder";
-                }
-            },
-            selectedFeedItems: function(feedItems) {
-                const self = this;
-
-                if (feedItems && feedItems.length > 0) {
-                    if (feedItems.length === 1) {
-                        self.detailsViewComponent = "details-feed-item";
-                    } else {
-                        //TODO: Handle multiple selected feed items ?
-                        self.detailsViewComponent = null;
-                    }
-                } else {
-                    if (
-                        self.selectedDocuments &&
-                        self.selectedDocuments.length > 0
-                    ) {
-                        self.detailsViewComponent = "details-document";
-                    } else {
-                        self.detailsViewComponent = "details-folder";
-                    }
-                }
+            if (oldFolder && newFolder && oldFolder.id !== newFolder.id) {
+                self.detailsViewComponent = "details-folder";
             }
         },
-        methods: {
-            ...mapActions({
-                showFolder: "folders/show",
-                indexFolders: "folders/index",
-                selectDocuments: "documents/selectDocuments",
-                indexDocuments: "documents/index",
-                dropIntoFolder: "folders/dropIntoFolder",
-                selectFeedItems: "feedItems/selectFeedItems",
-                markFeedItemsAsRead: "feedItems/markAsRead",
-                updateDocument: "documents/update",
-                deleteDocuments: "documents/destroy"
-            }),
+        selectedDocuments: function(documents) {
+            const self = this;
 
-            /**
-             * Listen to broadcast events
-             */
-            listenToBroadcast: function() {
-                const self = this;
-                const userId = document
-                    .querySelector('meta[name="user-id"]')
-                    .getAttribute("content");
-
-                window.Echo.private("App.Models.User." + userId).notification(
-                    notification => {
-                        switch (notification.type) {
-                            case "App\\Notifications\\UnreadItemsChanged":
-                                self.indexFolders().then(function() {
-                                    self.indexDocuments();
-                                });
-                                break;
-                            case "App\\Notifications\\DocumentUpdated":
-                                self.updateDocument({
-                                    documentId: notification.document.id,
-                                    newProperties: notification.document
-                                });
-                                break;
-                        }
-                    }
-                );
-            },
-
-            /**
-             * Folders tree has been loaded
-             */
-            onFoldersLoaded: function() {
-                //
-            },
-
-            /**
-             * User-action - Selected folder has changed
-             * @param {*} folder
-             */
-            onSelectedFolderChanged: function(folder) {
-                const self = this;
-
-                self.showFolder(folder);
-
+            if (documents && documents.length > 0) {
+                if (documents.length === 1) {
+                    self.detailsViewComponent = "details-document";
+                } else {
+                    self.detailsViewComponent = "details-documents";
+                }
+            } else {
                 self.detailsViewComponent = "details-folder";
-            },
+            }
+        },
+        selectedFeedItems: function(feedItems) {
+            const self = this;
 
-            /**
-             * User-action - Something has been dropped into a folder
-             */
-            onItemDropped: function(folder) {
-                const self = this;
-
-                self.dropIntoFolder(folder);
-            },
-
-            /**
-             * User-action - Selected documents has changed
-             */
-            onSelectedDocumentsChanged: function(documents) {
-                const self = this;
-
-                self.selectDocuments(documents);
-            },
-
-            /**
-             * User-action - Refresh documents list after adding one
-             */
-            onDocumentAdded: function() {
-                //
-            },
-
-            /**
-             * User-action - Refresh documents list after deleting one (or more)
-             */
-            onDocumentsDeleted: function({ folder, documents }) {
-                const self = this;
-
-                self.deleteDocuments({
-                    documents: documents,
-                    folder: folder
-                });
-            },
-
-            /**
-             * User-action - Selected feed items has changed
-             */
-            onSelectedFeedItemsChanged: function(feedItems) {
-                const self = this;
-
-                self.selectFeedItems(feedItems);
-            },
-
-            /**
-             * User-action - Feed items marked as read
-             */
-            onFeedItemsRead: function(data) {
-                const self = this;
-
-                self.markFeedItemsAsRead(data);
+            if (feedItems && feedItems.length > 0) {
+                if (feedItems.length === 1) {
+                    self.detailsViewComponent = "details-feed-item";
+                } else {
+                    //TODO: Handle multiple selected feed items ?
+                    self.detailsViewComponent = null;
+                }
+            } else {
+                if (
+                    self.selectedDocuments &&
+                    self.selectedDocuments.length > 0
+                ) {
+                    self.detailsViewComponent = "details-document";
+                } else {
+                    self.detailsViewComponent = "details-folder";
+                }
             }
         }
-    });
-}
+    },
+    methods: {
+        ...mapActions({
+            showFolder: "folders/show",
+            indexFolders: "folders/index",
+            selectDocuments: "documents/selectDocuments",
+            indexDocuments: "documents/index",
+            dropIntoFolder: "folders/dropIntoFolder",
+            selectFeedItems: "feedItems/selectFeedItems",
+            markFeedItemsAsRead: "feedItems/markAsRead",
+            updateDocument: "documents/update",
+            deleteDocuments: "documents/destroy"
+        }),
+
+        /**
+         * Listen to broadcast events
+         */
+        listenToBroadcast: function() {
+            const self = this;
+            const userId = document
+                .querySelector('meta[name="user-id"]')
+                .getAttribute("content");
+
+            window.Echo.private("App.Models.User." + userId).notification(
+                notification => {
+                    switch (notification.type) {
+                        case "App\\Notifications\\UnreadItemsChanged":
+                            self.indexFolders().then(function() {
+                                self.indexDocuments();
+                            });
+                            break;
+                        case "App\\Notifications\\DocumentUpdated":
+                            self.updateDocument({
+                                documentId: notification.document.id,
+                                newProperties: notification.document
+                            });
+                            break;
+                    }
+                }
+            );
+        },
+
+        /**
+         * Folders tree has been loaded
+         */
+        onFoldersLoaded: function() {
+            //
+        },
+
+        /**
+         * User-action - Selected folder has changed
+         * @param {*} folder
+         */
+        onSelectedFolderChanged: function(folder) {
+            const self = this;
+
+            self.showFolder(folder);
+
+            self.detailsViewComponent = "details-folder";
+        },
+
+        /**
+         * User-action - Something has been dropped into a folder
+         */
+        onItemDropped: function(folder) {
+            const self = this;
+
+            self.dropIntoFolder(folder);
+        },
+
+        /**
+         * User-action - Selected documents has changed
+         */
+        onSelectedDocumentsChanged: function(documents) {
+            const self = this;
+
+            self.selectDocuments(documents);
+        },
+
+        /**
+         * User-action - Refresh documents list after adding one
+         */
+        onDocumentAdded: function() {
+            //
+        },
+
+        /**
+         * User-action - Refresh documents list after deleting one (or more)
+         */
+        onDocumentsDeleted: function({ folder, documents }) {
+            const self = this;
+
+            self.deleteDocuments({
+                documents: documents,
+                folder: folder
+            });
+        },
+
+        /**
+         * User-action - Selected feed items has changed
+         */
+        onSelectedFeedItemsChanged: function(feedItems) {
+            const self = this;
+
+            self.selectFeedItems(feedItems);
+        },
+
+        /**
+         * User-action - Feed items marked as read
+         */
+        onFeedItemsRead: function(data) {
+            const self = this;
+
+            self.markFeedItemsAsRead(data);
+        }
+    }
+});

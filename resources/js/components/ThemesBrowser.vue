@@ -13,7 +13,7 @@
             ></theme-card>
         </div>
 
-        <div v-if="themes.community.length > 0">
+        <div v-if="themes.community && themes.community.length > 0">
             <h2>{{ __("Community themes") }}</h2>
 
             <p>{{ __("These themes were hand-picked by Cyca's author.") }}</p>

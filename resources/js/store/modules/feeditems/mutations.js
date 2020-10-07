@@ -48,6 +48,5 @@ export default {
         for(var property in newProperties) {
             feedItem[property] = newProperties[property];
         }
-        console.log(feedItem);
     },
 };
