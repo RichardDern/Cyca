@@ -211,10 +211,10 @@ export default {
                 url: self.document.url,
             };
 
-            try {
+            if (navigator.share) {
                 navigator.share(sharedData);
-            } catch (err) {
-                console.log(err);
+            } else {
+                location.href = 'mailto:?subject=' + sharedData.title + '&body=' + sharedData.url;
             }
         },
 

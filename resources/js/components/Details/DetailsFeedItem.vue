@@ -117,10 +117,10 @@ export default {
                 url: self.feedItem.url,
             };
 
-            try {
+            if (navigator.share) {
                 navigator.share(sharedData);
-            } catch (err) {
-                console.log(err);
+            } else {
+                location.href = 'mailto:?subject=' + sharedData.title + '&body=' + sharedData.url;
             }
         },
     },
