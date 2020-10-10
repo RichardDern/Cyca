@@ -19,7 +19,7 @@
     @endauth
 
     <link rel="icon" href="{{ asset('images/favicon.png') }}" />
-    <link rel="stylesheet" href="{{ $css }}" />
+    <link rel="stylesheet" href="{{ $css }}" id="main-stylesheet" />
 
     <title>{{ config('app.name', 'Cyca') }}</title>
 
