@@ -19,6 +19,7 @@ export default {
         const self = this;
 
         self.$watch('highlight.expression', self.updateHighlight);
+        self.$watch('highlight.color', self.updateHighlight);
     },
     methods: {
         updateHighlight: async function() {
