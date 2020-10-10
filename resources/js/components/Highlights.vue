@@ -8,7 +8,7 @@
             </tr>
             <tr>
                 <td class="w-1/2"><input type="text" class="w-full" v-model.lazy="newExpression" v-bind:aria-label="__('Expression')" /></td>
-                <td class="w-1/4"><input type="color" class="w-full" v-model.lazy="newColor" v-bind:aria-label="__('Color')" /></td>
+                <td class="w-1/4"><input type="color" class="w-full" v-model="newColor" v-bind:aria-label="__('Color')" /></td>
                 <td>
                     <button type="submit" class="success" v-on:click="addHighlight" v-bind:title="__('Add highlight')">
                         <svg fill="currentColor" width="16" height="16">
