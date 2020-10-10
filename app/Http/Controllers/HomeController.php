@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Folder;
+use App\Facades\ThemeManager;
 use App\Models\Document;
 use App\Models\Feed;
+use App\Models\Folder;
+use App\Models\Highlight;
 use App\Models\IgnoredFeed;
-use App\Facades\ThemeManager;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -60,7 +61,8 @@ class HomeController extends Controller
     /**
      * Theme selection page
      */
-    public function theme() {
+    public function theme()
+    {
         $availableThemes = ThemeManager::listAvailableThemes();
 
         return view('account.themes')->with(['availableThemes' => $availableThemes]);
@@ -74,15 +76,17 @@ class HomeController extends Controller
         return view('account.highlights');
     }
 
-    public function getThemes() {
+    public function getThemes()
+    {
         return ThemeManager::listAvailableThemes();
     }
 
     /**
      * Save theme to user's profile
      */
-    public function setTheme(Request $request) {
-        if(!ThemeManager::themeExists($request->input('theme'))) {
+    public function setTheme(Request $request)
+    {
+        if (!ThemeManager::themeExists($request->input('theme'))) {
             abort(422);
         }
 
@@ -93,59 +97,66 @@ class HomeController extends Controller
     /**
      * Export user's data
      */
-    public function export(Request $request) {
-        $root = $request->user()->folders()->ofType('root')->first();
+    public function export(Request $request)
+    {
+        $root      = $request->user()->folders()->ofType('root')->first();
         $rootArray = [
             'documents' => [],
-            'folders' => $this->exportTree($root->children()->get())
+            'folders'   => $this->exportTree($root->children()->get()),
         ];
 
-        foreach($root->documents()->get() as $document) {
+        foreach ($root->documents()->get() as $document) {
             $documentArray = [
-                'url' => $document->url,
-                'feeds' => []
+                'url'   => $document->url,
+                'feeds' => [],
             ];
 
-            foreach($document->feeds()->get() as $feed) {
+            foreach ($document->feeds()->get() as $feed) {
                 $documentArray['feeds'] = [
-                    'url' => $feed->url,
-                    'is_ignored' => $feed->is_ignored
+                    'url'        => $feed->url,
+                    'is_ignored' => $feed->is_ignored,
                 ];
             }
 
             $rootArray['documents'][] = $documentArray;
         }
 
-        return response()->streamDownload(function ()use ($rootArray) {
-            echo json_encode($rootArray);
+        $data = [
+            'highlights' => $request->user()->highlights()->select(['expression', 'color'])->get(),
+            'bookmarks'  => $rootArray,
+        ];
+
+        return response()->streamDownload(function () use ($data) {
+            echo json_encode($data);
         }, sprintf('%s - Export.json', $request->user()->name), [
-            'Content-Type' => 'application/x-json'
+            'Content-Type' => 'application/x-json',
         ]);
     }
 
     /**
      * Export a single tree branch
      */
-    protected function exportTree($folders) {
+    protected function exportTree($folders)
+    {
         $array = [];
 
-        foreach($folders as $folder) {
+        foreach ($folders as $folder) {
             $folderArray = [
-                'title' => $folder->title,
+                'title'     => $folder->title,
                 'documents' => [],
-                'folders' => []
+                'folders'   => [],
             ];
 
-            foreach($folder->documents()->get() as $document) {
+            foreach ($folder->documents()->get() as $document) {
                 $documentArray = [
-                    'url' => $document->url,
-                    'feeds' => []
+                    'url'   => $document->url,
+                    'feeds' => [],
                 ];
 
-                foreach($document->feeds()->get() as $feed) {
+                foreach ($document->feeds()->get() as $feed) {
                     $documentArray['feeds'][] = [
-                        'url' => $feed->url,
-                        'is_ignored' => $feed->is_ignored
+                        'url'        => $feed->url,
+                        'is_ignored' => $feed->is_ignored,
                     ];
                 }
 
@@ -163,7 +174,8 @@ class HomeController extends Controller
     /**
      * Show the import form
      */
-    public function showImportForm() {
+    public function showImportForm()
+    {
         return view('account.import');
     }
 
@@ -171,8 +183,9 @@ class HomeController extends Controller
      * Import a file
      */
     //TODO: Handle different input file types, such as OPML and Netscape bookmarks
-    public function import(Request $request) {
-        if(!$request->hasFile('file')) {
+    public function import(Request $request)
+    {
+        if (!$request->hasFile('file')) {
             abort(422, "A file is required");
         }
 
@@ -180,12 +193,12 @@ class HomeController extends Controller
             abort(422, "Invalid file");
         }
 
-        $contents = file_get_contents((string)$request->file('file'));
-        $data = [];
+        $contents = file_get_contents((string) $request->file('file'));
+        $data     = [];
 
         try {
             $data = json_decode($contents, true);
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
 
         }
 
@@ -194,18 +207,39 @@ class HomeController extends Controller
         return ['ok' => true];
     }
 
-    protected function importData($data) {
+    protected function importData($data)
+    {
         $user = request()->user();
-        $root = $user->folders()->ofType('root')->first();
 
-        $this->importDocuments($root, $data['documents']);
-        $this->importFolders($root, $data['folders']);
+        if (!empty($data['highlights'])) {
+            foreach ($data['highlights'] as $highlightData) {
+                $highlight = Highlight::where('user_id', $user->id)->where('expression', $highlightData['expression'])->first();
+
+                if (!$highlight) {
+                    $highlight = new Highlight();
+
+                    $highlight->user_id    = $user->id;
+                    $highlight->expression = $highlightData['expression'];
+                    $highlight->color      = $highlightData['color'];
+
+                    $highlight->save();
+                }
+            }
+        }
+
+        if (!empty($data['bookmarks'])) {
+            $root = $user->folders()->ofType('root')->first();
+
+            $this->importDocuments($root, $data['bookmarks']['documents'] ?: []);
+            $this->importFolders($root, $data['bookmarks']['folders'] ?: []);
+        }
     }
 
-    protected function importFolders($folder, $foldersData) {
+    protected function importFolders($folder, $foldersData)
+    {
         $user = request()->user();
 
-        foreach($foldersData as $folderData) {
+        foreach ($foldersData as $folderData) {
             $children = $user->folders()->save(new Folder([
                 'title'     => $folderData['title'],
                 'parent_id' => $folder->id,
@@ -216,13 +250,14 @@ class HomeController extends Controller
         }
     }
 
-    protected function importDocuments($folder, $documentsData) {
-        foreach($documentsData as $docData) {
-            if(empty($docData['url'])) {
+    protected function importDocuments($folder, $documentsData)
+    {
+        foreach ($documentsData as $docData) {
+            if (empty($docData['url'])) {
                 continue;
             }
 
-            $url = urldecode($docData['url']);
+            $url      = urldecode($docData['url']);
             $document = Document::firstOrCreate(['url' => $url]);
 
             $this->importFeeds($document, $docData['feeds']);
@@ -233,12 +268,13 @@ class HomeController extends Controller
         }
     }
 
-    protected function importFeeds($document, $feedsData) {
-        $user = request()->user();
+    protected function importFeeds($document, $feedsData)
+    {
+        $user          = request()->user();
         $feedsToAttach = $document->feeds()->get()->pluck('id')->all();
 
-        foreach($feedsData as $feedData) {
-            if(empty($feedData['url'])) {
+        foreach ($feedsData as $feedData) {
+            if (empty($feedData['url'])) {
                 continue;
             }
 
@@ -248,10 +284,10 @@ class HomeController extends Controller
 
             $feedsToAttach[] = $feed->id;
 
-            if($feedData['is_ignored']) {
+            if ($feedData['is_ignored']) {
                 $ignoredFeed = IgnoredFeed::where('user_id', $user->id)->where('feed_id', $feed->id)->first();
 
-                if(!$ignoredFeed) {
+                if (!$ignoredFeed) {
                     $ignoredFeed = new IgnoredFeed();
 
                     $ignoredFeed->user()->associate($user);
