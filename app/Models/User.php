@@ -66,6 +66,16 @@ class User extends Authenticatable implements MustVerifyEmail, HasLocalePreferen
         return $this->hasManyThrough(Bookmark::class, Folder::class);
     }
 
+    /**
+     * Highlights registered by this user
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function highlights()
+    {
+        return $this->hasMany(Highlight::class);
+    }
+
     # --------------------------------------------------------------------------
     # ----| Methods |-----------------------------------------------------------
     # --------------------------------------------------------------------------

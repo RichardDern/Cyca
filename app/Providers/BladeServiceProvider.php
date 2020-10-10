@@ -24,6 +24,14 @@ class BladeServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->registerThemeVariables();
+        $this->registerHighlights();
+    }
+
+    /**
+     * Register theme-specific variables into view
+     */
+    protected function registerThemeVariables() {
         view()->composer('*', function ($view) {
             $theme = config('app.theme');
 
@@ -73,5 +81,17 @@ class BladeServiceProvider extends ServiceProvider
         }
 
         return null;
+    }
+
+    protected function registerHighlights() {
+        view()->composer('*', function ($view) {
+            if (!auth()->check()) {
+                return;
+            }
+
+            $highlights = auth()->user()->highlights()->get();
+
+            view()->share('highlights', $highlights);
+        });
     }
 }

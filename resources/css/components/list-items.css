@@ -61,3 +61,7 @@
 
     color: theme("colors.feed-item.meta");
 }
+
+.highlight {
+    @apply rounded px-1;
+}

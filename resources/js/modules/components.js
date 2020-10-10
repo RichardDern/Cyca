@@ -19,6 +19,10 @@ const sets = {
     "themesBrowser": [
         "ThemeCard",
         "ThemesBrowser"
+    ],
+    "highlights": [
+        "Highlights",
+        "Highlight"
     ]
 }
 

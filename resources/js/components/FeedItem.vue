@@ -6,7 +6,7 @@
         rel="noopener noreferrer"
         v-on:click.left.exact.stop.prevent="onClicked"
     >
-        <div class="feed-item-label" v-html="feedItem.title"></div>
+        <div class="feed-item-label" v-html="highlight(feedItem.title)"></div>
         <div class="feed-item-meta">
             <date-time
                 class="flex-none mr-4 w-2/12"
@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import TEXTColor from 'textcolor';
 import { mapGetters, mapActions } from "vuex";
 
 export default {
@@ -84,6 +85,15 @@ export default {
 
             self.$emit("selected-feeditems-changed", selectedFeedItems);
         },
+        highlight: function(title) {
+            highlights.forEach(function(highlight) {
+                var regex = new RegExp("(" + highlight.expression + ")(?![^<]*>|[^<>]*</)", "i");
+                let textColor = TEXTColor.findTextColor(highlight.color);
+                title = title.replace(regex, '<span class="highlight" style="color: ' + textColor + '; background-color: ' + highlight.color + '">$1</span>');
+            });
+
+            return title;
+        }
     },
 };
 </script>

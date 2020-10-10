@@ -53,3 +53,13 @@
 #account-content-wrapper {
     @apply w-1/4 pl-6;
 }
+
+/* Right part of account-related pages - Large wrapper */
+#account-content-wrapper.large {
+    @apply w-1/2;
+}
+
+/* Right part of account-related pages - Title */
+#account-content-wrapper h2 {
+    @apply text-4xl my-4;
+}

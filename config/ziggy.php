@@ -27,6 +27,9 @@ return [
         'folder.show',
         'folder.store',
         'folder.update',
+        'highlight.destroy',
+        'highlight.store',
+        'highlight.update',
         'home'
     ],
 ];

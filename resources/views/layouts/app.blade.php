@@ -25,8 +25,12 @@
 
     <script>
         const lang = @json($langStrings);
-
     </script>
+    @auth
+    <script>
+        const highlights = @json($highlights);
+    </script>
+    @endauth
 
     @stack('scripts')
 </head>

@@ -66,6 +66,14 @@ class HomeController extends Controller
         return view('account.themes')->with(['availableThemes' => $availableThemes]);
     }
 
+    /**
+     * Manage user's highlights
+     */
+    public function highlights()
+    {
+        return view('account.highlights');
+    }
+
     public function getThemes() {
         return ThemeManager::listAvailableThemes();
     }

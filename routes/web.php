@@ -21,6 +21,8 @@ Route::group(['middleware' => 'auth'], function () {
                 Route::get('/themes', 'ThemeController@index')->name('account.getThemes');
             });
 
+            Route::get('/highlights', 'HomeController@highlights')->name('account.highlights');
+
             Route::get('/import', 'HomeController@showImportForm')->name('account.import.form');
             Route::post('/import', 'HomeController@import')->name('account.import');
 
@@ -53,6 +55,14 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('feed_item',  'FeedItemController')->only([
             'index',
             'show'
+        ]);
+
+        Route::resource('highlight', 'HighlightController')->only([
+            'destroy',
+            'index',
+            'store',
+            'show',
+            'update'
         ]);
     });
 });

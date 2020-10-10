@@ -1,9 +1,10 @@
 {
-    "/js/app.js": "/js/app.js?id=a60b304e941732617ba9",
-    "/themes/cyca-dark/theme.css": "/themes/cyca-dark/theme.css?id=413c81b3aca59764179f",
-    "/themes/cyca-light/theme.css": "/themes/cyca-light/theme.css?id=fdac9b3775b2e876b310",
-    "/js/import.js": "/js/import.js?id=ae7efb211c07b0292933",
-    "/js/themes-browser.js": "/js/themes-browser.js?id=62022c1fe5d200aad9b6",
+    "/js/app.js": "/js/app.js?id=00a40eda576f46e93f37",
+    "/themes/cyca-dark/theme.css": "/themes/cyca-dark/theme.css?id=f95a8b57b8bf8c8993a9",
+    "/themes/cyca-light/theme.css": "/themes/cyca-light/theme.css?id=ddebef2fd3bdf5569cbc",
+    "/js/highlights.js": "/js/highlights.js?id=7d434ae3e4e2f88330f7",
+    "/js/import.js": "/js/import.js?id=a22d9f4a7e1f9bb440f3",
+    "/js/themes-browser.js": "/js/themes-browser.js?id=952525d10bea2b418aef",
     "/themes/cyca-dark/theme.json": "/themes/cyca-dark/theme.json?id=e6af9f523b70bc467aa4",
     "/themes/cyca-light/theme.json": "/themes/cyca-light/theme.json?id=bb59033be8f29999311e"
 }

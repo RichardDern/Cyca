@@ -44,6 +44,7 @@ themes.forEach(theme => {
 mix.js("resources/js/app.js", "public/js");
 mix.js("resources/js/themes-browser.js", "public/js");
 mix.js("resources/js/import.js", "public/js");
+mix.js("resources/js/highlights.js", "public/js");
 
 if (mix.inProduction()) {
     mix.version();
