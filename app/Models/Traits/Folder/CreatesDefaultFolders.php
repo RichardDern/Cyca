@@ -21,16 +21,6 @@ trait CreatesDefaultFolders
      */
     private static $POSITION_ROOT = 1;
 
-    /**
-     * Position of the account link in the folders hierarchy
-     */
-    private static $POSITION_ACCOUNT = 2;
-
-    /**
-     * Position of the log out link in the folders hierarchy
-     */
-    private static $POSITION_LOGOUT = 3;
-
     # --------------------------------------------------------------------------
     # ----| Methods |-----------------------------------------------------------
     # --------------------------------------------------------------------------
@@ -61,20 +51,6 @@ trait CreatesDefaultFolders
                 'title'       => 'Root',
                 'position'    => self::$POSITION_ROOT,
                 'is_selected' => true,
-                'is_expanded' => true
-            ]),
-            new self([
-                'type'        => 'account',
-                'title'       => 'My account',
-                'position'    => self::$POSITION_ACCOUNT,
-                'is_selected' => false,
-                'is_expanded' => true
-            ]),
-            new self([
-                'type'        => 'logout',
-                'title'       => 'Log out',
-                'position'    => self::$POSITION_LOGOUT,
-                'is_selected' => false,
                 'is_expanded' => true
             ]),
         ]);

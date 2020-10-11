@@ -30,6 +30,7 @@ return [
         'highlight.destroy',
         'highlight.store',
         'highlight.update',
-        'home'
+        'home',
+        'logout'
     ],
 ];

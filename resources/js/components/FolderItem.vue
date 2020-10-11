@@ -209,12 +209,6 @@ export default {
             const self = this;
 
             switch (self.folder.type) {
-                case "account":
-                    window.location.href = route("account");
-                    break;
-                case "logout":
-                    document.getElementById("logout-form").submit();
-                    break;
                 default:
                     self.$emit("selected-folder-changed", self.folder);
                     break;

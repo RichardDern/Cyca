@@ -4,9 +4,27 @@
 
 /* Folders tree - the left panel */
 #folders-tree {
-    @apply w-2/12 h-screen overflow-auto;
+    @apply w-2/12 h-screen flex flex-col;
 
-    background-color: theme("colors.folders-tree");
+    background-color: theme("colors.folders-tree.bg");
+}
+
+#tree {
+    @apply overflow-auto;
+}
+
+#tree-top {
+    @apply border-b-2 overflow-auto flex-none;
+
+    max-height: 9rem;
+    border-color: theme("colors.folders-tree.separator");
+}
+
+/* Bottom of the tree - Holds my account and logout links */
+#tree-bottom {
+    @apply border-t-2;
+
+    border-color: theme("colors.folders-tree.separator");
 }
 
 /* Documents list - the middle panel */
