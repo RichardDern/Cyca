@@ -61,3 +61,7 @@ label {
     color: theme("colors.input.text");
     background-color: theme("colors.input.bg");
 }
+
+input[type=color] {
+    @apply p-1;
+}
