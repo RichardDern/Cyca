@@ -89,7 +89,7 @@ class BladeServiceProvider extends ServiceProvider
                 return;
             }
 
-            $highlights = auth()->user()->highlights()->get();
+            $highlights = auth()->user()->highlights()->select(['id', 'expression', 'color'])->get();
 
             view()->share('highlights', $highlights);
         });
