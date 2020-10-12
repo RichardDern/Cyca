@@ -54,7 +54,7 @@ export default {
         return {
             highlights: highlights,
             newExpression: null,
-            newColor: null,
+            newColor: '#000000',
         };
     },
     computed: {
@@ -76,7 +76,7 @@ export default {
             });
 
             self.newExpression = null;
-            self.newColor = null;
+            self.newColor = '#000000';
         },
         onDestroy: async function (id) {
             const self = this;
