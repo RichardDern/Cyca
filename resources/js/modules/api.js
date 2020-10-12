@@ -16,8 +16,8 @@ export default {
     async send(url, params, method = "POST", upload = false) {
         let headers = defaultHeaders;
 
-        if(upload) {
-            headers['Content-Type'] = 'multipart/form-data';
+        if (upload) {
+            headers["Content-Type"] = "multipart/form-data";
         }
 
         let options = {
@@ -26,8 +26,32 @@ export default {
         };
 
         if (params) {
-            if(upload) {
+            if (upload) {
                 options.body = params;
+            } else if (method === "GET") {
+                // Build the query string
+                var query = Object.keys(params)
+                    .map(
+                        k => {
+                            let key = encodeURIComponent(k);
+                            let val = params[k];
+
+                            if(val.constructor === Array) {
+                                let arr = [];
+
+                                val.forEach((v => {
+                                    arr.push(key + "[]=" + encodeURIComponent(v));
+                                }));
+
+                                return arr.join('&');
+                            } else {
+                                return key + "=" + encodeURIComponent(val);
+                            }
+                        }
+                    )
+                    .join("&");
+
+                url = url + "?" + query;
             } else {
                 options.body = JSON.stringify(params);
             }
@@ -46,8 +70,8 @@ export default {
     /**
      * Send a GET request and return resulting JSON
      */
-    async get(url) {
-        return this.send(url, null, "GET");
+    async get(url, params) {
+        return this.send(url, params, "GET");
     },
 
     /**

@@ -2,6 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
+    <base href="{{ env('APP_URL') }}" />
     <meta charset="utf-8" />
 
     <meta name="application-name" content="Cyca" />

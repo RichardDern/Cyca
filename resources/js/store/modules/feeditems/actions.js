@@ -18,11 +18,9 @@ export default {
         let feedItems = [];
 
         if (feeds.length > 0) {
-            const data = await api.get(
-                route("feed_item.index", {
-                    feeds: feeds
-                })
-            );
+            const data = await api.get(route("feed_item.index"), {
+                feeds: feeds
+            });
 
             feedItems = data.data;
             nextPage = data.next_page_url !== null ? data.current_page + 1 : 0;
@@ -42,12 +40,10 @@ export default {
         }
 
         const items = getters.feedItems;
-        const data = await api.get(
-            route("feed_item.index", {
-                page: getters.nextPage,
-                feeds: getters.feeds
-            })
-        );
+        const data = await api.get(route("feed_item.index"), {
+            page: getters.nextPage,
+            feeds: getters.feeds
+        });
 
         const newItems = [...items, ...data.data];
 

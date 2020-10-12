@@ -83,6 +83,9 @@ class BladeServiceProvider extends ServiceProvider
         return null;
     }
 
+    /**
+     * Register user's highlights into view
+     */
     protected function registerHighlights() {
         view()->composer('*', function ($view) {
             if (!auth()->check()) {

@@ -1,6 +1,16 @@
 <?php
 
+/**
+ * Configuration used by the route:generate command
+ */
 return [
+    /**
+     * Target path of generated routes.js file
+     */
+    'target' => resource_path('js/modules/routes.js'),
+    /**
+     * Whitelisted routes
+     */
     'whitelist' => [
         'account',
         'account.password',
