@@ -2,7 +2,7 @@
 
 @section('content')
     <div id="about">
-        <h2>Cyca <small>@version('compact')</small></h2>
+        <h2>Cyca <small>{{ config('app.version') }}</small></h2>
 
         <p>{{ __('Created by') }} Richard Dern.</p>
 

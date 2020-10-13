@@ -21,7 +21,6 @@
         "league/uri": "^6.3",
         "lordelph/icofileloader": "^2.0",
         "neitanod/forceutf8": "^2.0",
-        "pragmarx/version": "^1.2",
         "pusher/pusher-php-server": "~3.0",
         "simplepie/simplepie": "^1.5"
     },
