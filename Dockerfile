@@ -5,6 +5,8 @@
 # Use php as parent container
 FROM php:7.4-fpm as php-fpm
 
+WORKDIR /app
+
 RUN set -ex; \
     \
     # Install system-wide dependencies
@@ -19,6 +21,7 @@ RUN set -ex; \
         locales \
         locales-all \
         memcached \
+        nginx \
         unzip \
         wget \
         zip \
@@ -83,8 +86,6 @@ RUN set -ex; \
 # ----| Composer |--------------------------------------------------------------
 # ------------------------------------------------------------------------------
 
-WORKDIR /app
-
 RUN set -ex; \
     \
     EXPECTED_CHECKSUM="$(wget -q -O - https://composer.github.io/installer.sig)"; \
@@ -104,13 +105,20 @@ RUN set -ex; \
 # ----| Getting Cyca |----------------------------------------------------------
 # ------------------------------------------------------------------------------
 
-RUN git clone https://github.com/RichardDern/Cyca /app
+#RUN git clone https://github.com/RichardDern/Cyca /app
+COPY . /app
 
 RUN set -ex; \
     \
     [ ! -e ".env" ] && cp .env.example .env; \
-    /usr/bin/composer update; \
+    /usr/bin/composer --no-dev update; \
     chown -R www-data:www-data ./
+
+# ------------------------------------------------------------------------------
+# ----| Web server |------------------------------------------------------------
+# ------------------------------------------------------------------------------
+
+COPY resources/container/nginx.conf /etc/nginx/sites-available/default
 
 # ------------------------------------------------------------------------------
 # ----| Cron |------------------------------------------------------------------
