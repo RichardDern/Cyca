@@ -65,19 +65,6 @@ class HomeController extends Controller
     }
 
     /**
-     * Manage user's highlights
-     */
-    public function highlights()
-    {
-        return view('account.highlights');
-    }
-
-    public function getThemes()
-    {
-        return ThemeManager::listAvailableThemes();
-    }
-
-    /**
      * Save theme to user's profile
      */
     public function setTheme(Request $request)
@@ -88,6 +75,14 @@ class HomeController extends Controller
 
         $request->user()->theme = $request->input('theme');
         $request->user()->save();
+    }
+
+    /**
+     * Manage user's highlights
+     */
+    public function highlights()
+    {
+        return view('account.highlights');
     }
 
     /**
