@@ -65,10 +65,11 @@ export default {
     /**
      * Remove the specified resource from storage.
      */
-    async destroy({ commit }, folder) {
+    async destroy({ commit, dispatch }, folder) {
         const data = await api.delete(route("folder.destroy", folder));
 
         commit("setFolders", data);
+        dispatch("show");
     },
 
     /**
