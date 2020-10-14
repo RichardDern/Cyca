@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Facades\ThemeManager;
 use App\Services\Importer;
 use Illuminate\Http\Request;
+use App\Services\Exporter;
 
 class HomeController extends Controller
 {
@@ -86,83 +87,6 @@ class HomeController extends Controller
     }
 
     /**
-     * Export user's data
-     */
-    public function export(Request $request)
-    {
-        $root      = $request->user()->folders()->ofType('root')->first();
-        $rootArray = [
-            'documents' => [],
-            'folders'   => $this->exportTree($root->children()->get()),
-        ];
-
-        foreach ($root->documents()->get() as $document) {
-            $documentArray = [
-                'url'   => $document->url,
-                'feeds' => [],
-            ];
-
-            foreach ($document->feeds()->get() as $feed) {
-                $documentArray['feeds'] = [
-                    'url'        => $feed->url,
-                    'is_ignored' => $feed->is_ignored,
-                ];
-            }
-
-            $rootArray['documents'][] = $documentArray;
-        }
-
-        $data = [
-            'highlights' => $request->user()->highlights()->select(['expression', 'color'])->get(),
-            'bookmarks'  => $rootArray,
-        ];
-
-        return response()->streamDownload(function () use ($data) {
-            echo json_encode($data);
-        }, sprintf('%s - Export.json', $request->user()->name), [
-            'Content-Type' => 'application/x-json',
-        ]);
-    }
-
-    /**
-     * Export a single tree branch
-     */
-    protected function exportTree($folders)
-    {
-        $array = [];
-
-        foreach ($folders as $folder) {
-            $folderArray = [
-                'title'     => $folder->title,
-                'documents' => [],
-                'folders'   => [],
-            ];
-
-            foreach ($folder->documents()->get() as $document) {
-                $documentArray = [
-                    'url'   => $document->url,
-                    'feeds' => [],
-                ];
-
-                foreach ($document->feeds()->get() as $feed) {
-                    $documentArray['feeds'][] = [
-                        'url'        => $feed->url,
-                        'is_ignored' => $feed->is_ignored,
-                    ];
-                }
-
-                $folderArray['documents'][] = $documentArray;
-            }
-
-            $folderArray['folders'] = $this->exportTree(($folder->children()->get()));
-
-            $array[] = $folderArray;
-        }
-
-        return $array;
-    }
-
-    /**
      * Show the import form
      */
     public function showImportForm()
@@ -178,5 +102,19 @@ class HomeController extends Controller
         (new Importer())->fromRequest($request)->import();
 
         return ['ok' => true];
+    }
+
+    /**
+     * Export user's data
+     */
+    public function export(Request $request)
+    {
+        $data = (new Exporter())->forUser($request->user())->export();
+
+        return response()->streamDownload(function () use ($data) {
+            echo json_encode($data);
+        }, sprintf('%s - Export.json', $request->user()->name), [
+            'Content-Type' => 'application/x-json',
+        ]);
     }
 }
