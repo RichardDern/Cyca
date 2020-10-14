@@ -55,16 +55,17 @@ class ThemeManager
      * @param string $theme
      * @return string
      */
-    public function getThemeUrl($theme) {
+    public function getThemeUrl($theme)
+    {
         $url = null;
 
-        if(empty($this->allThemes)) {
+        if (empty($this->allThemes)) {
             $this->updateCache();
         }
 
-        if(array_key_exists($theme, $this->allThemes['official'])) {
+        if (array_key_exists($theme, $this->allThemes['official'])) {
             $url = $this->allThemes['official'][$theme];
-        } else if(array_key_exists($theme, $this->allThemes['community'])) {
+        } else if (array_key_exists($theme, $this->allThemes['community'])) {
             $url = $this->allThemes['community'][$theme];
         }
 
@@ -77,8 +78,9 @@ class ThemeManager
      * @param string $theme
      * @return boolean
      */
-    public function themeExists($theme) {
-        if(empty($this->allThemes)) {
+    public function themeExists($theme)
+    {
+        if (empty($this->allThemes)) {
             $this->updateCache();
         }
 
@@ -91,13 +93,12 @@ class ThemeManager
      * @param string $theme
      * @return array
      */
-    public function getThemeDetails($theme) {
-        $meta = null;
+    public function getThemeDetails($theme)
+    {
+        $meta     = null;
         $jsonPath = public_path(sprintf('themes/%s/theme.json', $theme));
 
-        if(!file_exists($jsonPath)) {
-            $this->installTheme($theme);
-        }
+        $this->installTheme($theme);
 
         $meta = json_decode(file_get_contents($jsonPath), true);
 
@@ -111,8 +112,10 @@ class ThemeManager
      *
      * @param string $theme
      */
-    public function installTheme($theme) {
-        $url = $this->getThemeUrl($theme);
+    public function installTheme($theme)
+    {
+        $theme = Str::slug($theme);
+        $url   = $this->getThemeUrl($theme);
 
         // Physical path to the directory
         $targetDir = storage_path('app/themes/' . $theme);
@@ -148,7 +151,7 @@ class ThemeManager
 
         $this->copyDir($distPath, $target);
 
-        if(!empty($json['inherits'])) {
+        if (!empty($json['inherits'])) {
             $this->installTheme($json['inherits']);
         }
     }
