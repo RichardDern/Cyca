@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Facades\ThemeManager;
-use App\Services\Import\Importer;
+use App\Services\Importer;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller

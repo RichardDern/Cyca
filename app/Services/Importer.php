@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Import;
+namespace App\Services;
 
 use App\Contracts\ImportAdapter;
 use App\Models\Document;
