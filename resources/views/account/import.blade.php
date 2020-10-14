@@ -7,7 +7,7 @@
 @section('content')
     <div id="account-content-wrapper">
         <div class="w-full flex flex-col">
-            <importer></importer>
+            <importer v-bind:available-importers='@json(config('importers.adapters'))'></importer>
         </div>
     </div>
 @endsection

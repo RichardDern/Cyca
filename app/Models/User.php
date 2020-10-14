@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Translation\HasLocalePreference;
+use App\Services\Import\Importer;
 
 class User extends Authenticatable implements MustVerifyEmail, HasLocalePreference
 {
@@ -112,5 +113,13 @@ class User extends Authenticatable implements MustVerifyEmail, HasLocalePreferen
     public function preferredLocale()
     {
         return $this->lang;
+    }
+
+    /**
+     * Import initial set of data
+     */
+    public function importInitialData() {
+        $importer = new Importer();
+        $importer->forUser($this)->fromFile(resource_path('initial_data.json'))->import();
     }
 }

@@ -15,5 +15,6 @@ class UserObserver
     public function created(User $user)
     {
         $user->createDefaultFolders();
+        $user->importInitialData();
     }
 }

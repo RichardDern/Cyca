@@ -3,11 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Facades\ThemeManager;
-use App\Models\Document;
-use App\Models\Feed;
-use App\Models\Folder;
-use App\Models\Highlight;
-use App\Models\IgnoredFeed;
+use App\Services\Import\Importer;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -182,122 +178,10 @@ class HomeController extends Controller
     /**
      * Import a file
      */
-    //TODO: Handle different input file types, such as OPML and Netscape bookmarks
     public function import(Request $request)
     {
-        if (!$request->hasFile('file')) {
-            abort(422, "A file is required");
-        }
-
-        if (!$request->file('file')->isValid()) {
-            abort(422, "Invalid file");
-        }
-
-        $contents = file_get_contents((string) $request->file('file'));
-        $data     = [];
-
-        try {
-            $data = json_decode($contents, true);
-        } catch (\Exception $ex) {
-
-        }
-
-        $this->importData($data);
+        (new Importer())->fromRequest($request)->import();
 
         return ['ok' => true];
-    }
-
-    protected function importData($data)
-    {
-        $user = request()->user();
-
-        if (!empty($data['highlights'])) {
-            foreach ($data['highlights'] as $highlightData) {
-                $highlight = Highlight::where('user_id', $user->id)->where('expression', $highlightData['expression'])->first();
-
-                if (!$highlight) {
-                    $highlight = new Highlight();
-
-                    $highlight->user_id    = $user->id;
-                    $highlight->expression = $highlightData['expression'];
-                    $highlight->color      = $highlightData['color'];
-
-                    $highlight->save();
-                }
-            }
-        }
-
-        if (!empty($data['bookmarks'])) {
-            $root = $user->folders()->ofType('root')->first();
-
-            $this->importDocuments($root, $data['bookmarks']['documents'] ?: []);
-            $this->importFolders($root, $data['bookmarks']['folders'] ?: []);
-        }
-    }
-
-    protected function importFolders($folder, $foldersData)
-    {
-        $user = request()->user();
-
-        foreach ($foldersData as $folderData) {
-            $children = $user->folders()->save(new Folder([
-                'title'     => $folderData['title'],
-                'parent_id' => $folder->id,
-            ]));
-
-            $this->importDocuments($children, $folderData['documents']);
-            $this->importFolders($children, $folderData['folders']);
-        }
-    }
-
-    protected function importDocuments($folder, $documentsData)
-    {
-        foreach ($documentsData as $docData) {
-            if (empty($docData['url'])) {
-                continue;
-            }
-
-            $url      = urldecode($docData['url']);
-            $document = Document::firstOrCreate(['url' => $url]);
-
-            $this->importFeeds($document, $docData['feeds']);
-
-            $folder->documents()->save($document, [
-                'initial_url' => $url,
-            ]);
-        }
-    }
-
-    protected function importFeeds($document, $feedsData)
-    {
-        $user          = request()->user();
-        $feedsToAttach = $document->feeds()->get()->pluck('id')->all();
-
-        foreach ($feedsData as $feedData) {
-            if (empty($feedData['url'])) {
-                continue;
-            }
-
-            $feedUrl = urldecode($feedData['url']);
-
-            $feed = Feed::firstOrCreate(['url' => $feedUrl]);
-
-            $feedsToAttach[] = $feed->id;
-
-            if ($feedData['is_ignored']) {
-                $ignoredFeed = IgnoredFeed::where('user_id', $user->id)->where('feed_id', $feed->id)->first();
-
-                if (!$ignoredFeed) {
-                    $ignoredFeed = new IgnoredFeed();
-
-                    $ignoredFeed->user()->associate($user);
-                    $ignoredFeed->feed()->associate($feed);
-
-                    $ignoredFeed->save();
-                }
-            }
-        }
-
-        $document->feeds()->sync($feedsToAttach);
     }
 }
