@@ -112,7 +112,7 @@ return [
     |--------------------------------------------------------------------------
      */
 
-    'version'           => '0.6.0',
+    'version'           => '0.6.1',
 
     /*
     |--------------------------------------------------------------------------
@@ -193,7 +193,6 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
-        App\Providers\HorizonServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\ObserversServiceProvider::class,
         App\Providers\LangServiceProvider::class,

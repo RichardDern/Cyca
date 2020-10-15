@@ -16,7 +16,6 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/fortify": "^1.5",
         "laravel/framework": "^8.0",
-        "laravel/horizon": "^5.0",
         "laravel/tinker": "^2.0",
         "league/uri": "^6.3",
         "lordelph/icofileloader": "^2.0",
