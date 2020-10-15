@@ -135,7 +135,7 @@ RUN set -ex; \
 
 VOLUME /app
 
-COPY resources/examples/supervisor/cyca_queue.docker.conf /etc/supervisord.conf
+COPY resources/container/supervisord.conf /etc/supervisord.conf
 COPY resources/container/entrypoint.sh /usr/local/bin
 
 RUN set -ex; \
