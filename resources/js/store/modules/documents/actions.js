@@ -146,7 +146,7 @@ export default {
         commit("setSelectedDocuments", []);
 
         const data = await api.post(
-            route("document.destroy_bookmarks", folder.id),
+            route("document.destroy_bookmarks", { folder: folder.id }),
             {
                 documents: collect(documents)
                     .pluck("id")
