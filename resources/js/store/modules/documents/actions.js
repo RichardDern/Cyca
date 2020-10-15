@@ -101,8 +101,8 @@ export default {
 
         const data = await api.post(
                 route("document.move", {
-                    sourceFolder: sourceFolder,
-                    targetFolder: targetFolder
+                    sourceFolder: sourceFolder.id,
+                    targetFolder: targetFolder.id
                 }),
                 {
                     documents: collect(documents)
@@ -121,7 +121,7 @@ export default {
      */
     async incrementVisits({ commit }, { document, folder }) {
         const data = await api.post(
-            route("document.visit", { document: document, folder: folder })
+            route("document.visit", { document: document.id, folder: folder.id })
         );
 
         commit("update", {
@@ -146,7 +146,7 @@ export default {
         commit("setSelectedDocuments", []);
 
         const data = await api.post(
-            route("document.destroy_bookmarks", folder),
+            route("document.destroy_bookmarks", folder.id),
             {
                 documents: collect(documents)
                     .pluck("id")
