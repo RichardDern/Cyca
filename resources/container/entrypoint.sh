@@ -3,6 +3,8 @@
 set -e
 
 if [ "$1" = "php-fpm" ]; then
+    . /app/.env
+
     if [ -z "${APP_KEY:-}" -o "$APP_KEY" = "" ]; then
         php /app/artisan key:generate --no-interaction
         echo "APP_KEY automatically set"
