@@ -6,7 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Translation\HasLocalePreference;
-use App\Services\Import\Importer;
+use App\Services\Importer;
 
 class User extends Authenticatable implements MustVerifyEmail, HasLocalePreference
 {
