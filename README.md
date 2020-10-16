@@ -1,6 +1,6 @@
 # Cyca
 
-![](https://www.getcyca.com/images/cyca-0.3.png)
+![](https://www.getcyca.com/images/cover.png)
 
 ## About
 
