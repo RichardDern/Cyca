@@ -16,6 +16,7 @@ if [ "$1" = "php-fpm" ]; then
     php /app/artisan storage:link
     php /app/artisan optimize
     php /app/artisan cache:clear
+    php /app/artisan config:clear
     chown -R www-data:www-data /app/
 fi
 
