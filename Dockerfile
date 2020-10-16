@@ -22,7 +22,6 @@ RUN set -ex; \
         locales-all \
         memcached \
         nginx \
-        supervisor \
         unzip \
         wget \
         zip \
@@ -135,7 +134,6 @@ RUN set -ex; \
 
 VOLUME /app
 
-COPY resources/container/supervisord.conf /etc/supervisord.conf
 COPY resources/container/entrypoint.sh /usr/local/bin
 
 RUN set -ex; \
