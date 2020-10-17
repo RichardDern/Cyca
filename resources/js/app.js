@@ -3,7 +3,7 @@ require("./modules/websockets");
 require("./modules/components")("app");
 
 import store from "./store";
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
 
 const app = new Vue({
     el: "#app",
@@ -24,7 +24,8 @@ const app = new Vue({
             documents: "documents/documents",
             selectedDocuments: "documents/selectedDocuments",
             feedItems: "feedItems/feedItems",
-            selectedFeedItems: "feedItems/selectedFeedItems"
+            selectedFeedItems: "feedItems/selectedFeedItems",
+            getUnreadItemsFolder: "folders/getUnreadItemsFolder"
         })
     },
     watch: {
@@ -80,7 +81,8 @@ const app = new Vue({
             selectFeedItems: "feedItems/selectFeedItems",
             markFeedItemsAsRead: "feedItems/markAsRead",
             updateDocument: "documents/update",
-            deleteDocuments: "documents/destroy"
+            deleteDocuments: "documents/destroy",
+            updateFolder: "folders/updateProperties"
         }),
 
         /**
@@ -96,8 +98,31 @@ const app = new Vue({
                 notification => {
                     switch (notification.type) {
                         case "App\\Notifications\\UnreadItemsChanged":
-                            self.indexFolders().then(function() {
-                                self.indexDocuments();
+                            for (var documentId in notification.documents) {
+                                self.updateDocument({
+                                    documentId: documentId,
+                                    newProperties: {
+                                        feed_item_states_count:
+                                            notification.documents[documentId]
+                                    }
+                                });
+                            }
+
+                            for (var folderId in notification.folders) {
+                                self.updateFolder({
+                                    folderId: folderId,
+                                    newProperties: {
+                                        feed_item_states_count:
+                                            notification.folders[folderId]
+                                    }
+                                });
+                            }
+
+                            self.updateFolder({
+                                folderId: self.getUnreadItemsFolder.id,
+                                newProperties: {
+                                    feed_item_states_count: notification.total
+                                }
                             });
                             break;
                         case "App\\Notifications\\DocumentUpdated":

@@ -53,13 +53,26 @@ export default {
     /**
      * Update the specified resource in storage.
      */
-    async update({ commit }, { folder, newProperties }) {
+    async update({ dispatch }, { folder, newProperties }) {
         const data = await api.put(
             route("folder.update", folder),
             newProperties
         );
 
-        commit("update", { folder: folder, newProperties: data });
+        dispatch("update", { folderId: folder.id, newProperties: data });
+    },
+
+    /**
+     * Update the specified resource in storage.
+     */
+    updateProperties({ commit, getters }, { folderId, newProperties }) {
+        const folder = getters.folders.find(f => f.id == folderId);
+
+        if (!folder) {
+            return;
+        }
+
+        commit("update", { folder: folder, newProperties: newProperties });
     },
 
     /**

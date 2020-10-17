@@ -8,7 +8,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use App\Models\Document;
 
-class DocumentUpdated extends Notification implements ShouldQueue
+class DocumentUpdated extends Notification
 {
     use Queueable;
 

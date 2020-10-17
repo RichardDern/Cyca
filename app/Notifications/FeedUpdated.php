@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class FeedUpdated extends Notification implements ShouldQueue
+class FeedUpdated extends Notification
 {
     use Queueable;
 

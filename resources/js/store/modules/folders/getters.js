@@ -21,5 +21,17 @@ export default {
      */
     draggedFolder: state => {
         return state.draggedFolder;
+    },
+    /**
+     * Return a folder by its id
+     */
+    getFolderById: (state) => (id) => {
+        return state.folders.find(folder => folder.id === id);
+    },
+    /**
+     * Return the "unread items" folder
+     */
+    getUnreadItemsFolder: (state)  => {
+        return state.folders.find(folder => folder.type === 'unread_items');
     }
 }
