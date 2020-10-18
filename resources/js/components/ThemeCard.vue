@@ -16,7 +16,7 @@
                 <a
                     class="button info mr-2"
                     v-bind:title="__('Preview')"
-                    v-bind:href="route('home', { theme: name })"
+                    v-bind:href="route('home') + '?theme=' + name"
                     target="_blank"
                 >
                     <svg fill="currentColor" width="16" height="16">
