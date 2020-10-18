@@ -40,3 +40,10 @@
 #account-menu-items a:hover {
     color: theme("colors.account.menu.item.hovered");
 }
+
+/* List of feeds in the document details panel */
+.feeds-list {
+    @apply rounded mb-2 p-2;
+
+    background-color: theme("colors.feeds-list.bg");
+}

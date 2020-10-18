@@ -88,7 +88,7 @@
             <div
                 v-for="feed in document.feeds"
                 v-bind:key="feed.id"
-                class="rounded bg-gray-600 mb-2 p-2"
+                class="feeds-list"
             >
                 <div class="flex justify-between items-center">
                     <div class="flex items-center my-0 py-0">
