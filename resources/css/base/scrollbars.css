@@ -6,7 +6,7 @@
    that is currently Firefox-only */
 * {
     scrollbar-width: thin;
-    scrollbar-color: transparent theme("colors.scrollbar");
+    scrollbar-color: theme("colors.scrollbar") transparent;
 }
 
 /* Works on Chrome/Edge/Safari */
