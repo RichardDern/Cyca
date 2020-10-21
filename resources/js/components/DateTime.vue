@@ -5,7 +5,7 @@
 </template>
 <script>
 export default {
-    props: ['datetime'],
+    props: ['datetime', 'onlyDate', 'onlyTime'],
     computed: {
         iso: function() {
             if(!this.datetime) {
@@ -15,6 +15,12 @@ export default {
             return new Date(this.datetime).toISOString();
         },
         formatted: function() {
+            if(this.onlyTime) {
+                return new Date(this.datetime).toLocaleTimeString();
+            } else if(this.onlyDate) {
+                return new Date(this.datetime).toLocaleDateString();
+            }
+
             return new Date(this.datetime).toLocaleString();
         }
     }

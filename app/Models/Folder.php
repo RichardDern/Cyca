@@ -133,6 +133,26 @@ class Folder extends Model
         }
     }
 
+    /**
+     * Return a formatted path to the folder, using every ascendant's title
+     * 
+     * @return string
+     */
+    public function getBreadcrumbsAttribute() {
+        $parts = [
+            $this->title
+        ];
+
+        $parent = $this->parent;
+
+        while($parent !== null) {
+            $parts[] = $parent->title;
+            $parent = $parent->parent;
+        }
+
+        return implode('/', array_reverse($parts));
+    }
+
     # --------------------------------------------------------------------------
     # ----| Relations |---------------------------------------------------------
     # --------------------------------------------------------------------------
@@ -225,5 +245,19 @@ class Folder extends Model
                 $query->where('is_read', false)->where('user_id', $self->user_id);
             }])->with('feeds.ignored')->get();
         }
+    }
+
+    /**
+     * Return an array used to represent model in a history entry
+     * 
+     * @return array
+     */
+    public function toHistoryEntry()
+    {
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'breadcrumbs' => $this->breadcrumbs
+        ];
     }
 }

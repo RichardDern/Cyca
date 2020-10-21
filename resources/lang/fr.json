@@ -84,5 +84,15 @@
     "Visits": "Visites",
     "We have emailed your password reset link!": "Nous vous avons envoyé un lien de réinitialisation par email!",
     "You can import the following types of file": "Vous pouvez importer des fichiers de type",
-    "Your profile has been updated": "Votre profil a été mis à jour"
+    "Your profile has been updated": "Votre profil a été mis à jour",
+    "History": "Historique",
+    "User :user created (:email)": "Utilisateur :user créé (:email)",
+    ":user created the folder :folder in :parent": ":user a créé le dossier :folder dans :parent",
+    ":user created the folder :folder": ":user a créé le dossier :folder",
+    ":user deleted folder :folder from :parent": ":user a supprimé le dossier :folder supprimé de :parent",
+    ":user deleted folder :folder": ":user a supprimé le dossier :folder",
+    ":user created a bookmark to :document in :folder": ":user a créé un signet vers :document dans :folder",
+    ":user removed the bookmark to :document from :folder": ":user a supprimé le signet vers :document dans :folder",
+    ":user ignores feed :feed": ":user ignore le flux :feed",
+    ":user follows feed :feed": ":user suit le flux :feed"
 }

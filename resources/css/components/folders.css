@@ -4,6 +4,13 @@
 
 /* This file defines colors for folders icons */
 
+/* A folder when displayed inline */
+.inline-folder {
+    @apply inline-block text-sm rounded px-2 py-1;
+
+    background-color: theme("colors.folders.inline-folder.bg");
+}
+
 /* Regular folder */
 .folder-common {
     color: theme("colors.folders.common");

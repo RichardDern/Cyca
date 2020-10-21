@@ -27,4 +27,22 @@ class Bookmark extends Pivot
      * @var bool
      */
     public $incrementing = true;
+
+    # --------------------------------------------------------------------------
+    # ----| Relations |---------------------------------------------------------
+    # --------------------------------------------------------------------------
+
+    /**
+     * Associated document
+     */
+    public function document() {
+        return $this->belongsTo(Document::class);
+    }
+
+    /**
+     * Associated folder
+     */
+    public function folder() {
+        return $this->belongsTo(Folder::class);
+    }
 }

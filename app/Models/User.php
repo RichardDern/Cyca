@@ -77,6 +77,15 @@ class User extends Authenticatable implements MustVerifyEmail, HasLocalePreferen
         return $this->hasMany(Highlight::class);
     }
 
+    /**
+     * User's history entries
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function historyEntries() {
+        return $this->hasMany(HistoryEntry::class);
+    }
+
     # --------------------------------------------------------------------------
     # ----| Methods |-----------------------------------------------------------
     # --------------------------------------------------------------------------
@@ -101,7 +110,8 @@ class User extends Authenticatable implements MustVerifyEmail, HasLocalePreferen
      *
      * @return \Illuminate\Support\Collection
      */
-    public function getFlatTree() {
+    public function getFlatTree()
+    {
         return Folder::getFlatTreeFor($this);
     }
 
@@ -118,8 +128,23 @@ class User extends Authenticatable implements MustVerifyEmail, HasLocalePreferen
     /**
      * Import initial set of data
      */
-    public function importInitialData() {
+    public function importInitialData()
+    {
         $importer = new Importer();
         $importer->forUser($this)->fromFile(resource_path('initial_data.json'))->import();
+    }
+
+    /**
+     * Return an array used to represent model in a history entry
+     * 
+     * @return array
+     */
+    public function toHistoryEntry()
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'email' => $this->email
+        ];
     }
 }

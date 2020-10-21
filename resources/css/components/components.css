@@ -47,3 +47,8 @@
 
     background-color: theme("colors.feeds-list.bg");
 }
+
+/* A document when displayed inline */
+.inline-document .favicon {
+    @apply inline-block;
+}

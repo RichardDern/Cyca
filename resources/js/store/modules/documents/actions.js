@@ -173,12 +173,12 @@ export default {
     },
 
     followFeed({commit}, feed) {
-        api.post(route("feed.follow", feed.id));
+        api.post(route("feed.follow", feed));
         commit("ignoreFeed", {feed: feed, ignored: false});
     },
 
     ignoreFeed({commit}, feed) {
-        api.post(route("feed.ignore", feed.id));
+        api.post(route("feed.ignore", feed));
         commit("ignoreFeed", {feed: feed, ignored: true});
     }
 };

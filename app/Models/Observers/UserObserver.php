@@ -3,6 +3,7 @@
 namespace App\Models\Observers;
 
 use App\Models\User;
+use App\Models\HistoryEntry;
 
 class UserObserver
 {
@@ -16,5 +17,13 @@ class UserObserver
     {
         $user->createDefaultFolders();
         $user->importInitialData();
+
+        HistoryEntry::create([
+            'user_id' => $user->id,
+            'event' => 'user_created',
+            'details' => [
+                'user' => $user->toHistoryEntry()
+            ]
+        ]);
     }
 }
