@@ -23,6 +23,10 @@ const sets = {
     "highlights": [
         "Highlights",
         "Highlight"
+    ],
+    "historyBrowser": [
+        "HistoryBrowser",
+        "DateTime",
     ]
 }
 

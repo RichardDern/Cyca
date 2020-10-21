@@ -117,4 +117,12 @@ class HomeController extends Controller
             'Content-Type' => 'application/x-json',
         ]);
     }
+
+    /**
+     * Browse user's history
+     */
+    public function history()
+    {
+        return view('account.history');
+    }
 }

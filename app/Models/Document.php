@@ -207,4 +207,17 @@ class Document extends Model
 
         return $this->storagePath;
     }
+
+    /**
+     * Return an array used to represent model in a history entry
+     * 
+     * @return array
+     */
+    public function toHistoryEntry()
+    {
+        return [
+            'id' => $this->id,
+            'url' => $this->url
+        ];
+    }
 }

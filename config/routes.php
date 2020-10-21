@@ -7,7 +7,7 @@ return [
     /**
      * Target path of generated routes.js file
      */
-    'target' => resource_path('js/modules/routes.js'),
+    'target' => resource_path('js/modules/routes.json'),
     /**
      * Whitelisted routes
      */
@@ -40,6 +40,7 @@ return [
         'highlight.destroy',
         'highlight.store',
         'highlight.update',
+        'history_entry.index',
         'home',
         'logout'
     ],

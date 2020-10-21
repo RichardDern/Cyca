@@ -27,6 +27,8 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/import', 'HomeController@import')->name('account.import');
 
             Route::get('/export', 'HomeController@export')->name('account.export');
+
+            Route::get('/history', 'HomeController@history')->name('account.history');
         });
 
         Route::post('/document/move/{sourceFolder}/{targetFolder}', 'DocumentController@move')->name('document.move');
@@ -63,6 +65,10 @@ Route::group(['middleware' => 'auth'], function () {
             'store',
             'show',
             'update'
+        ]);
+
+        Route::resource('history_entry', 'HistoryEntryController')->only([
+            'index'
         ]);
     });
 });
