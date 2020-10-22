@@ -9,12 +9,18 @@
 
 /* Date header */
 .timeline h2 {
-    @apply text-xl font-bold my-8;
+    @apply text-xl font-bold py-8 sticky top-0;
+
+    background-color: theme("colors.timeline.h2.bg");
 }
 
 /* Timeline element wrapper */
+.timeline ol {
+    @apply ml-4 pl-4 border-l;
+}
+
 .timeline ol li {
-    @apply mb-2;
+    @apply leading-4 mb-4;
 }
 
 /* History entry */
@@ -24,10 +30,10 @@
 
 /* Time component of a history entry */
 .history-entry time {
-    @apply text-xs w-1/12 text-center;
+    @apply text-xs w-1/12 flex-none text-center;
 }
 
 /* Descriptive text of a history entry */
 .history-entry .event {
-    @apply flex-grow;
+    
 }

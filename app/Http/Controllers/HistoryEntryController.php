@@ -16,8 +16,7 @@ class HistoryEntryController extends Controller
     {
         $entries = $request->user()->historyEntries()
             ->orderBy('created_at', 'desc')
-            ->limit(50)
-            ->simplePaginate(50);
+            ->simplePaginate(25);
 
         return $entries;
     }
