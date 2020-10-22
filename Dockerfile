@@ -132,8 +132,6 @@ RUN set -ex; \
 
 # ------------------------------------------------------------------------------
 
-VOLUME /app
-
 COPY resources/container/entrypoint.sh /usr/local/bin
 
 RUN set -ex; \
