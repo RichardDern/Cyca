@@ -26,3 +26,4 @@ Dockerfile.dev
 resources/container/entrypoint.dev.sh
 supervisord.log
 supervisord.pid
+.php_cs

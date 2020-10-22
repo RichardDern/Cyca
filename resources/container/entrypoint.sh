@@ -2,6 +2,8 @@
 
 set -e
 
+php /app/artisan storage:link
+
 if [ "$1" = "php-fpm" ]; then
     . /app/.env
 
@@ -13,7 +15,6 @@ if [ "$1" = "php-fpm" ]; then
     fi
 
     php /app/artisan migrate
-    php /app/artisan storage:link
     php /app/artisan optimize
     php /app/artisan cache:clear
     php /app/artisan config:clear
