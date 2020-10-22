@@ -81,8 +81,8 @@ class HistoryEntry extends Model
         $user = sprintf('<a href="mailto:%s">%s</a>', $userEmail, $userName);
 
         if($this->folder) {
-            $iconColor = $this->folder->parent ? $this->folder->parent->iconColor : $this->folder->iconColor;
-            $title = $this->folder->parent ? $this->folder->parent->breadcrumbs : $this->folder->title;
+            $iconColor = $this->folder->iconColor;
+            $title = $this->folder->breadcrumbs;
 
             $folder = sprintf('<span class="inline-folder %s">%s</span>',
                 $iconColor,
@@ -141,9 +141,8 @@ class HistoryEntry extends Model
                 ]);
             case "folder_created":
                 if($parent) {
-                    return __(":user created the folder :folder in :parent", [
+                    return __(":user created the folder :folder", [
                         'folder' => $folder, 
-                        'parent' => $parent, 
                         'user' => $user, 
                     ]);
                 } else {
@@ -153,18 +152,10 @@ class HistoryEntry extends Model
                     ]);
                 }
             case "folder_deleted":
-                if($parent) {
-                    return __(":user deleted folder :folder from :parent", [
-                        'folder' => $folder, 
-                        'parent' => $parent, 
-                        'user' => $user, 
-                    ]);
-                } else {
-                    return __(":user deleted folder :folder", [
-                        'folder' => $folder, 
-                        'user' => $user, 
-                    ]);
-                }
+                return __(":user deleted folder :folder", [
+                    'folder' => $folder, 
+                    'user' => $user, 
+                ]);
             case "bookmark_created":
                 return __(":user created a bookmark to :document in :folder", [
                     'folder' => $folder, 
