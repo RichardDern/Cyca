@@ -1,28 +1,20 @@
 <template>
-    <div
-        class="timeline h-screen w-full overflow-auto px-4"
-        v-on:scroll.passive="onScroll"
-    >
-        <div v-for="(sortedEntries, date) in sortedList">
-            <h2 class="text-xl bold my-8">
+    <div class="timeline" v-on:scroll.passive="onScroll">
+        <div v-for="(sortedEntries, date) in sortedList" v-bind:key="date">
+            <h2>
                 <date-time
                     v-bind:datetime="date"
                     v-bind:only-date="true"
                 ></date-time>
             </h2>
-            <ol class="timeline">
-                <li
-                    class="mb-2"
-                    v-for="entry in sortedEntries"
-                    v-bind:key="entry.id"
-                >
-                    <div class="flex w-full items-center">
+            <ol>
+                <li v-for="entry in sortedEntries" v-bind:key="entry.id">
+                    <div class="history-entry">
                         <date-time
-                            class="time text-xs w-1/12 text-center"
                             v-bind:datetime="entry.created_at"
                             v-bind:only-time="true"
                         ></date-time>
-                        <div class="event flex-grow" v-html="entry.text"></div>
+                        <div class="event" v-html="entry.text"></div>
                     </div>
                 </li>
             </ol>

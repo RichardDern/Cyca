@@ -9,6 +9,7 @@
 @import "themes-browser.css";
 @import "alerts.css";
 @import "about.css";
+@import "history.css";
 
 /* Caret - icon used to expand/collapse elements */
 .caret {

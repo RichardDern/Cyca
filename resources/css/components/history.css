@@ -1,0 +1,33 @@
+/* -------------------------------------------------------------------------- */
+/* ----| History classes |--------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+
+/* The whole timeline wrapper. */
+.timeline {
+    @apply h-screen w-full overflow-auto px-4;
+}
+
+/* Date header */
+.timeline h2 {
+    @apply text-xl font-bold my-8;
+}
+
+/* Timeline element wrapper */
+.timeline ol li {
+    @apply mb-2;
+}
+
+/* History entry */
+.history-entry {
+    @apply flex w-full items-center;
+}
+
+/* Time component of a history entry */
+.history-entry time {
+    @apply text-xs w-1/12 text-center;
+}
+
+/* Descriptive text of a history entry */
+.history-entry .event {
+    @apply flex-grow;
+}
