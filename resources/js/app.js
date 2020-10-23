@@ -124,6 +124,8 @@ const app = new Vue({
                                     feed_item_states_count: notification.total
                                 }
                             });
+
+                            self.showFolder();
                             break;
                         case "App\\Notifications\\DocumentUpdated":
                             self.updateDocument({
