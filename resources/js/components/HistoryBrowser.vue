@@ -38,6 +38,20 @@ export default {
             return collect(this.entries).groupBy("date").all();
         },
     },
+    watch: {
+        sortedList: function () {
+            const self = this;
+
+            self.$nextTick(function () {
+                const scrollHeight = self.$el.scrollHeight;
+                const innerHeight = self.$el.clientHeight;
+
+                if (scrollHeight === innerHeight && self.nextPageUrl) {
+                    self.loadMoreEntries();
+                }
+            });
+        },
+    },
     methods: {
         loadEntries: function () {
             const self = this;
