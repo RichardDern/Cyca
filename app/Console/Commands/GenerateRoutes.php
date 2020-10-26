@@ -58,6 +58,9 @@ class GenerateRoutes extends Command
 
         file_put_contents(config('routes.target'), $json);
 
+        $this->info(sprintf("Routes successfully generated in %s", config('routes.target')));
+        $this->comment("Don't forget to rebuild assets using  npm run dev  or  npm run prod  !");
+
         return 0;
     }
 }
