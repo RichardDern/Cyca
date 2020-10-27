@@ -14,8 +14,9 @@ class HistoryEntryController extends Controller
      */
     public function index(Request $request)
     {
-        $entries = $request->user()->historyEntries()
+        $entries = $request->user()->userHistoryEntries()
             ->orderBy('created_at', 'desc')
+            ->orderBy('id', 'desc')
             ->simplePaginate(25);
 
         return $entries;
