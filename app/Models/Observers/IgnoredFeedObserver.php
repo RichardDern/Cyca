@@ -15,15 +15,10 @@ class IgnoredFeedObserver
      */
     public function created(IgnoredFeed  $ignoredFeed)
     {
-        HistoryEntry::create([
-            'user_id' => $ignoredFeed->user->id,
-            'feed_id' => $ignoredFeed->feed->id,
-            'event' => 'feed_ignored',
-            'details' => [
-                'user' => $ignoredFeed->user->toHistoryEntry(),
-                'feed' => $ignoredFeed->feed->toHistoryEntry()
-            ]
-        ]);
+        $ignoredFeed->feed->addHistoryEntry('feed_ignored', [
+            'user' => $ignoredFeed->user->toHistoryArray(),
+            'feed' => $ignoredFeed->feed->toHistoryArray()
+        ], $ignoredFeed->user);
     }
 
     /**
@@ -34,14 +29,9 @@ class IgnoredFeedObserver
      */
     public function deleting(IgnoredFeed  $ignoredFeed)
     {
-        HistoryEntry::create([
-            'user_id' => $ignoredFeed->user->id,
-            'feed_id' => $ignoredFeed->feed->id,
-            'event' => 'feed_followed',
-            'details' => [
-                'user' => $ignoredFeed->user->toHistoryEntry(),
-                'feed' => $ignoredFeed->feed->toHistoryEntry()
-            ]
-        ]);
+        $ignoredFeed->feed->addHistoryEntry('feed_followed', [
+            'user' => $ignoredFeed->user->toHistoryArray(),
+            'feed' => $ignoredFeed->feed->toHistoryArray()
+        ], $ignoredFeed->user);
     }
 }

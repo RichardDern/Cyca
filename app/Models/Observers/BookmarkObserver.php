@@ -15,17 +15,11 @@ class BookmarkObserver
      */
     public function created(Bookmark  $bookmark)
     {
-        HistoryEntry::create([
-            'user_id' => $bookmark->folder->user->id,
-            'folder_id' => $bookmark->folder->id,
-            'document_id' => $bookmark->document->id,
-            'event' => 'bookmark_created',
-            'details' => [
-                'user' => $bookmark->folder->user->toHistoryEntry(),
-                'folder' => $bookmark->folder->toHistoryEntry(),
-                'document' => $bookmark->document->toHistoryEntry()
-            ]
-        ]);
+        $bookmark->document->addHistoryEntry('bookmark_created', [
+            'user' => $bookmark->folder->user->toHistoryArray(),
+            'folder' => $bookmark->folder->toHistoryArray(),
+            'document' => $bookmark->document->toHistoryArray()
+        ], $bookmark->folder->user);
     }
 
     /**
@@ -36,16 +30,10 @@ class BookmarkObserver
      */
     public function deleting(Bookmark  $bookmark)
     {
-        HistoryEntry::create([
-            'user_id' => $bookmark->folder->user->id,
-            'folder_id' => $bookmark->folder->id,
-            'document_id' => $bookmark->document->id,
-            'event' => 'bookmark_deleted',
-            'details' => [
-                'user' => $bookmark->folder->user->toHistoryEntry(),
-                'folder' => $bookmark->folder->toHistoryEntry(),
-                'document' => $bookmark->document->toHistoryEntry()
-            ]
-        ]);
+        $bookmark->document->addHistoryEntry('bookmark_deleted', [
+            'user' => $bookmark->folder->user->toHistoryArray(),
+            'folder' => $bookmark->folder->toHistoryArray(),
+            'document' => $bookmark->document->toHistoryArray()
+        ], $bookmark->folder->user);
     }
 }

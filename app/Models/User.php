@@ -7,10 +7,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Translation\HasLocalePreference;
 use App\Services\Importer;
+use App\Models\Traits\HasHistory;
 
 class User extends Authenticatable implements MustVerifyEmail, HasLocalePreference
 {
-    use Notifiable;
+    use Notifiable, HasHistory;
 
     # --------------------------------------------------------------------------
     # ----| Properties |--------------------------------------------------------
@@ -41,6 +42,16 @@ class User extends Authenticatable implements MustVerifyEmail, HasLocalePreferen
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+    ];
+
+    /**
+     * Attributes used to display this model in history
+     * 
+     * @var array
+     */
+    protected $historyAttributes = [
+        'name',
+        'email'
     ];
 
     # --------------------------------------------------------------------------
@@ -78,11 +89,11 @@ class User extends Authenticatable implements MustVerifyEmail, HasLocalePreferen
     }
 
     /**
-     * User's history entries
-     * 
+     * Associated history entries
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function historyEntries() {
+    public function userHistoryEntries() {
         return $this->hasMany(HistoryEntry::class);
     }
 
@@ -132,19 +143,5 @@ class User extends Authenticatable implements MustVerifyEmail, HasLocalePreferen
     {
         $importer = new Importer();
         $importer->forUser($this)->fromFile(resource_path('initial_data.json'))->import();
-    }
-
-    /**
-     * Return an array used to represent model in a history entry
-     * 
-     * @return array
-     */
-    public function toHistoryEntry()
-    {
-        return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'email' => $this->email
-        ];
     }
 }

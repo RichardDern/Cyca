@@ -15,15 +15,8 @@ class UserObserver
      */
     public function created(User $user)
     {
+        $user->addHistoryEntry('user_created', ['user' => $user->toHistoryArray()], $user);
         $user->createDefaultFolders();
         $user->importInitialData();
-
-        HistoryEntry::create([
-            'user_id' => $user->id,
-            'event' => 'user_created',
-            'details' => [
-                'user' => $user->toHistoryEntry()
-            ]
-        ]);
     }
 }

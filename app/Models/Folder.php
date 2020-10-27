@@ -5,10 +5,11 @@ namespace App\Models;
 use App\Models\Traits\Folder\BuildsTree;
 use App\Models\Traits\Folder\CreatesDefaultFolders;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Traits\HasHistory;
 
 class Folder extends Model
 {
-    use BuildsTree, CreatesDefaultFolders;
+    use BuildsTree, CreatesDefaultFolders, HasHistory;
 
     # --------------------------------------------------------------------------
     # ----| Properties |--------------------------------------------------------
@@ -46,6 +47,18 @@ class Folder extends Model
     protected $casts = [
         'is_expanded' => 'boolean',
         'is_selected' => 'boolean',
+    ];
+
+    /**
+     * Attributes used to display this model in history
+     * 
+     * @var array
+     */
+    protected $historyAttributes = [
+        'title',
+        'icon',
+        'iconColor',
+        'type'
     ];
 
     # --------------------------------------------------------------------------
@@ -245,19 +258,5 @@ class Folder extends Model
                 $query->where('is_read', false)->where('user_id', $self->user_id);
             }])->with('feeds.ignored')->get();
         }
-    }
-
-    /**
-     * Return an array used to represent model in a history entry
-     * 
-     * @return array
-     */
-    public function toHistoryEntry()
-    {
-        return [
-            'id' => $this->id,
-            'title' => $this->title,
-            'breadcrumbs' => $this->breadcrumbs
-        ];
     }
 }

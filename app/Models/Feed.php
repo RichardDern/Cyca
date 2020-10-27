@@ -4,10 +4,11 @@ namespace App\Models;
 
 use App\Models\Traits\Feed\AnalysesFeed;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Traits\HasHistory;
 
 class Feed extends Model
 {
-    use AnalysesFeed;
+    use AnalysesFeed, HasHistory;
 
     # --------------------------------------------------------------------------
     # ----| Properties |--------------------------------------------------------
@@ -53,6 +54,17 @@ class Feed extends Model
      */
     protected $dates = [
         'checked_at',
+    ];
+
+    /**
+     * Attributes used to display this model in history
+     * 
+     * @var array
+     */
+    protected $historyAttributes = [
+        'url',
+        'title',
+        'favicon'
     ];
 
     # --------------------------------------------------------------------------
@@ -177,18 +189,5 @@ class Feed extends Model
         }
 
         return $this->storagePath;
-    }
-
-    /**
-     * Return an array used to represent model in a history entry
-     * 
-     * @return array
-     */
-    public function toHistoryEntry()
-    {
-        return [
-            'id' => $this->id,
-            'url' => $this->url
-        ];
     }
 }

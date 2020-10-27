@@ -15,15 +15,11 @@ class FolderObserver
      */
     public function created(Folder  $folder)
     {
-        HistoryEntry::create([
-            'user_id' => $folder->user->id,
-            'folder_id' => $folder->id,
-            'event' => 'folder_created',
-            'details' => [
-                'user' => $folder->user->toHistoryEntry(),
-                'folder' => $folder->toHistoryEntry()
-            ]
-        ]);
+        $folder->addHistoryEntry('folder_created', [
+            'user' => $folder->user->toHistoryArray(),
+            'folder' => $folder->toHistoryArray(),
+            'breadcrumbs' => !empty($folder->parent_id) ? $folder->parent->breadcrumbs : null
+        ], $folder->user);
     }
 
     /**
@@ -33,14 +29,10 @@ class FolderObserver
      * @return void
      */
     public function deleting(Folder $folder) {
-        HistoryEntry::create([
-            'user_id' => $folder->user->id,
-            'folder_id' => $folder->id,
-            'event' => 'folder_deleted',
-            'details' => [
-                'user' => $folder->user->toHistoryEntry(),
-                'folder' => $folder->toHistoryEntry()
-            ]
-        ]);
+        $folder->addHistoryEntry('folder_deleted', [
+            'user' => $folder->user->toHistoryArray(),
+            'folder' => $folder->toHistoryArray(),
+            'breadcrumbs' => !empty($folder->parent_id) ? $folder->parent->breadcrumbs : null
+        ], $folder->user);
     }
 }

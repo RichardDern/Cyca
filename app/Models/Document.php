@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Traits\Document\AnalysesDocument;
+use App\Models\Traits\HasHistory;
 
 class Document extends Model
 {
-    use AnalysesDocument;
+    use AnalysesDocument, HasHistory;
 
     # --------------------------------------------------------------------------
     # ----| Properties |--------------------------------------------------------
@@ -60,6 +61,17 @@ class Document extends Model
      * @var string
      */
     private $storagePath = null;
+
+    /**
+     * Attributes used to display this model in history
+     * 
+     * @var array
+     */
+    protected $historyAttributes = [
+        'url',
+        'title',
+        'favicon'
+    ];
 
     # --------------------------------------------------------------------------
     # ----| Attributes |--------------------------------------------------------
@@ -206,18 +218,5 @@ class Document extends Model
         }
 
         return $this->storagePath;
-    }
-
-    /**
-     * Return an array used to represent model in a history entry
-     * 
-     * @return array
-     */
-    public function toHistoryEntry()
-    {
-        return [
-            'id' => $this->id,
-            'url' => $this->url
-        ];
     }
 }
