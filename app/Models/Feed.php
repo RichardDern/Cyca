@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use App\Models\Traits\Feed\AnalysesFeed;
-use Illuminate\Database\Eloquent\Model;
 use App\Models\Traits\HasHistory;
+use Illuminate\Database\Eloquent\Model;
 
 class Feed extends Model
 {
@@ -44,7 +44,7 @@ class Feed extends Model
      */
     protected $appends = [
         'favicon',
-        'is_ignored'
+        'is_ignored',
     ];
 
     /**
@@ -58,13 +58,13 @@ class Feed extends Model
 
     /**
      * Attributes used to display this model in history
-     * 
+     *
      * @var array
      */
     protected $historyAttributes = [
         'url',
         'title',
-        'favicon'
+        'favicon',
     ];
 
     # --------------------------------------------------------------------------
@@ -82,7 +82,13 @@ class Feed extends Model
             return asset('storage/' . str_replace('public/', '', $this->attributes['favicon_path']));
         }
 
-        return $this->documents()->first()->favicon;
+        $document = $this->documents()->first();
+
+        if ($document) {
+            return $document->favicon;
+        }
+
+        return null;
     }
 
     /**
@@ -90,8 +96,9 @@ class Feed extends Model
      *
      * @return boolean
      */
-    public function getIsIgnoredAttribute() {
-        if(auth()->user()) {
+    public function getIsIgnoredAttribute()
+    {
+        if (auth()->user()) {
             return $this->ignored->firstWhere('user_id', auth()->user()->id) !== null;
         }
 
@@ -127,7 +134,8 @@ class Feed extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function feedItemStates() {
+    public function feedItemStates()
+    {
         return $this->hasMany(FeedItemState::class);
     }
 
@@ -136,7 +144,8 @@ class Feed extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function ignored() {
+    public function ignored()
+    {
         return $this->hasMany(IgnoredFeed::class);
     }
 
