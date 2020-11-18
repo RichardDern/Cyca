@@ -1,0 +1,9 @@
+{
+    "author": "Richard Dern",
+    "name": "Cyca Dark",
+    "description": "Cyca's default theme - Dark colors",
+    "url": "https://github.com/RichardDern/cyca_theme_dark",
+    "screenshot": "images/screenshot.png",
+    "icons": "images/icons.svg",
+    "inherits": null
+}

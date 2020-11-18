@@ -1,0 +1,6 @@
+[submodule "resources/themes/cyca_theme_dark"]
+	path = resources/themes/cyca_theme_dark
+	url = git@github.com:RichardDern/cyca_theme_dark.git
+[submodule "resources/themes/cyca_theme_light"]
+	path = resources/themes/cyca_theme_light
+	url = git@github.com:RichardDern/cyca_theme_light.git
