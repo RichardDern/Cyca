@@ -177,6 +177,7 @@ class Document extends Model
         foreach ($folders as $folder) {
             $this->dupplicates[] = [
                 'id'          => $folder->id,
+                'group_id'    => $folder->group->id,
                 'breadcrumbs' => $folder->breadcrumbs
             ];
         }

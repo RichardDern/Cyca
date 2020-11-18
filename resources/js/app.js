@@ -25,7 +25,8 @@ const app = new Vue({
             selectedDocuments: "documents/selectedDocuments",
             feedItems: "feedItems/feedItems",
             selectedFeedItems: "feedItems/selectedFeedItems",
-            getUnreadItemsFolder: "folders/getUnreadItemsFolder"
+            getUnreadItemsFolder: "folders/getUnreadItemsFolder",
+            selectedGroup: "groups/selectedGroup"
         })
     },
     watch: {
@@ -138,10 +139,14 @@ const app = new Vue({
          * User-action - Selected folder has changed
          * @param {*} folder
          */
-        onSelectedFolderChanged: function(folder) {
+        onSelectedFolderChanged: function(folder, group) {
             const self = this;
 
-            self.showFolder(folder);
+            if (group && group != self.selectedGroup.id) {
+                self.showGroup(group, folder);
+            } else {
+                self.showFolder(folder);
+            }
 
             self.detailsViewComponent = "details-folder";
         },

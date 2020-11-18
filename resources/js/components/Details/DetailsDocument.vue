@@ -106,7 +106,11 @@
                         v-for="dupplicateInFolder in dupplicateInFolders"
                         v-bind:key="dupplicateInFolder.id"
                         v-on:click="
-                            $emit('folder-selected', dupplicateInFolder.id)
+                            $emit(
+                                'folder-selected',
+                                dupplicateInFolder.id,
+                                dupplicateInFolder.group_id
+                            )
                         "
                         v-html="dupplicateInFolder.breadcrumbs"
                         class="cursor-pointer mb-1"

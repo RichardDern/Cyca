@@ -28,8 +28,9 @@ export default {
             folder = getters.folders.find(f => f.id === folder);
         }
 
+        commit("setSelectedFolder", folder);
+
         if (folder.id !== currentSelectedFolder.id) {
-            commit("setSelectedFolder", folder);
             dispatch("documents/selectDocuments", [], { root: true });
         }
 

@@ -29,18 +29,36 @@ export default {
     /**
      * Display the specified resource.
      */
-    async show({ commit, getters, dispatch }, group) {
+    async show({ getters, dispatch }, group, folder) {
         const currentSelectedGroup = getters.selectedGroup;
 
         if (!group) {
             group = currentSelectedGroup;
+        } else if (Number.isInteger(group)) {
+            group = getters.groups.find(g => g.id === group);
         }
 
-        commit("setSelectedGroup", group);
+        dispatch("selectGroup", group);
+        dispatch("documents/selectDocuments", [], { root: true });
 
         const folders = await api.get(route("group.show", group));
 
         dispatch("folders/index", folders, { root: true });
+
+        if (folder) {
+            dispatch("folders/show", folder, { root: true });
+        }
+    },
+
+    /**
+     * Mark specified group as selected
+     */
+    selectGroup({ commit, getters }, group) {
+        if (Number.isInteger(group)) {
+            group = getters.groups.find(g => g.id === group);
+        }
+
+        commit("setSelectedGroup", group);
     },
 
     /**
