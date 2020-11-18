@@ -40,16 +40,16 @@ trait HasFeeds
 
         $unreadItemsFolder = $group->folders()->ofType('unread_items')->first();
 
-        $query = $group->folders()->with('documents:document_id');
+        $query = $group->folders()->with('documents:documents.id');
 
         if (!in_array($unreadItemsFolder->id, $folders)) {
-            $query = $query->whereIn('id', $folders);
+            $query = $query->whereIn('folders.id', $folders);
         }
         
-        $folders = $query->get();
-        $documentIds = $query->get()->pluck('documents')->flatten()->pluck('document_id')->unique();
+        $folders     = $query->get();
+        $documentIds = $query->get()->pluck('documents')->flatten()->pluck('id')->unique();
         
-        $query = $this->feedItemStates()->unread()->whereIn('document_id', $documentIds);
+        $query       = $this->feedItemStates()->unread()->whereIn('document_id', $documentIds);
         $feedItemIds = $query->pluck('feed_item_id')->unique();
         
         $query->update(['is_read' => true]);
@@ -69,7 +69,7 @@ trait HasFeeds
      */
     public function markFeedItemsReadInDocuments($documents)
     {
-        $query = $this->feedItemStates()->unread()->whereIn('document_id', $documents);
+        $query       = $this->feedItemStates()->unread()->whereIn('document_id', $documents);
         $feedItemIds = $query->pluck('feed_item_id')->unique();
         
         $query->update(['is_read' => true]);
@@ -97,7 +97,7 @@ trait HasFeeds
      */
     public function markFeedItemsRead($feedItems)
     {
-        $query = $this->feedItemStates()->unread()->whereIn('feed_item_id', $feedItems);
+        $query       = $this->feedItemStates()->unread()->whereIn('feed_item_id', $feedItems);
         $feedItemIds = $query->pluck('feed_item_id')->unique();
         $documentIds = $query->pluck('document_id')->unique();
         
@@ -132,7 +132,7 @@ trait HasFeeds
         }
 
         $countPerDocument = $this->feedItemStates()->unread()->whereIn('document_id', $for['documents'])->get()->countBy('document_id')->all();
-        $countPerGroup = [];
+        $countPerGroup    = [];
 
         if (!empty($for['documents'])) {
             foreach ($for['documents'] as $id) {
@@ -153,11 +153,11 @@ trait HasFeeds
         }
 
         foreach ($this->groups as $group) {
-            $totalUnreadItems = $group->getUnreadFeedItemsCountFor($this);
+            $totalUnreadItems    = $group->getUnreadFeedItemsCountFor($this);
             $unreadItemsFolderId = $group->folders()->ofType('unread_items')->first()->id;
 
             $countPerFolder[$unreadItemsFolderId] = $totalUnreadItems;
-            $countPerGroup[$group->id] = $totalUnreadItems;
+            $countPerGroup[$group->id]            = $totalUnreadItems;
         }
 
         $data = [
