@@ -102,31 +102,15 @@
                     {{ __("Also exists in") }}
                 </dt>
                 <dd v-if="dupplicateInFolders.length > 0">
-                    <button
-                        class="bg-gray-400 hover:bg-gray-500"
+                    <div
                         v-for="dupplicateInFolder in dupplicateInFolders"
                         v-bind:key="dupplicateInFolder.id"
                         v-on:click="
-                            $emit('folder-selected', dupplicateInFolder)
+                            $emit('folder-selected', dupplicateInFolder.id)
                         "
-                    >
-                        <svg
-                            fill="currentColor"
-                            width="16"
-                            height="16"
-                            class="favicon"
-                            v-bind:class="dupplicateInFolder.iconColor"
-                        >
-                            <use
-                                v-bind:xlink:href="
-                                    icon(dupplicateInFolder.icon)
-                                "
-                            />
-                        </svg>
-                        <span class="truncate flex-grow py-0.5">{{
-                            dupplicateInFolder.title
-                        }}</span>
-                    </button>
+                        v-html="dupplicateInFolder.breadcrumbs"
+                        class="cursor-pointer"
+                    ></div>
                 </dd>
             </dl>
 

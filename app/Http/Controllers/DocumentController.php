@@ -26,10 +26,10 @@ class DocumentController extends Controller
     public function store(StoreRequest $request)
     {
         $validated = $request->validated();
-        $user = $request->user();
-        $url = $validated['url'];
-        $folder = Folder::find($validated['folder_id']);
-        $document = Document::firstOrCreate(['url' => $url]);
+        $user      = $request->user();
+        $url       = $validated['url'];
+        $folder    = Folder::find($validated['folder_id']);
+        $document  = Document::firstOrCreate(['url' => $url]);
 
         $folder->documents()->save($document, [
             'initial_url' => $url,
@@ -106,7 +106,7 @@ class DocumentController extends Controller
     {
         $this->authorize('deleteBookmarkFrom', $folder);
 
-        $user = $request->user();
+        $user      = $request->user();
         $documents = $folder->documents()->whereIn('documents.id', $request->input('documents'))->get();
 
         foreach ($documents as $document) {

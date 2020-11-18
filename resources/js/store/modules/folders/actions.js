@@ -22,6 +22,10 @@ export default {
     show({ commit, getters, dispatch }, folder) {
         const currentSelectedFolder = getters.selectedFolder;
 
+        if (Number.isInteger(folder)) {
+            folder = getters.folders.find(f => f.id === folder);
+        }
+
         if (!folder) {
             folder = currentSelectedFolder;
         }

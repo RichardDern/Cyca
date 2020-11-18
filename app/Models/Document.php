@@ -172,7 +172,14 @@ class Document extends Model
     {
         $ids = $user->documents()->where('document_id', $this->id)->select('folder_id')->pluck('folder_id');
 
-        $this->dupplicates = Folder::find($ids);
+        $folders = Folder::find($ids);
+
+        foreach ($folders as $folder) {
+            $this->dupplicates[] = [
+                'id'          => $folder->id,
+                'breadcrumbs' => $folder->breadcrumbs
+            ];
+        }
 
         return $this->dupplicates;
     }
