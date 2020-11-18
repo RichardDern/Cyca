@@ -109,7 +109,7 @@
                             $emit('folder-selected', dupplicateInFolder.id)
                         "
                         v-html="dupplicateInFolder.breadcrumbs"
-                        class="cursor-pointer"
+                        class="cursor-pointer mb-1"
                     ></div>
                 </dd>
             </dl>
