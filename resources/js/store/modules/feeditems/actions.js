@@ -97,12 +97,16 @@ export default {
     /**
      * Mark feed items as read
      */
-    markAsRead({ dispatch, commit }, data) {
+    markAsRead({ dispatch, commit, getters }, data) {
+        const nextPage = getters.nextPage;
+
+        // Avoid unwanted reloading
+        commit("setNextPage", null);
+
         api.post(route("feed_item.mark_as_read"), data).then(function(
             response
         ) {
             dispatch("updateUnreadFeedItemsCount", response);
-            commit("setNextPage", null);
 
             if ("feed_items" in data) {
                 dispatch("selectFirstUnreadFeedItem", data.feed_items);
@@ -113,6 +117,8 @@ export default {
                     { root: true }
                 );
             }
+
+            commit("setNextPage", nextPage);
         });
     },
 

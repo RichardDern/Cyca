@@ -101,6 +101,10 @@ const app = new Vue({
                     switch (notification.type) {
                         case "App\\Notifications\\UnreadItemsChanged":
                             self.updateUnreadFeedItemsCount(notification);
+
+                            if (self.selectedFolder.type === "unread_items") {
+                                self.showFolder();
+                            }
                             break;
                         case "App\\Notifications\\DocumentUpdated":
                             self.updateDocument({

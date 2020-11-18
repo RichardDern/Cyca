@@ -6,10 +6,6 @@ export default {
      * Display a listing of the resource.
      */
     async index({ commit, dispatch, getters }, documents) {
-        if (!documents) {
-            documents = await api.get(route("document.index"));
-        }
-
         commit("setDocuments", documents);
 
         let selectedDocuments = getters.selectedDocuments;

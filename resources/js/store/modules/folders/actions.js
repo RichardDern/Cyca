@@ -26,11 +26,13 @@ export default {
             folder = currentSelectedFolder;
         }
 
-        dispatch("loadDetails", folder).then(function() {
-            commit("setSelectedFolder", folder);
-        });
+        if (folder.id !== currentSelectedFolder.id) {
+            dispatch("loadDetails", folder).then(function() {
+                commit("setSelectedFolder", folder);
+            });
 
-        dispatch("documents/selectDocuments", [], { root: true });
+            dispatch("documents/selectDocuments", [], { root: true });
+        }
 
         api.get(route("folder.show", folder)).then(function(response) {
             dispatch("documents/index", response, { root: true });
