@@ -185,9 +185,22 @@ export default {
             const self = this;
 
             if (self.folder) {
+                self.loadDetails(self.folder).then(function () {
+                    self.$forceUpdate();
+                });
+
                 self.updateFolderTitle = self.folder.title;
             }
         },
+    },
+    mounted: function () {
+        const self = this;
+
+        if (self.folder) {
+            self.loadDetails(self.folder).then(function () {
+                self.$forceUpdate();
+            });
+        }
     },
     /**
      * Methods

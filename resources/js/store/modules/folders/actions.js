@@ -22,19 +22,14 @@ export default {
     show({ commit, getters, dispatch }, folder) {
         const currentSelectedFolder = getters.selectedFolder;
 
-        if (Number.isInteger(folder)) {
+        if (!folder) {
+            folder = currentSelectedFolder;
+        } else if (Number.isInteger(folder)) {
             folder = getters.folders.find(f => f.id === folder);
         }
 
-        if (!folder) {
-            folder = currentSelectedFolder;
-        }
-
         if (folder.id !== currentSelectedFolder.id) {
-            dispatch("loadDetails", folder).then(function() {
-                commit("setSelectedFolder", folder);
-            });
-
+            commit("setSelectedFolder", folder);
             dispatch("documents/selectDocuments", [], { root: true });
         }
 
