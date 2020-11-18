@@ -7,7 +7,7 @@ return [
     /**
      * Target path of generated routes.js file
      */
-    'target' => resource_path('js/modules/routes.json'),
+    'target'    => resource_path('js/modules/routes.json'),
     /**
      * Whitelisted routes
      */
@@ -22,7 +22,6 @@ return [
         'account.import',
         'account.export',
         'document.destroy_bookmarks',
-        'document.index',
         'document.move',
         'document.store',
         'document.show',
@@ -33,15 +32,30 @@ return [
         'feed_item.mark_as_read',
         'feed_item.show',
         'folder.destroy',
+        'folder.details',
         'folder.index',
+        'folder.set_permission',
         'folder.show',
         'folder.store',
+        'folder.toggle_branch',
         'folder.update',
+        'group.accept_invitation',
+        'group.destroy',
+        'group.index',
+        'group.index_active',
+        'group.invite_user',
+        'group.leave',
+        'group.my_groups',
+        'group.reject_invitation',
+        'group.show',
+        'group.store',
+        'group.update',
+        'group.update_positions',
         'highlight.destroy',
         'highlight.store',
         'highlight.update',
         'history_entry.index',
         'home',
-        'logout'
+        'logout',
     ],
 ];

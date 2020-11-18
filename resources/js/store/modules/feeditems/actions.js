@@ -84,30 +84,101 @@ export default {
         if (nextFeedItem) {
             dispatch("selectFeedItems", [nextFeedItem]);
         } else {
-            dispatch("selectFeedItems", []);
-            dispatch("documents/selectFirstDocumentWithUnreadItems", null, {
-                root: true
-            });
+            dispatch(
+                "documents/selectFirstDocumentWithUnreadItems",
+                { selectFirstUnread: true },
+                {
+                    root: true
+                }
+            );
         }
     },
 
     /**
      * Mark feed items as read
      */
-    async markAsRead({ dispatch, commit }, data) {
-        if ("feed_items" in data) {
-            dispatch("selectFirstUnreadFeedItem", data.feed_items);
-        } else if ("documents" in data) {
-            dispatch(
-                "documents/selectFirstDocumentWithUnreadItems",
-                data.documents,
-                { root: true }
+    markAsRead({ dispatch, commit }, data) {
+        api.post(route("feed_item.mark_as_read"), data).then(function(
+            response
+        ) {
+            dispatch("updateUnreadFeedItemsCount", response);
+            commit("setNextPage", null);
+
+            if ("feed_items" in data) {
+                dispatch("selectFirstUnreadFeedItem", data.feed_items);
+            } else if ("documents" in data) {
+                dispatch(
+                    "documents/selectFirstDocumentWithUnreadItems",
+                    { exclude: data.documents },
+                    { root: true }
+                );
+            }
+        });
+    },
+
+    /**
+     * Change number of unread feed items everywhere it's necessary
+     */
+    updateUnreadFeedItemsCount({ commit, dispatch, getters }, data) {
+        if ("updated_feed_items" in data && data.updated_feed_items !== null) {
+            const feedItems = collect(getters.feedItems).whereIn(
+                "id",
+                data.updated_feed_items
             );
+
+            feedItems.each(function(feedItem) {
+                commit("update", {
+                    feedItem: feedItem,
+                    newProperties: {
+                        feed_item_states_count: 0
+                    }
+                });
+            });
         }
 
-        const response = await api.post(route("feed_item.mark_as_read"), data);
+        if ("documents" in data) {
+            for (var documentId in data.documents) {
+                dispatch(
+                    "documents/update",
+                    {
+                        documentId: documentId,
+                        newProperties: {
+                            feed_item_states_count: data.documents[documentId]
+                        }
+                    },
+                    { root: true }
+                );
+            }
+        }
 
-        commit("folders/setFolders", response, { root: true });
-        await dispatch("documents/index", null, { root: true });
+        if ("folders" in data) {
+            for (var folderId in data.folders) {
+                dispatch(
+                    "folders/updateProperties",
+                    {
+                        folderId: folderId,
+                        newProperties: {
+                            feed_item_states_count: data.folders[folderId]
+                        }
+                    },
+                    { root: true }
+                );
+            }
+        }
+
+        if ("groups" in data) {
+            for (var groupId in data.groups) {
+                dispatch(
+                    "groups/updateProperties",
+                    {
+                        groupId: groupId,
+                        newProperties: {
+                            feed_item_states_count: data.groups[groupId]
+                        }
+                    },
+                    { root: true }
+                );
+            }
+        }
     }
 };

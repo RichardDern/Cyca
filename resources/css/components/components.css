@@ -10,10 +10,11 @@
 @import "alerts.css";
 @import "about.css";
 @import "history.css";
+@import "groups-browser.css";
 
 /* Caret - icon used to expand/collapse elements */
 .caret {
-    @apply block mr-1 flex-none w-4 h-4;
+    @apply block mr-1 w-4 h-4 cursor-pointer;
 
     color: theme("colors.caret");
 }

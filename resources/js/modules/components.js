@@ -1,5 +1,5 @@
 const sets = {
-    "app": [
+    app: [
         "Details/DetailsDocument",
         "Details/DetailsDocuments",
         "Details/DetailsFeedItem",
@@ -10,36 +10,36 @@ const sets = {
         "FeedItem",
         "FeedItemsList",
         "FolderItem",
-        "FoldersTree"
+        "FoldersTree",
+        "GroupItem"
     ],
-    "import": [
-        "Importers/ImportFromCyca",
-        "Importer"
-    ],
-    "themesBrowser": [
-        "ThemeCard",
-        "ThemesBrowser"
-    ],
-    "highlights": [
-        "Highlights",
-        "Highlight"
-    ],
-    "historyBrowser": [
-        "HistoryBrowser",
-        "DateTime",
+    import: ["Importers/ImportFromCyca", "Importer"],
+    themesBrowser: ["ThemeCard", "ThemesBrowser"],
+    highlights: ["Highlights", "Highlight"],
+    historyBrowser: ["HistoryBrowser", "DateTime"],
+    groups: [
+        "GroupsBrowser",
+        "GroupsBrowser/GroupsBrowserItem",
+        "GroupsBrowser/GroupForm"
     ]
-}
+};
 
 module.exports = function(set) {
     const files = sets[set];
 
     files.map(file => {
-        const componentName = file.split('/').pop().match(
-            /[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g
-        )
-        .map(x => x.toLowerCase())
-        .join("-");
+        const componentName = file
+            .split("/")
+            .pop()
+            .match(
+                /[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g
+            )
+            .map(x => x.toLowerCase())
+            .join("-");
 
-        Vue.component(componentName, require("../components/" + file + ".vue").default);
+        Vue.component(
+            componentName,
+            require("../components/" + file + ".vue").default
+        );
     });
 };

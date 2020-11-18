@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Feed;
 use App\Models\FeedItem;
-use App\Models\FeedItemState;
 use Illuminate\Http\Request;
 
 class FeedItemController extends Controller
@@ -21,22 +21,24 @@ class FeedItemController extends Controller
             return [];
         }
 
-        $queryBuilder = FeedItem::with('feeds')->whereHas('feeds', function ($query) use ($feedIds) {
+        $user = $request->user();
+
+        $queryBuilder = FeedItem::with('feeds:feeds.id,title', 'feeds.documents:documents.id')->whereHas('feeds', function ($query) use ($feedIds) {
             $query->whereIn('feeds.id', $feedIds);
         });
 
-        $queryBuilder->select(['id', 'url', 'title', 'published_at', 'created_at', 'updated_at']);
+        $queryBuilder->select(['feed_items.id', 'url', 'title', 'published_at', 'created_at', 'updated_at']);
 
-        $folder = $request->user()->folders()->where('is_selected', true)->first();
+        $folder = $user->selectedFolder();
 
         if ($folder->type === 'unread_items') {
-            $queryBuilder->whereHas('feedItemStates', function ($query) use ($request) {
-                $query->where('feed_item_states.user_id', $request->user()->id)->where('is_read', false);
+            $queryBuilder->whereHas('feedItemStates', function ($query) use ($user) {
+                $query->where('user_id', $user->id)->where('is_read', false);
             });
         }
 
-        return $queryBuilder->withCount(['feedItemStates' => function ($query) use ($request) {
-            $query->where('is_read', false)->where('user_id', $request->user()->id);
+        return $queryBuilder->withCount(['feedItemStates' => function ($query) use ($user) {
+            $query->where('user_id', $user->id)->where('is_read', false);
         }])->orderBy('published_at', 'desc')->simplePaginate(15);
     }
 
@@ -62,22 +64,16 @@ class FeedItemController extends Controller
      */
     public function markAsRead(Request $request)
     {
+        $user = $request->user();
+
         if ($request->has('folders')) {
-            $folder = $request->user()->folders()->find($request->input('folders')[0]);
-
-            if ($folder && $folder->type === 'unread_items') {
-                FeedItemState::where('user_id', $request->user()->id)->update(['is_read' => true]);
-            } else {
-                FeedItemState::where('user_id', $request->user()->id)->whereIn('folder_id', $request->input('folders'))->update(['is_read' => true]);
-            }
-        } else if ($request->has('documents')) {
-            FeedItemState::where('user_id', $request->user()->id)->whereIn('document_id', $request->input('documents'))->update(['is_read' => true]);
-        } else if ($request->has('feeds')) {
-            FeedItemState::where('user_id', $request->user()->id)->whereIn('feed_id', $request->input('feeds'))->update(['is_read' => true]);
-        } else if ($request->has('feed_items')) {
-            FeedItemState::where('user_id', $request->user()->id)->whereIn('feed_item_id', $request->input('feed_items'))->update(['is_read' => true]);
+            return $user->markFeedItemsReadInFolders($request->input('folders'));
+        } elseif ($request->has('documents')) {
+            return $user->markFeedItemsReadInDocuments($request->input('documents'));
+        } elseif ($request->has('feeds')) {
+            return $user->markFeedItemsReadInFeeds($request->input('feeds'));
+        } elseif ($request->has('feed_items')) {
+            return $user->markFeedItemsRead($request->input('feed_items'));
         }
-
-        return $request->user()->getFlatTree();
     }
 }

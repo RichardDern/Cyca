@@ -3,7 +3,8 @@
 namespace App\Models\Observers;
 
 use App\Models\Bookmark;
-use App\Models\HistoryEntry;
+use App\Notifications\UnreadItemsChanged;
+use Illuminate\Support\Facades\Notification;
 
 class BookmarkObserver
 {
@@ -13,12 +14,14 @@ class BookmarkObserver
      * @param  \App\Models\Bookmark  $bookmark
      * @return void
      */
-    public function created(Bookmark  $bookmark)
+    public function created(Bookmark $bookmark)
     {
+        Notification::send($bookmark->folder->group->activeUsers, new UnreadItemsChanged(['documents' => [$bookmark->document->id]]));
+
         $bookmark->document->addHistoryEntry('bookmark_created', [
-            'user' => $bookmark->folder->user->toHistoryArray(),
-            'folder' => $bookmark->folder->toHistoryArray(),
-            'document' => $bookmark->document->toHistoryArray()
+            'user'        => $bookmark->folder->user->toHistoryArray(),
+            'breadcrumbs' => $bookmark->folder->breadcrumbs,
+            'document'    => $bookmark->document->toHistoryArray(),
         ], $bookmark->folder->user);
     }
 
@@ -28,12 +31,12 @@ class BookmarkObserver
      * @param  \App\Models\Bookmark  $bookmark
      * @return void
      */
-    public function deleting(Bookmark  $bookmark)
+    public function deleting(Bookmark $bookmark)
     {
         $bookmark->document->addHistoryEntry('bookmark_deleted', [
-            'user' => $bookmark->folder->user->toHistoryArray(),
-            'folder' => $bookmark->folder->toHistoryArray(),
-            'document' => $bookmark->document->toHistoryArray()
+            'user'        => $bookmark->folder->user->toHistoryArray(),
+            'breadcrumbs' => $bookmark->folder->breadcrumbs,
+            'document'    => $bookmark->document->toHistoryArray(),
         ], $bookmark->folder->user);
     }
 }

@@ -13,9 +13,11 @@
                 </svg>
                 <span>{{ folder.title }}</span>
                 <div
-                    class="badge"
+                    class="badge article"
                     v-if="folder.feed_item_states_count > 0"
-                >{{ folder.feed_item_states_count }}</div>
+                >
+                    {{ folder.feed_item_states_count }}
+                </div>
             </div>
             <button
                 v-if="folder.feed_item_states_count > 0"
@@ -32,7 +34,7 @@
         <div class="body">
             <form
                 v-bind:action="route('folder.update', folder)"
-                v-if="folder.type === 'folder' && !folder.deleted_at"
+                v-if="can('can_update_folder') && folder.type === 'folder'"
                 v-on:submit.prevent="onUpdateFolder"
             >
                 <div class="form-group items-stretched">
@@ -43,7 +45,12 @@
                         v-on:input="updateFolderTitle = $event.target.value"
                     />
                     <button type="submit" class="success ml-2">
-                        <svg fill="currentColor" width="16" height="16" class="mr-1">
+                        <svg
+                            fill="currentColor"
+                            width="16"
+                            height="16"
+                            class="mr-1"
+                        >
                             <use v-bind:xlink:href="icon('update')" />
                         </svg>
                         {{ __("Update folder") }}
@@ -54,12 +61,17 @@
             <form
                 v-bind:action="route('folder.store')"
                 v-on:submit.prevent="onAddFolder"
-                v-if="(folder.type === 'folder' || folder.type === 'root') && !folder.deleted_at"
+                v-if="can('can_create_folder')"
             >
                 <div class="form-group items-stretched">
                     <input type="text" v-model="addFolderTitle" />
                     <button type="submit" class="success ml-2">
-                        <svg fill="currentColor" width="16" height="16" class="mr-1">
+                        <svg
+                            fill="currentColor"
+                            width="16"
+                            height="16"
+                            class="mr-1"
+                        >
                             <use v-bind:xlink:href="icon('add')" />
                         </svg>
                         {{ __("Add folder") }}
@@ -70,12 +82,17 @@
             <form
                 v-bind:action="route('document.store')"
                 v-on:submit.prevent="onAddDocument"
-                v-if="(folder.type === 'folder' || folder.type === 'root') && !folder.deleted_at"
+                v-if="can('can_create_document')"
             >
                 <div class="form-group items-stretched">
                     <input type="url" v-model="addDocumentUrl" />
                     <button type="submit" class="success ml-2">
-                        <svg fill="currentColor" width="16" height="16" class="mr-1">
+                        <svg
+                            fill="currentColor"
+                            width="16"
+                            height="16"
+                            class="mr-1"
+                        >
                             <use v-bind:xlink:href="icon('add')" />
                         </svg>
                         {{ __("Add document") }}
@@ -83,14 +100,69 @@
                 </div>
             </form>
 
-            <div class="mt-6" v-if="folder.type === 'folder'">
+            <div class="mt-6" v-if="can('can_delete_folder')">
                 <button class="danger" v-on:click="onDeleteFolder">
-                    <svg fill="currentColor" width="16" height="16" class="mr-1">
+                    <svg
+                        fill="currentColor"
+                        width="16"
+                        height="16"
+                        class="mr-1"
+                    >
                         <use v-bind:xlink:href="icon('trash')" />
                     </svg>
                     {{ __("Delete") }}
                 </button>
             </div>
+
+            <details
+                v-if="
+                    can('can_change_permissions') &&
+                    (folder.type === 'root' || folder.type === 'folder')
+                "
+                class="feeds-list mt-4"
+            >
+                <summary>
+                    {{ __("Users without explicit permissions can") }}:
+                </summary>
+
+                <div class="grid grid-cols-3">
+                    <label class="my-2 mx-2">
+                        <input
+                            type="checkbox"
+                            v-model="canCreateFolderByDefault"
+                        />
+                        {{ __("Create folder") }}
+                    </label>
+                    <label class="my-2 mx-2">
+                        <input
+                            type="checkbox"
+                            v-model="canUpdateFolderByDefault"
+                        />
+                        {{ __("Update folder") }}
+                    </label>
+                    <label class="my-2 mx-2">
+                        <input
+                            type="checkbox"
+                            v-model="canDeleteFolderByDefault"
+                        />
+                        {{ __("Delete folder") }}
+                    </label>
+                    <label class="my-2 mx-2">
+                        <input
+                            type="checkbox"
+                            v-model="canCreateDocumentByDefault"
+                        />
+                        {{ __("Create document") }}
+                    </label>
+                    <label class="my-2 mx-2">
+                        <input
+                            type="checkbox"
+                            v-model="canDeleteDocumentByDefault"
+                        />
+                        {{ __("Delete document") }}
+                    </label>
+                </div>
+            </details>
         </div>
     </article>
 </template>
@@ -111,8 +183,99 @@ export default {
      */
     computed: {
         ...mapGetters({
+            group: "groups/selectedGroup",
             folder: "folders/selectedFolder",
         }),
+        canCreateFolderByDefault: {
+            get() {
+                if ("default_permissions" in this.folder) {
+                    return this.folder.default_permissions.can_create_folder;
+                }
+
+                return false;
+            },
+            set(value) {
+                const self = this;
+
+                self.updatePermission({
+                    ability: "can_create_folder",
+                    granted: value,
+                    folder: self.folder,
+                });
+            },
+        },
+        canUpdateFolderByDefault: {
+            get() {
+                if ("default_permissions" in this.folder) {
+                    return this.folder.default_permissions.can_update_folder;
+                }
+
+                return false;
+            },
+            set(value) {
+                const self = this;
+
+                self.updatePermission({
+                    ability: "can_update_folder",
+                    granted: value,
+                    folder: self.folder,
+                });
+            },
+        },
+        canDeleteFolderByDefault: {
+            get() {
+                if ("default_permissions" in this.folder) {
+                    return this.folder.default_permissions.can_delete_folder;
+                }
+
+                return false;
+            },
+            set(value) {
+                const self = this;
+
+                self.updatePermission({
+                    ability: "can_delete_folder",
+                    granted: value,
+                    folder: self.folder,
+                });
+            },
+        },
+        canCreateDocumentByDefault: {
+            get() {
+                if ("default_permissions" in this.folder) {
+                    return this.folder.default_permissions.can_create_document;
+                }
+
+                return false;
+            },
+            set(value) {
+                const self = this;
+
+                self.updatePermission({
+                    ability: "can_create_document",
+                    granted: value,
+                    folder: self.folder,
+                });
+            },
+        },
+        canDeleteDocumentByDefault: {
+            get() {
+                if ("default_permissions" in this.folder) {
+                    return this.folder.default_permissions.can_delete_document;
+                }
+
+                return false;
+            },
+            set(value) {
+                const self = this;
+
+                self.updatePermission({
+                    ability: "can_delete_document",
+                    granted: value,
+                    folder: self.folder,
+                });
+            },
+        },
     },
     /**
      * Watchers
@@ -132,10 +295,13 @@ export default {
     methods: {
         ...mapActions({
             update: "folders/update",
+            updateProperties: "folders/updateProperties",
+            updatePermission: "folders/updatePermission",
             store: "folders/store",
             destroy: "folders/destroy",
             storeDocument: "documents/store",
             index: "folders/index",
+            loadDetails: "folders/loadDetails",
         }),
 
         /**
@@ -144,7 +310,7 @@ export default {
         onMarkAsReadClicked: function () {
             const self = this;
 
-            self.$emit('feeditems-read', {
+            self.$emit("feeditems-read", {
                 folders: [self.folder.id],
             });
         },
@@ -183,11 +349,14 @@ export default {
             }
 
             self.store({
+                group_id: self.group.id,
                 parent_id: self.folder.id,
                 title: self.addFolderTitle,
-            }).then(function () {
-                self.addFolderTitle = null;
-            });
+            })
+                .then(function () {
+                    self.addFolderTitle = null;
+                })
+                .catch((error) => console.error(error));
         },
         /**
          * Delete folder button clicked
@@ -195,9 +364,7 @@ export default {
         onDeleteFolder: function () {
             const self = this;
 
-            self.destroy(self.folder).then(function () {
-                self.index();
-            });
+            self.destroy(self.folder);
         },
         /**
          * Add document form submitted
@@ -210,12 +377,20 @@ export default {
             }
 
             self.storeDocument({
+                group_id: self.group.id,
                 folder_id: self.folder.id,
                 url: self.addDocumentUrl,
             }).then(function () {
                 self.addDocumentUrl = null;
-                self.$emit('document-added');
+                self.$emit("document-added");
             });
+        },
+
+        can: function (permission) {
+            return (
+                this.folder.user_permissions &&
+                this.folder.user_permissions[permission]
+            );
         },
     },
 };

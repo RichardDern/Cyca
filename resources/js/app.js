@@ -32,9 +32,7 @@ const app = new Vue({
         selectedFolder: function(oldFolder, newFolder) {
             const self = this;
 
-            if (oldFolder && newFolder && oldFolder.id !== newFolder.id) {
-                self.detailsViewComponent = "details-folder";
-            }
+            self.detailsViewComponent = "details-folder";
         },
         selectedDocuments: function(documents) {
             const self = this;
@@ -82,7 +80,11 @@ const app = new Vue({
             markFeedItemsAsRead: "feedItems/markAsRead",
             updateDocument: "documents/update",
             deleteDocuments: "documents/destroy",
-            updateFolder: "folders/updateProperties"
+            updateFolder: "folders/updateProperties",
+            showGroup: "groups/show",
+            updateGroup: "groups/updateProperties",
+            resetUnreadCount: "folders/resetUnreadCount",
+            updateUnreadFeedItemsCount: "feedItems/updateUnreadFeedItemsCount"
         }),
 
         /**
@@ -98,34 +100,7 @@ const app = new Vue({
                 notification => {
                     switch (notification.type) {
                         case "App\\Notifications\\UnreadItemsChanged":
-                            for (var documentId in notification.documents) {
-                                self.updateDocument({
-                                    documentId: documentId,
-                                    newProperties: {
-                                        feed_item_states_count:
-                                            notification.documents[documentId]
-                                    }
-                                });
-                            }
-
-                            for (var folderId in notification.folders) {
-                                self.updateFolder({
-                                    folderId: folderId,
-                                    newProperties: {
-                                        feed_item_states_count:
-                                            notification.folders[folderId]
-                                    }
-                                });
-                            }
-
-                            self.updateFolder({
-                                folderId: self.getUnreadItemsFolder.id,
-                                newProperties: {
-                                    feed_item_states_count: notification.total
-                                }
-                            });
-
-                            self.showFolder();
+                            self.updateUnreadFeedItemsCount(notification);
                             break;
                         case "App\\Notifications\\DocumentUpdated":
                             self.updateDocument({
@@ -136,6 +111,16 @@ const app = new Vue({
                     }
                 }
             );
+        },
+
+        /**
+         * User-action - Selected group has changed
+         * @param {*} group
+         */
+        onSelectedGroupChanged: function(group) {
+            const self = this;
+
+            self.showGroup(group);
         },
 
         /**
@@ -172,7 +157,7 @@ const app = new Vue({
         onSelectedDocumentsChanged: function(documents) {
             const self = this;
 
-            self.selectDocuments(documents);
+            self.selectDocuments({ documents: documents });
         },
 
         /**

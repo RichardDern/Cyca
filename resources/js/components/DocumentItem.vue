@@ -1,13 +1,17 @@
 <template>
     <a
         class="list-item"
-        v-bind:class="{'selected': is_selected}"
+        v-bind:class="{ selected: is_selected }"
         v-bind:draggable="true"
         v-bind:href="url"
-        v-on:click.meta.left.exact.stop.prevent="onAddToSelection"
-        v-on:click.left.exact.stop.prevent="onClicked"
-        v-on:click.middle.exact="incrementVisits({document: document, folder: selectedFolder})"
-        v-on:dblclick="openDocument({document: document, folder: selectedFolder})"
+        v-on:click.meta.left.exact.prevent.stop="onAddToSelection"
+        v-on:click.left.exact.prevent.stop="onClicked"
+        v-on:click.middle.exact="
+            incrementVisits({ document: document, folder: selectedFolder })
+        "
+        v-on:dblclick="
+            openDocument({ document: document, folder: selectedFolder })
+        "
         v-on:dragstart="onDragStart"
         v-on:dragend="onDragEnd"
         rel="noopener noreferrer"
@@ -16,7 +20,9 @@
             <img v-bind:src="document.favicon" class="favicon" />
             <div class="truncate flex-grow py-0.5">{{ document.title }}</div>
         </div>
-        <div class="badge" v-if="document.feed_item_states_count > 0">{{ document.feed_item_states_count }}</div>
+        <div class="badge default" v-if="document.feed_item_states_count > 0">
+            {{ document.feed_item_states_count }}
+        </div>
     </a>
 </template>
 
@@ -28,7 +34,7 @@ export default {
     computed: {
         ...mapGetters({
             selectedDocuments: "documents/selectedDocuments",
-            selectedFolder: "folders/selectedFolder"
+            selectedFolder: "folders/selectedFolder",
         }),
 
         /**
@@ -48,15 +54,15 @@ export default {
          * Return document's initial URL instead of the real URL, unless there
          * is not attached bookmark
          */
-        url: function() {
+        url: function () {
             const self = this;
 
-            if(self.document.bookmark.initial_url) {
+            if (self.document.bookmark.initial_url) {
                 return self.document.bookmark.initial_url;
             }
 
             return self.document.url;
-        }
+        },
     },
     methods: {
         ...mapActions({
@@ -69,10 +75,10 @@ export default {
         /**
          * Document has been clicked
          */
-        onClicked: function() {
+        onClicked: function () {
             const self = this;
 
-            self.$emit('selected-documents-changed', [self.document]);
+            self.$emit("selected-documents-changed", [self.document]);
         },
 
         /**
@@ -84,7 +90,7 @@ export default {
             let selectedDocuments = [...self.selectedDocuments];
 
             const index = selectedDocuments.findIndex(
-                doc => doc.id === self.document.id
+                (doc) => doc.id === self.document.id
             );
 
             if (index === -1) {

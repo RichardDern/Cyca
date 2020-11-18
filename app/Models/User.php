@@ -2,16 +2,19 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasHistory;
+use App\Models\Traits\User\HasFeeds;
+use App\Models\Traits\User\HasFolders;
+use App\Models\Traits\User\HasGroups;
+use App\Services\Importer;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Translation\HasLocalePreference;
-use App\Services\Importer;
-use App\Models\Traits\HasHistory;
 
 class User extends Authenticatable implements MustVerifyEmail, HasLocalePreference
 {
-    use Notifiable, HasHistory;
+    use Notifiable, HasHistory, HasGroups, HasFolders, HasFeeds;
 
     # --------------------------------------------------------------------------
     # ----| Properties |--------------------------------------------------------
@@ -46,27 +49,21 @@ class User extends Authenticatable implements MustVerifyEmail, HasLocalePreferen
 
     /**
      * Attributes used to display this model in history
-     * 
+     *
      * @var array
      */
     protected $historyAttributes = [
         'name',
-        'email'
+        'email',
     ];
+
+    # --------------------------------------------------------------------------
+    # ----| Attributes |--------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     # --------------------------------------------------------------------------
     # ----| Relations |---------------------------------------------------------
     # --------------------------------------------------------------------------
-
-    /**
-     * Folders owned by this user
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function folders()
-    {
-        return $this->hasMany(Folder::class);
-    }
 
     /**
      * Documents added to user's collection
@@ -93,38 +90,14 @@ class User extends Authenticatable implements MustVerifyEmail, HasLocalePreferen
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function userHistoryEntries() {
+    public function userHistoryEntries()
+    {
         return $this->hasMany(HistoryEntry::class);
     }
 
     # --------------------------------------------------------------------------
     # ----| Methods |-----------------------------------------------------------
     # --------------------------------------------------------------------------
-
-    /**
-     * Create default folders for this user.
-     *
-     * @throws \App\Exceptions\UserDoesNotExistsException
-     * @return void
-     */
-    public function createDefaultFolders()
-    {
-        if (empty($this->id)) {
-            throw new \App\Exceptions\UserDoesNotExistsException("Cannot create default folders for inexisting user");
-        }
-
-        Folder::createDefaultFoldersFor($this);
-    }
-
-    /**
-     * Return user's folders as a flat tree.
-     *
-     * @return \Illuminate\Support\Collection
-     */
-    public function getFlatTree()
-    {
-        return Folder::getFlatTreeFor($this);
-    }
 
     /**
      * Get the user's preferred locale.
@@ -139,9 +112,9 @@ class User extends Authenticatable implements MustVerifyEmail, HasLocalePreferen
     /**
      * Import initial set of data
      */
-    public function importInitialData()
+    public function importInitialData(Group $group)
     {
         $importer = new Importer();
-        $importer->forUser($this)->fromFile(resource_path('initial_data.json'))->import();
+        $importer->forUser($this)->inGroup($group)->fromFile(resource_path('initial_data.json'))->import();
     }
 }

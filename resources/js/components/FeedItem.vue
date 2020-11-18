@@ -1,7 +1,10 @@
 <template>
     <a
         class="feed-item"
-        v-bind:class="{'selected': is_selected, 'read': feedItem.feed_item_states_count === 0}"
+        v-bind:class="{
+            selected: is_selected,
+            read: feedItem.feed_item_states_count === 0,
+        }"
         v-bind:href="feedItem.url"
         rel="noopener noreferrer"
         v-on:click.left.exact.stop.prevent="onClicked"
@@ -20,7 +23,7 @@
 </template>
 
 <script>
-import TEXTColor from 'textcolor';
+import TEXTColor from "textcolor";
 import { mapGetters, mapActions } from "vuex";
 
 export default {
@@ -47,6 +50,17 @@ export default {
                     );
             } finally {
                 return selected;
+            }
+        },
+    },
+    watch: {
+        is_selected: function (selected) {
+            const self = this;
+
+            if (selected) {
+                self.$el.scrollIntoView({
+                    block: "center",
+                });
             }
         },
     },
@@ -85,15 +99,25 @@ export default {
 
             self.$emit("selected-feeditems-changed", selectedFeedItems);
         },
-        highlight: function(title) {
-            highlights.forEach(function(highlight) {
-                var regex = new RegExp("(" + highlight.expression + ")(?![^<]*>|[^<>]*</)", "i");
+        highlight: function (title) {
+            highlights.forEach(function (highlight) {
+                var regex = new RegExp(
+                    "(" + highlight.expression + ")(?![^<]*>|[^<>]*</)",
+                    "i"
+                );
                 let textColor = TEXTColor.findTextColor(highlight.color);
-                title = title.replace(regex, '<span class="highlight" style="color: ' + textColor + '; background-color: ' + highlight.color + '">$1</span>');
+                title = title.replace(
+                    regex,
+                    '<span class="highlight" style="color: ' +
+                        textColor +
+                        "; background-color: " +
+                        highlight.color +
+                        '">$1</span>'
+                );
             });
 
             return title;
-        }
+        },
     },
 };
 </script>

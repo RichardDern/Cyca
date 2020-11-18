@@ -1,7 +1,7 @@
 <template>
     <div id="documents-list">
         <document-item
-            v-for="document in documents"
+            v-for="document in sortedList"
             v-bind:key="document.id"
             v-bind:document="document"
             v-on:selected-documents-changed="onSelectedDocumentsChanged"
@@ -23,8 +23,22 @@ export default {
      */
     computed: {
         ...mapGetters({
-            documents: "documents/documents"
-        })
+            documents: "documents/documents",
+            selectedFolder: "folders/selectedFolder",
+        }),
+        sortedList: function() {
+            const self = this;
+            let collection = collect(self.documents).sortBy("title");
+
+            if (
+                self.selectedFolder &&
+                self.selectedFolder.type === "unread_items"
+            ) {
+                collection = collection.where("feed_item_states_count", ">", 0);
+            }
+
+            return collection.all();
+        }
     },
     /**
      * Methods

@@ -8,13 +8,26 @@
                     class="button info"
                     v-on:click="onMarkAsReadClicked"
                 >
-                    <svg fill="currentColor" width="16" height="16" class="mr-1">
+                    <svg
+                        fill="currentColor"
+                        width="16"
+                        height="16"
+                        class="mr-1"
+                    >
                         <use v-bind:xlink:href="icon('unread_items')" />
                     </svg>
                     {{ __("Mark as read") }}
                 </button>
-                <button class="info ml-2" v-on:click.left.stop.prevent="onOpenClicked">
-                    <svg fill="currentColor" width="16" height="16" class="mr-1">
+                <button
+                    class="info ml-2"
+                    v-on:click.left.stop.prevent="onOpenClicked"
+                >
+                    <svg
+                        fill="currentColor"
+                        width="16"
+                        height="16"
+                        class="mr-1"
+                    >
                         <use v-bind:xlink:href="icon('open')" />
                     </svg>
                     {{ __("Open") }}
@@ -30,9 +43,14 @@
                 v-bind:src="document.favicon"
                 class="favicon inline mr-1 mb-1"
             />
-            <div class="mt-6">
+            <div class="mt-6" v-if="selectedFolder.type !== 'unread_items'">
                 <button class="danger" v-on:click="onDeleteDocument">
-                    <svg fill="currentColor" width="16" height="16" class="mr-1">
+                    <svg
+                        fill="currentColor"
+                        width="16"
+                        height="16"
+                        class="mr-1"
+                    >
                         <use v-bind:xlink:href="icon('trash')" />
                     </svg>
                     {{ __("Delete") }}

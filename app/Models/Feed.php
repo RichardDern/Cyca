@@ -5,10 +5,11 @@ namespace App\Models;
 use App\Models\Traits\Feed\AnalysesFeed;
 use App\Models\Traits\HasHistory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Traits\HasUrl;
 
 class Feed extends Model
 {
-    use AnalysesFeed, HasHistory;
+    use AnalysesFeed, HasHistory, HasUrl;
 
     # --------------------------------------------------------------------------
     # ----| Properties |--------------------------------------------------------
@@ -45,6 +46,7 @@ class Feed extends Model
     protected $appends = [
         'favicon',
         'is_ignored',
+        'ascii_url'
     ];
 
     /**
@@ -70,6 +72,20 @@ class Feed extends Model
     # --------------------------------------------------------------------------
     # ----| Attributes |--------------------------------------------------------
     # --------------------------------------------------------------------------
+
+    /**
+     * Return feed's title, or url if empty
+     *
+     * @return string
+     */
+    public function getTitleAttribute()
+    {
+        if (!empty($this->attributes['title'])) {
+            return $this->attributes['title'];
+        }
+
+        return $this->url;
+    }
 
     /**
      * Return full URL to favicon

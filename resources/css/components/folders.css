@@ -5,7 +5,7 @@
 /* This file defines colors for folders icons */
 
 /* A folder when displayed inline */
-.inline-folder {
+.inline-folder, .inline-group {
     @apply inline-block text-sm rounded px-2 py-1;
 
     background-color: theme("colors.folders.inline-folder.bg");
@@ -39,4 +39,9 @@
 /* Logout link */
 .folder-logout {
     color: theme("colors.folders.logout");
+}
+
+/* Group link */
+.folder-group {
+    color: theme("colors.folders.group");
 }

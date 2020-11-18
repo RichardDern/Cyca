@@ -1,9 +1,14 @@
 <template>
     <button
         class="list-item"
-        v-bind:class="{'selected': folder.is_selected, 'dragged-over': is_dragged_over, 'cannot-drop': cannot_drop, 'deleted': folder.deleted_at}"
+        v-bind:class="{
+            selected: folder.is_selected,
+            'dragged-over': is_dragged_over,
+            'cannot-drop': cannot_drop,
+            deleted: folder.deleted_at,
+        }"
         v-bind:draggable="isDraggable"
-        v-on:click.prevent="onClick"
+        v-on:mousedown="onClick"
         v-on:dragstart="onDragStart"
         v-on:dragend="onDragEnd"
         v-on:drop="onDrop"
@@ -11,14 +16,18 @@
         v-on:dragover="onDragOver"
         v-if="branchIsExpanded"
     >
-        <div class="list-item-label" v-bind:style="{'padding-left': indent}">
-            <span class="caret" v-if="folder.type === 'folder'">
+        <div class="list-item-label" v-bind:style="{ 'padding-left': indent }">
+            <span
+                class="caret"
+                v-if="folder.type === 'folder' || folder.type === 'root'"
+            >
                 <svg
                     fill="currentColor"
                     width="16"
                     height="16"
-                    v-on:click.capture.stop="toggleExpanded(folder)"
-                    v-if="folder.type === 'folder' && folder.children_count > 0"
+                    v-on:mouseup.capture.stop="onToggleExpandedClicked"
+                    v-on:mousedown.capture.stop="startTimer"
+                    v-if="folder.children_count > 0"
                 >
                     <use v-bind:xlink:href="icon(expanderIcon)" />
                 </svg>
@@ -28,16 +37,15 @@
                 width="16"
                 height="16"
                 class="favicon"
-                v-bind:class="folder.iconColor"
+                v-bind:class="iconColor"
             >
                 <use v-bind:xlink:href="icon(folder.icon)" />
             </svg>
             <div class="truncate flex-grow py-0.5">{{ folder.title }}</div>
         </div>
-        <div
-            class="badge"
-            v-if="folder.feed_item_states_count > 0"
-        >{{ folder.feed_item_states_count }}</div>
+        <div class="badge default" v-if="folder.feed_item_states_count > 0">
+            {{ folder.feed_item_states_count }}
+        </div>
     </button>
 </template>
 
@@ -50,13 +58,17 @@ export default {
         return {
             is_dragged_over: false,
             cannot_drop: false,
+            timer: null,
+            longClick: false,
         };
     },
     mounted: function () {
         const self = this;
 
         if (self.folder.is_selected) {
-            self.$el.scrollIntoView();
+            self.$el.scrollIntoView({
+                block: "center",
+            });
         }
     },
     /**
@@ -109,7 +121,7 @@ export default {
             const self = this;
             var parentId = self.folder.parent_id;
 
-            if (!parentId || !self.folders) {
+            if (!parentId || !self.folders || self.folder.type === "root") {
                 return true;
             }
 
@@ -139,6 +151,15 @@ export default {
 
             return "collapsed";
         },
+
+        /**
+         * Color of folder's icon
+         */
+        iconColor: function () {
+            const self = this;
+
+            return self.folder.iconColor;
+        },
     },
     /**
      * Methods
@@ -149,6 +170,7 @@ export default {
             stopDraggingFolder: "folders/stopDraggingFolder",
             dropIntoFolder: "folders/dropIntoFolder",
             toggleExpanded: "folders/toggleExpanded",
+            toggleBranch: "folders/toggleBranch",
         }),
         /**
          * Dragging started
@@ -174,9 +196,9 @@ export default {
         onDrop: function () {
             const self = this;
 
-            self.is_dragged_over = false;
-
             self.$emit("item-dropped", self.folder);
+
+            self.is_dragged_over = false;
         },
         /**
          * Dragging outside of this folder
@@ -213,6 +235,33 @@ export default {
                     self.$emit("selected-folder-changed", self.folder);
                     break;
             }
+        },
+
+        /**
+         * Keep track of current timestamp
+         */
+        startTimer: function (event) {
+            const self = this;
+
+            self.timer = window.setTimeout(function () {
+                self.longClick = true;
+
+                self.toggleBranch(self.folder);
+            }, 500);
+        },
+
+        /**
+         * Expand/collapse button clicked
+         */
+        onToggleExpandedClicked: function (event) {
+            const self = this;
+
+            if (!self.longClick) {
+                self.toggleExpanded(self.folder);
+            }
+
+            clearTimeout(self.timer);
+            self.longClick = false;
         },
     },
 };

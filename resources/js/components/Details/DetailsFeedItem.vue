@@ -10,19 +10,38 @@
                     class="button info"
                     v-on:click="onMarkAsReadClicked"
                 >
-                    <svg fill="currentColor" width="16" height="16" class="mr-1">
+                    <svg
+                        fill="currentColor"
+                        width="16"
+                        height="16"
+                        class="mr-1"
+                    >
                         <use v-bind:xlink:href="icon('unread_items')" />
                     </svg>
                     {{ __("Mark as read") }}
                 </button>
-                <a class="button info ml-2" v-bind:href="feedItem.url" rel="noopener noreferrer">
-                    <svg fill="currentColor" width="16" height="16" class="mr-1">
+                <a
+                    class="button info ml-2"
+                    v-bind:href="feedItem.url"
+                    rel="noopener noreferrer"
+                >
+                    <svg
+                        fill="currentColor"
+                        width="16"
+                        height="16"
+                        class="mr-1"
+                    >
                         <use v-bind:xlink:href="icon('open')" />
                     </svg>
                     {{ __("Open") }}
                 </a>
                 <button class="button info ml-2" v-on:click="onShareClicked">
-                    <svg fill="currentColor" width="16" height="16" class="mr-1">
+                    <svg
+                        fill="currentColor"
+                        width="16"
+                        height="16"
+                        class="mr-1"
+                    >
                         <use v-bind:xlink:href="icon('share')" />
                     </svg>
                     {{ __("Share") }}
@@ -31,7 +50,11 @@
         </h1>
 
         <div class="body">
-            <div v-html="feedItem.content ? feedItem.content : feedItem.description"></div>
+            <div
+                v-html="
+                    feedItem.content ? feedItem.content : feedItem.description
+                "
+            ></div>
 
             <dl>
                 <dt>{{ __("URL") }}</dt>
@@ -39,15 +62,23 @@
                     <a
                         v-bind:href="feedItem.url"
                         rel="noopener noreferrer"
-                    >{{ feedItem.url }}</a>
+                        class="readable"
+                        v-html="feedItem.ascii_url"
+                    ></a>
                 </dd>
-                <dt>{{__("Date of item's creation")}}</dt>
+                <dt>{{ __("Date of item's creation") }}</dt>
                 <dd>
-                    <date-time v-bind:datetime="feedItem.created_at" v-bind:calendar="true"></date-time>
+                    <date-time
+                        v-bind:datetime="feedItem.created_at"
+                        v-bind:calendar="true"
+                    ></date-time>
                 </dd>
-                <dt>{{__("Date of item's publication")}}</dt>
+                <dt>{{ __("Date of item's publication") }}</dt>
                 <dd>
-                    <date-time v-bind:datetime="feedItem.published_at" v-bind:calendar="true"></date-time>
+                    <date-time
+                        v-bind:datetime="feedItem.published_at"
+                        v-bind:calendar="true"
+                    ></date-time>
                 </dd>
                 <dt>{{ __("Published in") }}</dt>
                 <dd>
@@ -83,7 +114,7 @@ export default {
     methods: {
         ...mapActions({
             loadFolders: "folders/loadFolders",
-            loadFeedItemDetails: "feedItems/loadDetails"
+            loadFeedItemDetails: "feedItems/loadDetails",
         }),
 
         /**
@@ -92,8 +123,8 @@ export default {
         onMarkAsReadClicked: function () {
             const self = this;
 
-            self.$emit('feeditems-read', {
-                feed_items: [self.feedItem.id]
+            self.$emit("feeditems-read", {
+                feed_items: [self.feedItem.id],
             });
         },
 
@@ -120,7 +151,11 @@ export default {
             if (navigator.share) {
                 navigator.share(sharedData);
             } else {
-                location.href = 'mailto:?subject=' + sharedData.title + '&body=' + sharedData.url;
+                location.href =
+                    "mailto:?subject=" +
+                    sharedData.title +
+                    "&body=" +
+                    sharedData.url;
             }
         },
     },

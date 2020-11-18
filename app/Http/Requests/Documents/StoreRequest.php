@@ -2,11 +2,37 @@
 
 namespace App\Http\Requests\Documents;
 
+use App\Models\Folder;
+use App\Models\Group;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class StoreRequest extends FormRequest
 {
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        $folder = Folder::find($this->folder_id);
+
+        return $this->user()->can('createBookmarkIn', $folder);
+    }
+
+    /**
+     * Prepare the data for validation.
+     *
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'url' => urldecode($this->url),
+        ]);
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -14,22 +40,18 @@ class StoreRequest extends FormRequest
      */
     public function rules()
     {
-        $userId = $this->user()->id;
-
         return [
-            'url'     => [
+            'url'       => [
                 'required',
                 'url',
             ],
-            /**
-             * folder_id must be specified, and pointing to an existing folder
-             * already owned by current user
-             */
+            'group_id'  => [
+                'required',
+                Rule::exists(Group::class, 'id'),
+            ],
             'folder_id' => [
                 'required',
-                Rule::exists('App\Models\Folder', 'id')->where(function ($query) use ($userId) {
-                    $query->where('user_id', $userId);
-                }),
+                Rule::exists(Folder::class, 'id'),
             ],
         ];
     }

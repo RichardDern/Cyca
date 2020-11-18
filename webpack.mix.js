@@ -46,6 +46,7 @@ mix.js("resources/js/themes-browser.js", "public/js");
 mix.js("resources/js/import.js", "public/js");
 mix.js("resources/js/highlights.js", "public/js");
 mix.js("resources/js/history.js", "public/js");
+mix.js("resources/js/groups.js", "public/js");
 
 if (mix.inProduction()) {
     mix.version();

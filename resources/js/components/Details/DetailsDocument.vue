@@ -5,9 +5,11 @@
                 <img v-bind:src="document.favicon" class="favicon" />
                 <span>{{ document.title }}</span>
                 <div
-                    class="badge"
+                    class="badge article"
                     v-if="document.feed_item_states_count > 0"
-                >{{ document.feed_item_states_count }}</div>
+                >
+                    {{ document.feed_item_states_count }}
+                </div>
             </div>
             <div class="flex items-center">
                 <button
@@ -15,7 +17,12 @@
                     class="button info"
                     v-on:click="onMarkAsReadClicked"
                 >
-                    <svg fill="currentColor" width="16" height="16" class="mr-1">
+                    <svg
+                        fill="currentColor"
+                        width="16"
+                        height="16"
+                        class="mr-1"
+                    >
                         <use v-bind:xlink:href="icon('unread_items')" />
                     </svg>
                     {{ __("Mark as read") }}
@@ -24,16 +31,34 @@
                     class="button info ml-2"
                     v-bind:href="url"
                     rel="noopener noreferrer"
-                    v-on:click.left.stop.prevent="openDocument({document: document, folder: selectedFolder})"
-                    v-on:click.middle.exact="incrementVisits({document: document, folder: selectedFolder})"
+                    v-on:click.left.stop.prevent="
+                        openDocument({
+                            document: document,
+                        })
+                    "
+                    v-on:click.middle.exact="
+                        incrementVisits({
+                            document: document,
+                        })
+                    "
                 >
-                    <svg fill="currentColor" width="16" height="16" class="mr-1">
+                    <svg
+                        fill="currentColor"
+                        width="16"
+                        height="16"
+                        class="mr-1"
+                    >
                         <use v-bind:xlink:href="icon('open')" />
                     </svg>
                     {{ __("Open") }}
                 </a>
                 <button class="button info ml-2" v-on:click="onShareClicked">
-                    <svg fill="currentColor" width="16" height="16" class="mr-1">
+                    <svg
+                        fill="currentColor"
+                        width="16"
+                        height="16"
+                        class="mr-1"
+                    >
                         <use v-bind:xlink:href="icon('share')" />
                     </svg>
                     {{ __("Share") }}
@@ -42,7 +67,10 @@
         </h1>
 
         <div class="body">
-            <div v-if="document.description" v-html="document.description"></div>
+            <div
+                v-if="document.description"
+                v-html="document.description"
+            ></div>
 
             <dl>
                 <dt>{{ __("Real URL") }}</dt>
@@ -50,22 +78,37 @@
                     <a
                         v-bind:href="document.url"
                         rel="noopener noreferrer"
-                        v-on:click.left.stop.prevent="openDocument({document: document, folder: selectedFolder})"
-                    >{{ document.url }}</a>
+                        v-on:click.left.stop.prevent="
+                            openDocument({
+                                document: document,
+                            })
+                        "
+                        class="readable"
+                        v-html="document.ascii_url"
+                    ></a>
                 </dd>
-                <dt v-if="document.bookmark.visits">{{ __("Visits") }}</dt>
-                <dd v-if="document.bookmark.visits">{{ document.bookmark.visits }}</dd>
-                <dt>{{__("Date of document's last check")}}</dt>
+                <dt v-if="document.visits">{{ __("Visits") }}</dt>
+                <dd v-if="document.visits">
+                    {{ document.visits }}
+                </dd>
+                <dt>{{ __("Date of document's last check") }}</dt>
                 <dd>
-                    <date-time v-bind:datetime="document.checked_at" v-bind:calendar="true"></date-time>
+                    <date-time
+                        v-bind:datetime="document.checked_at"
+                        v-bind:calendar="true"
+                    ></date-time>
                 </dd>
-                <dt v-if="dupplicateInFolders.length > 0">{{ __("Also exists in") }}</dt>
+                <dt v-if="dupplicateInFolders.length > 0">
+                    {{ __("Also exists in") }}
+                </dt>
                 <dd v-if="dupplicateInFolders.length > 0">
                     <button
                         class="bg-gray-400 hover:bg-gray-500"
                         v-for="dupplicateInFolder in dupplicateInFolders"
                         v-bind:key="dupplicateInFolder.id"
-                        v-on:click="$emit('folder-selected', dupplicateInFolder)"
+                        v-on:click="
+                            $emit('folder-selected', dupplicateInFolder)
+                        "
                     >
                         <svg
                             fill="currentColor"
@@ -75,15 +118,21 @@
                             v-bind:class="dupplicateInFolder.iconColor"
                         >
                             <use
-                                v-bind:xlink:href="icon(dupplicateInFolder.icon)"
+                                v-bind:xlink:href="
+                                    icon(dupplicateInFolder.icon)
+                                "
                             />
                         </svg>
-                        <span class="truncate flex-grow py-0.5">{{ dupplicateInFolder.title }}</span>
+                        <span class="truncate flex-grow py-0.5">{{
+                            dupplicateInFolder.title
+                        }}</span>
                     </button>
                 </dd>
             </dl>
 
-            <h2 v-if="document.feeds && document.feeds.length > 0">{{ __("Feeds") }}</h2>
+            <h2 v-if="document.feeds && document.feeds.length > 0">
+                {{ __("Feeds") }}
+            </h2>
 
             <div
                 v-for="feed in document.feeds"
@@ -99,30 +148,42 @@
                         class="button success"
                         v-if="feed.is_ignored"
                         v-on:click="follow(feed)"
-                    >{{ __("Follow") }}</button>
+                    >
+                        {{ __("Follow") }}
+                    </button>
                     <button
                         class="button danger"
                         v-if="!feed.is_ignored"
                         v-on:click="ignore(feed)"
-                    >{{ __("Ignore") }}</button>
+                    >
+                        {{ __("Ignore") }}
+                    </button>
                 </div>
                 <div v-if="feed.description" v-html="feed.description"></div>
 
                 <dl>
                     <dt>{{ __("Real URL") }}</dt>
                     <dd>
-                        <div>{{ feed.url }}</div>
+                        <div class="readable" v-html="feed.ascii_url"></div>
                     </dd>
-                    <dt>{{__("Date of document's last check")}}</dt>
+                    <dt>{{ __("Date of document's last check") }}</dt>
                     <dd>
-                        <date-time v-bind:datetime="feed.checked_at" v-bind:calendar="true"></date-time>
+                        <date-time
+                            v-bind:datetime="feed.checked_at"
+                            v-bind:calendar="true"
+                        ></date-time>
                     </dd>
                 </dl>
             </div>
 
-            <div class="mt-6">
+            <div class="mt-6" v-if="selectedFolder.type !== 'unread_items'">
                 <button class="danger" v-on:click="onDeleteDocument">
-                    <svg fill="currentColor" width="16" height="16" class="mr-1">
+                    <svg
+                        fill="currentColor"
+                        width="16"
+                        height="16"
+                        class="mr-1"
+                    >
                         <use v-bind:xlink:href="icon('trash')" />
                     </svg>
                     {{ __("Delete") }}
@@ -169,12 +230,25 @@ export default {
             return self.document.url;
         },
     },
+    watch: {
+        document: function (document) {
+            if (document && document.id) {
+                this.load(document);
+            }
+        },
+    },
+    mounted: function () {
+        if (this.document && this.document.id) {
+            this.load(this.document);
+        }
+    },
     methods: {
         ...mapActions({
             incrementVisits: "documents/incrementVisits",
             openDocument: "documents/openDocument",
             ignoreFeed: "documents/ignoreFeed",
-            followFeed: "documents/followFeed"
+            followFeed: "documents/followFeed",
+            load: "documents/load",
         }),
 
         /**
@@ -214,7 +288,11 @@ export default {
             if (navigator.share) {
                 navigator.share(sharedData);
             } else {
-                location.href = 'mailto:?subject=' + sharedData.title + '&body=' + sharedData.url;
+                location.href =
+                    "mailto:?subject=" +
+                    sharedData.title +
+                    "&body=" +
+                    sharedData.url;
             }
         },
 

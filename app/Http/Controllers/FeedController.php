@@ -19,7 +19,7 @@ class FeedController extends Controller
     {
         $ignoredFeed = IgnoredFeed::where('user_id', $request->user()->id)->where('feed_id', $feed->id)->first();
 
-        if(!$ignoredFeed) {
+        if (!$ignoredFeed) {
             $ignoredFeed = new IgnoredFeed();
 
             $ignoredFeed->user()->associate($request->user());
@@ -40,7 +40,7 @@ class FeedController extends Controller
     {
         $ignoredFeed = IgnoredFeed::where('user_id', $request->user()->id)->where('feed_id', $feed->id)->first();
 
-        if($ignoredFeed) {
+        if ($ignoredFeed) {
             $ignoredFeed->delete();
         }
     }

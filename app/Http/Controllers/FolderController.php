@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Folders\StoreRequest;
 use App\Http\Requests\Folders\UpdateRequest;
 use App\Models\Folder;
+use App\Models\Group;
+use App\Http\Requests\Folders\SetPermissionsRequest;
 use Illuminate\Http\Request;
 
 class FolderController extends Controller
@@ -21,7 +23,9 @@ class FolderController extends Controller
      */
     public function index(Request $request)
     {
-        return $request->user()->getFlatTree();
+        $user = $request->user();
+
+        return $user->getFlatTree();
     }
 
     /**
@@ -32,20 +36,20 @@ class FolderController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $validated = $request->validated();
-
+        $validated    = $request->validated();
+        $user         = $request->user();
         $parentFolder = Folder::find($validated['parent_id']);
+        $group        = Group::find($validated['group_id']);
 
-        if ($parentFolder->type !== 'folder' && $parentFolder->type !== 'root') {
-            abort(422);
-        }
-
-        $request->user()->folders()->save(new Folder([
+        $user->createdFolders()->save(new Folder([
             'title'     => $validated['title'],
-            'parent_id' => $validated['parent_id'],
+            'parent_id' => $parentFolder->id,
+            'group_id'  => $group->id,
         ]));
 
-        return $this->index($request);
+        $user->setFolderExpandedState(true, $parentFolder);
+
+        return $user->getFlatTree($group);
     }
 
     /**
@@ -56,13 +60,31 @@ class FolderController extends Controller
      */
     public function show(Request $request, Folder $folder)
     {
-        $request->user()->folders()->where('id', '<>', $folder->id)->update(['is_selected' => false]);
+        $user = $request->user();
 
-        $folder->is_selected = true;
+        $user->setSelectedFolder($folder);
 
-        $folder->save();
+        return $folder->listDocuments($user);
+    }
 
-        return $folder->listDocuments();
+    /**
+     * Load every details for specified folder
+     *
+     * @param  \App\Models\Folder  $folder
+     * @return \Illuminate\Http\Response
+     */
+    public function details(Request $request, Folder $folder)
+    {
+        $user = $request->user();
+        
+        if (!$user->can('view', $folder)) {
+            abort(404);
+        }
+
+        $folder->user_permissions    = $folder->getUserPermissions($user);
+        $folder->default_permissions = $folder->getDefaultPermissions();
+        
+        return $folder;
     }
 
     /**
@@ -75,26 +97,24 @@ class FolderController extends Controller
     public function update(UpdateRequest $request, Folder $folder)
     {
         $validated = $request->validated();
+        $user      = $request->user();
 
-        // Don't move a folder to a descendant
-        $parent = $request->user()->folders()->findOrFail($validated['parent_id']);
-
-        while ($parent !== null) {
-            if ($parent->id === $folder->id) {
-                abort(422, "Cannot move a folder to one of its descendants");
-            }
-
-            $parent = $parent->parent;
+        if ($request->has('is_expanded')) {
+            $user->setFolderExpandedState($validated['is_expanded'], $folder);
         }
 
         $folder->title     = $validated['title'];
         $folder->parent_id = $validated['parent_id'];
 
-        if ($request->has('is_expanded')) {
-            $folder->is_expanded = $validated['is_expanded'];
+        if ($folder->isDirty()) {
+            $folder->save();
         }
 
-        $folder->save();
+        if (!empty($folder->parent_id)) {
+            $user->setFolderExpandedState(true, $folder->parent);
+        }
+
+        //TODO: Send a "folder updated" notification to other users in the group
 
         return $folder;
     }
@@ -107,12 +127,36 @@ class FolderController extends Controller
      */
     public function destroy(Request $request, Folder $folder)
     {
+        $user = $request->user();
+
+        $user->setSelectedFolder(null, $folder->group);
+
         $folder->delete();
 
-        // We want to ensure at least the root folder is selected
-        $request->user()->folders()->update(['is_selected' => false]);
-        $request->user()->folders()->where('type', 'root')->update(['is_selected' => true]);
+        //TODO: Send a "folder deleted" notification to other users in the group
 
-        return $this->index($request);
+        return $user->getFlatTree();
+    }
+
+    /**
+     * Toggle expanded/collapsed a whole folder's branch
+     *
+     * @param  \App\Models\Folder  $folder
+     * @return \Illuminate\Http\Response
+     */
+    public function toggleBranch(Request $request, Folder $folder)
+    {
+        $user = $request->user();
+
+        $user->setFolderExpandedState(!$folder->is_expanded, $folder, $folder->group, true);
+
+        return $user->getFlatTree();
+    }
+
+    public function setPermission(SetPermissionsRequest $request, Folder $folder)
+    {
+        $validated = $request->validated();
+
+        $folder->setDefaultPermission($validated['ability'], $validated['granted']);
     }
 }

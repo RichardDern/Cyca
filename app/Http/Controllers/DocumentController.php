@@ -3,23 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Documents\StoreRequest;
-use App\Models\FeedItemState;
 use App\Models\Document;
+use App\Models\FeedItemState;
 use App\Models\Folder;
+use App\Notifications\UnreadItemsChanged;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 
 class DocumentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Request $request)
+    public function __construct()
     {
-        $folder = $request->user()->folders()->where('is_selected', true)->first();
-
-        return $folder->listDocuments();
+        $this->authorizeResource(Document::class, 'document');
     }
 
     /**
@@ -31,22 +26,16 @@ class DocumentController extends Controller
     public function store(StoreRequest $request)
     {
         $validated = $request->validated();
-
-        $url = urldecode($validated['url']);
-
-        $folder = $request->user()->folders()->findOrFail($validated['folder_id']);
-
-        if ($folder->type !== 'folder' && $folder->type !== 'root') {
-            abort(422);
-        }
-
+        $user = $request->user();
+        $url = $validated['url'];
+        $folder = Folder::find($validated['folder_id']);
         $document = Document::firstOrCreate(['url' => $url]);
 
         $folder->documents()->save($document, [
             'initial_url' => $url,
         ]);
 
-        return $folder->listDocuments();
+        return $folder->listDocuments($user);
     }
 
     /**
@@ -58,11 +47,13 @@ class DocumentController extends Controller
      */
     public function show(Request $request, Document $document)
     {
-        $document->findDupplicatesFor($request->user());
+        $user = $request->user();
 
-        $document->loadMissing('feeds')->loadCount(['feedItemStates' => function ($query) use ($request) {
-                $query->where('is_read', false)->where('user_id', $request->user()->id);
-            }]);
+        $document->findDupplicatesFor($user);
+
+        $document->loadMissing('feeds')->loadCount(['feedItemStates' => function ($query) use ($user) {
+            $query->where('is_read', false)->where('user_id', $user->id);
+        }]);
 
         return $document;
     }
@@ -76,17 +67,32 @@ class DocumentController extends Controller
      */
     public function move(Request $request, Folder $sourceFolder, Folder $targetFolder)
     {
-        if ($sourceFolder->user_id !== $request->user()->id || $targetFolder->user_id !== $request->user()->id) {
-            abort(404);
-        }
+        $this->authorize('createBookmarkIn', $targetFolder);
+        $this->authorize('deleteBookmarkFrom', $sourceFolder);
 
-        $documents = $sourceFolder->documents()->whereIn('documents.id', $request->input('documents'))->get();
+        $bookmarks = $sourceFolder->documents()->whereIn('documents.id', $request->input('documents'))->get();
 
-        foreach ($documents as $document) {
-            $sourceFolder->documents()->updateExistingPivot($document->id, ['folder_id' => $targetFolder->id]);
+        foreach ($bookmarks as $bookmark) {
+            $sourceFolder->documents()->updateExistingPivot($bookmark->id, ['folder_id' => $targetFolder->id]);
         }
 
         FeedItemState::where('folder_id', $sourceFolder->id)->whereIn('document_id', $request->input('documents'))->update(['folder_id' => $targetFolder->id]);
+
+        $usersToNotify = $sourceFolder->group->activeUsers->merge($targetFolder->group->activeUsers);
+
+        Notification::send($usersToNotify, new UnreadItemsChanged([
+            'folders' => [
+                $sourceFolder->id,
+                $targetFolder->id,
+            ],
+        ]));
+
+        return $request->user()->countUnreadItems([
+            'folders' => [
+                $sourceFolder->id,
+                $targetFolder->id,
+            ],
+        ]);
     }
 
     /**
@@ -98,17 +104,18 @@ class DocumentController extends Controller
      */
     public function destroyBookmarks(Request $request, Folder $folder)
     {
-        if ($folder->user_id !== $request->user()->id) {
-            abort(404);
-        }
+        $this->authorize('deleteBookmarkFrom', $folder);
 
+        $user = $request->user();
         $documents = $folder->documents()->whereIn('documents.id', $request->input('documents'))->get();
 
         foreach ($documents as $document) {
             $folder->documents()->detach($document);
         }
 
-        return $folder->listDocuments();
+        Notification::send($folder->group->activeUsers()->get(), new UnreadItemsChanged(['folders' => [$folder]]));
+
+        return $folder->listDocuments($user);
     }
 
     /**
@@ -116,28 +123,12 @@ class DocumentController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  Document $document
-     * @param  Folder $folder
      * @return \Illuminate\Http\Response
      */
-    public function visit(Request $request, Document $document, Folder $folder)
+    public function visit(Request $request, Document $document)
     {
-        if ($folder->user_id !== $request->user()->id) {
-            abort(404);
-        }
-
-        if($folder->type === 'unread_items') {
-            $folders = $document->findDupplicatesFor($request->user());
-
-            foreach($folders as $folder) {
-                $doc = $folder->documents()->where('documents.id', $document->id)->first();
-
-                $folder->documents()->updateExistingPivot($doc->id, ['visits' => $doc->bookmark->visits + 1]);
-            }
-        } else {
-            $document = $folder->documents()->where('documents.id', $document->id)->first();
-
-            $folder->documents()->updateExistingPivot($document->id, ['visits' => $document->bookmark->visits + 1]);
-        }
+        $document->visits++;
+        $document->save();
 
         return $document;
     }

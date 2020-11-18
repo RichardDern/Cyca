@@ -23,4 +23,41 @@ class FeedItemState extends Model
         'feed_id',
         'feed_item_id',
     ];
+
+    # --------------------------------------------------------------------------
+    # ----| Relations |---------------------------------------------------------
+    # --------------------------------------------------------------------------
+
+    /**
+     * Associated groups
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\hasManyThrough
+     */
+    public function groups()
+    {
+        return $this->hasManyThrough(Group::class, Folder::class);
+    }
+
+    /**
+     * Associated document
+     */
+    public function document()
+    {
+        return $this->belongsTo(Document::class);
+    }
+
+    # --------------------------------------------------------------------------
+    # ----| Scopes |------------------------------------------------------------
+    # --------------------------------------------------------------------------
+
+    /**
+     * Scope a query to only include unread items
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeUnread($query)
+    {
+        return $query->where('is_read', false);
+    }
 }

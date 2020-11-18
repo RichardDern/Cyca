@@ -2,6 +2,7 @@
 
 namespace App\Models\Traits\Folder;
 
+use App\Models\Group;
 use App\Models\User;
 
 trait CreatesDefaultFolders
@@ -26,33 +27,33 @@ trait CreatesDefaultFolders
     # --------------------------------------------------------------------------
 
     /**
-     * Create default folders for specified user. This method should be called
-     * only once when user is created.
+     * Create default folders for specified group. This method should be called
+     * only once when group is created.
      *
      * @throws \App\Exceptions\UserDoesNotExistsException
-     * @param \App\Models\User $user
+     * @param \App\Models\User $user User creating the folders
+     * @param \App\Models\Group $group
      */
-    public static function createDefaultFoldersFor(User $user)
+    public static function createDefaultFoldersFor(User $user, Group $group)
     {
-        if (empty($user->id)) {
-            throw new \App\Exceptions\UserDoesNotExistsException("Cannot create default folders for inexisting user");
-        }
+        $group->folders()->saveMany([
+            new self([
+                'type'     => 'unread_items',
+                'title'    => 'Unread items',
+                'position' => self::$POSITION_UNREAD_ITEMS,
+                'user_id'  => $user->id,
+            ]),
+            new self([
+                'type'     => 'root',
+                'title'    => 'Root',
+                'position' => self::$POSITION_ROOT,
+                'user_id'  => $user->id,
+            ]),
+        ]);
 
-        $user->folders()->saveMany([
-            new self([
-                'type'        => 'unread_items',
-                'title'       => 'Unread items',
-                'position'    => self::$POSITION_UNREAD_ITEMS,
-                'is_selected' => false,
-                'is_expanded' => true
-            ]),
-            new self([
-                'type'        => 'root',
-                'title'       => 'Root',
-                'position'    => self::$POSITION_ROOT,
-                'is_selected' => true,
-                'is_expanded' => true
-            ]),
+        session([
+            sprintf('selectedFolder.%d', $group->id) =>
+            $group->folders()->ofType('root')->first()->id,
         ]);
     }
 }

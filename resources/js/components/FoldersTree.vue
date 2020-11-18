@@ -1,5 +1,13 @@
 <template>
     <div id="folders-tree">
+        <div id="tree-top" v-if="sortedGroups.count() > 1">
+            <group-item
+                v-for="group in sortedGroups"
+                v-bind:key="group.id"
+                v-bind:group="group"
+                v-on:selected-group-changed="onSelectedGroupChanged"
+            ></group-item>
+        </div>
         <div id="tree" class="flex-grow">
             <folder-item
                 v-for="folder in folders"
@@ -25,25 +33,26 @@
                     </div>
                 </div>
             </a>
-            <form id="logout-form" v-bind:action="route('logout')" method="POST">
+            <form
+                id="logout-form"
+                v-bind:action="route('logout')"
+                method="POST"
+            >
                 <input type="hidden" name="_token" v-bind:value="csrf" />
-                <button
-                    type="submit"
-                    class="list-item"
-                >
-                <div class="list-item-label pl-0">
-                    <svg
-                        fill="currentColor"
-                        width="16"
-                        height="16"
-                        class="favicon folder-logout"
-                    >
-                        <use v-bind:xlink:href="icon('logout')" />
-                    </svg>
-                    <div class="truncate flex-grow py-0.5">
-                    {{ __("Logout") }}
+                <button type="submit" class="list-item">
+                    <div class="list-item-label pl-0">
+                        <svg
+                            fill="currentColor"
+                            width="16"
+                            height="16"
+                            class="favicon folder-logout"
+                        >
+                            <use v-bind:xlink:href="icon('logout')" />
+                        </svg>
+                        <div class="truncate flex-grow py-0.5">
+                            {{ __("Logout") }}
+                        </div>
                     </div>
-                </div>
                 </button>
             </form>
         </div>
@@ -57,9 +66,10 @@ export default {
     mounted: function () {
         const self = this;
 
-        self.index().then(function () {
-            self.$emit("folders-loaded");
-            self.onSelectedFolderChanged(self.selectedFolder);
+        self.indexGroups().then(function () {
+            self.$emit("groups-loaded");
+
+            self.showGroup();
         });
     },
     /**
@@ -68,19 +78,31 @@ export default {
     computed: {
         ...mapGetters({
             folders: "folders/folders",
-            selectedFolder: "folders/selectedFolder",
+            groups: "groups/groups",
         }),
-        csrf: function() {
-            return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        }
+        csrf: function () {
+            return document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content");
+        },
+        sortedGroups: function () {
+            return collect(this.groups).sortBy("position");
+        },
     },
     /**
      * Methods
      */
     methods: {
         ...mapActions({
-            index: "folders/index",
+            indexGroups: "groups/indexActive",
+            showGroup: "groups/show",
         }),
+
+        onSelectedGroupChanged: function (group) {
+            const self = this;
+
+            self.$emit("selected-group-changed", group);
+        },
 
         /**
          * Folder has been selected

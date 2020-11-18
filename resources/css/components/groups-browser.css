@@ -1,0 +1,81 @@
+/* -------------------------------------------------------------------------- */
+/* ----| Groups browser classes |-------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+
+/* Main browser wrapper */
+#groups-browser {
+    @apply h-screen w-full flex;
+}
+
+#groups-browser .left-panel {
+    @apply w-1/2;
+}
+
+#groups-browser .right-panel {
+    @apply w-1/2;
+
+    background-color: theme("colors.feeditems-list");
+}
+
+#groups-browser #my-groups {
+    @apply h-3/5 w-full overflow-auto;
+}
+
+#groups-browser #created-group-form {
+    @apply h-2/5 w-full overflow-auto;
+}
+
+/* Element of a list in the groups browser */
+#groups-browser .group-item {
+    @apply mb-1 flex items-center;
+
+    background-color: theme("colors.groups-browser.item.bg");
+    border: solid 1px theme("colors.groups-browser.item.border");
+}
+
+#groups-browser .group-item.selected {
+    background-color: theme("colors.groups-browser.selected-item.bg");
+    border: solid 1px theme("colors.groups-browser.selected-item.border");
+}
+
+/* Moving handle */
+#groups-browser .group-item .handle {
+    @apply flex-shrink cursor-move p-2 block;
+}
+
+/* ----| Group status |------------------------------------------------------ */
+
+.group-status-own {
+    background-color: theme("colors.groups-browser.status.own.bg");
+    color: theme("colors.groups-browser.status.own.text");
+}
+
+.group-status-created {
+    background-color: theme("colors.groups-browser.status.created.bg");
+    color: theme("colors.groups-browser.status.created.text");
+}
+
+.group-status-invited {
+    background-color: theme("colors.groups-browser.status.invited.bg");
+    color: theme("colors.groups-browser.status.invited.text");
+}
+
+.group-status-accepted {
+    background-color: theme("colors.groups-browser.status.accepted.bg");
+    color: theme("colors.groups-browser.status.accepted.text");
+}
+
+.group-status-rejected {
+    background-color: theme("colors.groups-browser.status.rejected.bg");
+    color: theme("colors.groups-browser.status.rejected.text");
+}
+
+.group-status-left {
+    background-color: theme("colors.groups-browser.status.left.bg");
+    color: theme("colors.groups-browser.status.left.text");
+}
+
+.group-status-joining {
+    background-color: theme("colors.groups-browser.status.joining.bg");
+    color: theme("colors.groups-browser.status.joining.text");
+}

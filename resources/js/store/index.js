@@ -3,6 +3,7 @@ import Vuex from "vuex";
 import folders from "./modules/folders";
 import documents from "./modules/documents";
 import feedItems from "./modules/feeditems";
+import groups from "./modules/groups";
 
 Vue.use(Vuex);
 
@@ -12,7 +13,8 @@ export default new Vuex.Store({
     modules: {
         folders,
         documents,
-        feedItems
+        feedItems,
+        groups
     },
     strict: debug
 });

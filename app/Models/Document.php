@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Traits\Document\AnalysesDocument;
 use App\Models\Traits\HasHistory;
+use App\Models\Traits\HasUrl;
 
 class Document extends Model
 {
-    use AnalysesDocument, HasHistory;
+    use AnalysesDocument, HasHistory, HasUrl;
 
     # --------------------------------------------------------------------------
     # ----| Properties |--------------------------------------------------------
@@ -36,7 +37,8 @@ class Document extends Model
      */
     protected $appends = [
         'dupplicates',
-        'favicon'
+        'favicon',
+        'ascii_url'
     ];
 
     /**
@@ -64,7 +66,7 @@ class Document extends Model
 
     /**
      * Attributes used to display this model in history
-     * 
+     *
      * @var array
      */
     protected $historyAttributes = [
@@ -106,8 +108,9 @@ class Document extends Model
      *
      * @return string
      */
-    public function getFaviconAttribute() {
-        if(empty($this->attributes['favicon_path'])) {
+    public function getFaviconAttribute()
+    {
+        if (empty($this->attributes['favicon_path'])) {
             return null;
         }
 
@@ -153,7 +156,8 @@ class Document extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function feedItemStates() {
+    public function feedItemStates()
+    {
         return $this->hasMany(FeedItemState::class);
     }
 
@@ -211,7 +215,7 @@ class Document extends Model
      */
     public function getStoragePath()
     {
-        if(empty($this->storagePath)) {
+        if (empty($this->storagePath)) {
             $hash = $this->getHash();
 
             $this->storagePath = 'public/documents/' . implode('/', str_split(($hash)));

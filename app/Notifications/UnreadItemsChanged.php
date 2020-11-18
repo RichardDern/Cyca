@@ -3,23 +3,30 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\BroadcastMessage;
-use App\Models\FeedItemState;
+use Illuminate\Notifications\Notification;
 
-class UnreadItemsChanged extends Notification implements ShouldQueue
+class UnreadItemsChanged extends Notification
 {
     use Queueable;
 
     /**
+     * Feed items, feeds, documents or folders to recalculate unread items for
+     *
+     * @var array
+     */
+    private $data = [];
+
+    /**
      * Create a new notification instance.
      *
+     * @param array|null Feed items, feeds, documents or folders to recalculate
+     * unread items for
      * @return void
      */
-    public function __construct()
+    public function __construct($data = null)
     {
-        //
+        $this->data = $data;
     }
 
     /**
@@ -41,13 +48,7 @@ class UnreadItemsChanged extends Notification implements ShouldQueue
      */
     public function toArray($notifiable)
     {
-        $states = FeedItemState::where('user_id', $notifiable->id)->where('is_read', false)->get();
-
-        return [
-            'documents' => $states->countBy('document_id')->all(),
-            'folders' => $states->countBy('folder_id')->all(),
-            'total' => $states->count()
-        ];
+        return $notifiable->countUnreadItems($this->data);
     }
 
     /**
@@ -69,7 +70,7 @@ class UnreadItemsChanged extends Notification implements ShouldQueue
     public function viaQueues()
     {
         return [
-            'broadcast'  => 'notifications',
+            'broadcast' => 'notifications',
         ];
     }
 }

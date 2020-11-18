@@ -36,7 +36,7 @@ export default {
                             let key = encodeURIComponent(k);
                             let val = params[k];
 
-                            if(val.constructor === Array) {
+                            if (val.constructor === Array) {
                                 let arr = [];
 
                                 val.forEach((v => {
@@ -61,6 +61,7 @@ export default {
 
         try {
             const json = await response.json();
+
             return json;
         } catch {
             return response;

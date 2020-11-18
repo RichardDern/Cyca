@@ -11,43 +11,64 @@ export default {
     /**
      * Display a listing of the resource.
      */
-    async index({ commit }) {
-        const data = await api.get(route("folder.index"));
-
-        commit("setFolders", data);
+    async index({ commit, dispatch }, folders) {
+        commit("setFolders", folders);
+        dispatch("show");
     },
 
     /**
      * Display the specified resource.
      */
-    async show({ commit, getters, dispatch }, folder) {
+    show({ commit, getters, dispatch }, folder) {
         const currentSelectedFolder = getters.selectedFolder;
 
         if (!folder) {
             folder = currentSelectedFolder;
         }
 
-        if (currentSelectedFolder && currentSelectedFolder.id !== folder.id) {
+        dispatch("loadDetails", folder).then(function() {
             commit("setSelectedFolder", folder);
-            dispatch("documents/selectDocuments", [], { root: true });
+        });
+
+        dispatch("documents/selectDocuments", [], { root: true });
+
+        api.get(route("folder.show", folder)).then(function(response) {
+            dispatch("documents/index", response, { root: true });
+        });
+    },
+
+    /**
+     * Load folder's details
+     */
+    loadDetails({ dispatch }, folder) {
+        if (!folder.details_loaded) {
+            return api
+                .get(route("folder.details", folder))
+                .then(function(response) {
+                    response.details_loaded = true;
+
+                    dispatch("updateProperties", {
+                        folderId: folder.id,
+                        newProperties: response
+                    });
+                });
         }
-
-        const documents = await api.get(route("folder.show", folder));
-
-        dispatch("documents/index", documents, { root: true });
     },
 
     /**
      * Store a newly created resource in storage.
      */
-    async store({ getters, commit }, { title, parent_id }) {
-        const parentFolder = getters.folders.find(f => f.id === parent_id);
-        const data = await api.post(route("folder.store"), {
-            title,
-            parent_id
-        });
-
-        commit("setFolders", data);
+    store({ dispatch }, { title, parent_id, group_id }) {
+        return api
+            .post(route("folder.store"), {
+                title,
+                parent_id,
+                group_id
+            })
+            .then(data => {
+                dispatch("index", data);
+            })
+            .catch(error => console.error(error));
     },
 
     /**
@@ -59,7 +80,10 @@ export default {
             newProperties
         );
 
-        dispatch("update", { folderId: folder.id, newProperties: data });
+        dispatch("updateProperties", {
+            folderId: folder.id,
+            newProperties: data
+        });
     },
 
     /**
@@ -75,14 +99,20 @@ export default {
         commit("update", { folder: folder, newProperties: newProperties });
     },
 
+    updatePermission({ commit }, { folder, ability, granted }) {
+        api.post(route("folder.set_permission", folder), {
+            ability: ability,
+            granted: granted
+        });
+    },
+
     /**
      * Remove the specified resource from storage.
      */
-    async destroy({ commit, dispatch }, folder) {
+    async destroy({ dispatch }, folder) {
         const data = await api.delete(route("folder.destroy", folder));
 
-        commit("setFolders", data);
-        dispatch("show");
+        dispatch("index", data);
     },
 
     /**
@@ -98,6 +128,15 @@ export default {
                 }
             }
         });
+    },
+
+    /**
+     * Toggle specified folder's branch expanded/collapsed
+     */
+    async toggleBranch({ commit }, folder) {
+        const response = await api.post(route("folder.toggle_branch", folder));
+
+        commit("setFolders", response);
     },
 
     /*
@@ -133,17 +172,10 @@ export default {
                 "documents/dropIntoFolder",
                 { sourceFolder: sourceFolder, targetFolder: folder },
                 { root: true }
-            ).then(function() {
-                dispatch("index");
-                dispatch("show");
-            });
+            );
 
             return;
         }
-
-        const newProperties = {
-            parent_id: folder.id
-        };
 
         if (
             sourceFolder.parent_id === folder.id ||
@@ -152,6 +184,10 @@ export default {
             return;
         }
 
+        const newProperties = {
+            parent_id: folder.id
+        };
+
         await dispatch("update", {
             folder: sourceFolder,
             newProperties: {
@@ -159,8 +195,7 @@ export default {
                 ...newProperties
             }
         }).then(function() {
-            dispatch("index");
-            dispatch("show");
+            dispatch("groups/show", null, { root: true });
         });
     }
 };

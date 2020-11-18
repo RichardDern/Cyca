@@ -2,8 +2,8 @@
 
 namespace App\Models\Traits\Folder;
 
+use App\Models\Group;
 use App\Models\User;
-use App\Models\FeedItemState;
 use Arr;
 
 /**
@@ -16,12 +16,24 @@ trait BuildsTree
      *
      * @return \Illuminate\Support\Collection
      */
-    public static function getFlatTreeFor(User $user)
+    public static function getFlatTreeFor(User $user, Group $group)
     {
         $tree  = [];
-        $query = $user->folders()->withCount(['children', 'feedItemStates' => function($query) {
-            $query->where('is_read', false);
-        }])->orderBy('parent_id', 'asc')->orderBy('position', 'asc')->orderBy('title', 'asc');
+        $query = $group->folders()
+            ->select([
+                'id',
+                'parent_id',
+                'type',
+                'title',
+                'position',
+                'group_id',
+            ])
+            ->withCount(['children', 'feedItemStates' => function ($query) use ($user) {
+                $query->where('is_read', false)->where('user_id', $user->id);
+            }])
+            ->orderBy('parent_id', 'asc')->orderBy('position', 'asc')
+            ->orderBy('title', 'asc');
+
         $folders = $query->get();
 
         $roots = $folders->collect()->filter(function ($folder) {
@@ -29,8 +41,8 @@ trait BuildsTree
         });
 
         foreach ($roots as $root) {
-            if($root->type === 'unread_items') {
-                $root->feed_item_states_count = FeedItemState::where('user_id', $root->user_id)->where('is_read', false)->count();
+            if ($root->type === 'unread_items') {
+                $root->feed_item_states_count = $group->feedItemStatesCount;
             }
 
             $branch = self::buildBranch($root, $folders, 0);

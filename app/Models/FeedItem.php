@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Traits\HasUrl;
 
 class FeedItem extends Model
 {
+    use HasUrl;
+    
     # --------------------------------------------------------------------------
     # ----| Properties |--------------------------------------------------------
     # --------------------------------------------------------------------------
@@ -17,6 +20,15 @@ class FeedItem extends Model
      */
     protected $dates = [
         'published_at',
+    ];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'ascii_url'
     ];
 
     # --------------------------------------------------------------------------
@@ -38,7 +50,8 @@ class FeedItem extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function feedItemStates() {
+    public function feedItemStates()
+    {
         return $this->hasMany(FeedItemState::class);
     }
 }

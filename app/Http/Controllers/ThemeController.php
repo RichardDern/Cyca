@@ -21,7 +21,8 @@ class ThemeController extends Controller
         return ThemeManager::listAvailableThemes();
     }
 
-    public function details(string $name) {
+    public function details(string $name)
+    {
         return ThemeManager::getThemeDetails($name);
     }
 }

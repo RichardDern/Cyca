@@ -26,10 +26,11 @@ export default {
     /**
      * Store a newly created resource in storage.
      */
-    async store({ dispatch }, { url, folder_id }) {
+    async store({ dispatch }, { url, folder_id, group_id }) {
         const data = await api.post(route("document.store"), {
             url: url,
-            folder_id: folder_id
+            folder_id: folder_id,
+            group_id: group_id
         });
 
         dispatch("index", data);
@@ -38,9 +39,17 @@ export default {
     /**
      * Mark specified documents as selected.
      */
-    async selectDocuments({ commit, dispatch }, documents) {
+    selectDocuments({ commit, dispatch }, { documents, selectFirstUnread }) {
         commit("setSelectedDocuments", documents);
-        await dispatch("feedItems/index", documents, { root: true });
+        dispatch("feedItems/index", documents, { root: true }).then(function() {
+            if (selectFirstUnread) {
+                dispatch("feedItems/selectFirstUnreadFeedItem", null, {
+                    root: true
+                });
+            } else {
+                commit("feedItems/setSelectedFeedItems", [], { root: true });
+            }
+        });
     },
 
     /**
@@ -56,18 +65,31 @@ export default {
      * Select first document containing unread feed items in currently displayed
      * list
      */
-    selectFirstDocumentWithUnreadItems({ getters, dispatch, rootGetters }, exclude) {
-        if(!exclude) {
-            exclude = collect(getters.selectedDocuments).pluck('id').all();
+    selectFirstDocumentWithUnreadItems(
+        { getters, dispatch, rootGetters },
+        { exclude, selectFirstUnread }
+    ) {
+        if (!exclude) {
+            exclude = collect(getters.selectedDocuments)
+                .pluck("id")
+                .all();
         }
 
-        const document = collect(getters.documents).where('feed_item_states_count', '>', 0).whereNotIn('id', exclude).first();
+        const document = collect(getters.documents)
+            .where("feed_item_states_count", ">", 0)
+            .whereNotIn("id", exclude)
+            .first();
 
-        if(document) {
-            dispatch("selectDocuments", [document]);
+        if (document) {
+            dispatch("selectDocuments", {
+                documents: [document],
+                selectFirstUnread: selectFirstUnread
+            });
         } else {
-            if(rootGetters["folders/selectedFolder"].type === 'unread_items') {
-                dispatch("selectDocuments", []);
+            if (rootGetters["folders/selectedFolder"].type === "unread_items") {
+                dispatch("selectDocuments", {
+                    selectFirstUnread: selectFirstUnread
+                });
             }
         }
     },
@@ -93,35 +115,45 @@ export default {
         { getters, commit, dispatch },
         { sourceFolder, targetFolder }
     ) {
-        const documents = getters.draggedDocuments;
+        const documents = collect(getters.draggedDocuments)
+            .pluck("id")
+            .all();
 
         if (!documents || documents.length === 0) {
             return;
         }
 
-        const data = await api.post(
-                route("document.move", {
-                    sourceFolder: sourceFolder.id,
-                    targetFolder: targetFolder.id
-                }),
-                {
-                    documents: collect(documents)
-                        .pluck("id")
-                        .all()
-                }
-            );
+        const response = await api.post(
+            route("document.move", {
+                sourceFolder: sourceFolder.id,
+                targetFolder: targetFolder.id
+            }),
+            {
+                documents: documents
+            }
+        );
 
         commit("setDraggedDocuments", []);
         commit("setSelectedDocuments", []);
+
+        const newDocumentsList = collect(getters.documents).whereNotIn(
+            "id",
+            documents
+        );
+
+        dispatch("index", newDocumentsList);
         dispatch("feedItems/index", getters.feeds, { root: true });
+        dispatch("feedItems/updateUnreadFeedItemsCount", response, {
+            root: true
+        });
     },
 
     /**
      * Increment visits for specified document
      */
-    async incrementVisits({ commit }, { document, folder }) {
+    async incrementVisits({ commit }, { document }) {
         const data = await api.post(
-            route("document.visit", { document: document.id, folder: folder.id })
+            route("document.visit", { document: document.id })
         );
 
         commit("update", {
@@ -133,10 +165,10 @@ export default {
     /**
      * Open specified document in background
      */
-    openDocument({ dispatch }, { document, folder }) {
-        window.open(document.bookmark.initial_url);
+    openDocument({ dispatch }, { document }) {
+        window.open(document.url);
 
-        dispatch("incrementVisits", { document: document, folder: folder });
+        dispatch("incrementVisits", { document: document });
     },
 
     /**
@@ -154,16 +186,14 @@ export default {
             }
         );
 
-        dispatch("folders/index", null, { root: true });
         dispatch("index", data);
-        dispatch("feedItems/index", getters.feeds, { root: true });
     },
 
     /**
      * Update the specified resource in storage.
      */
     update({ commit, getters }, { documentId, newProperties }) {
-        const document = getters.documents.find(d => d.id === documentId);
+        const document = getters.documents.find(d => d.id == documentId);
 
         if (!document) {
             return;
@@ -172,13 +202,28 @@ export default {
         commit("update", { document: document, newProperties: newProperties });
     },
 
-    followFeed({commit}, feed) {
-        api.post(route("feed.follow", feed));
-        commit("ignoreFeed", {feed: feed, ignored: false});
+    /**
+     * Load every data available for specified document, unless it was already
+     * loaded
+     */
+    load({ dispatch }, document) {
+        if (!document.loaded) {
+            api.get(route("document.show", document)).then(function(response) {
+                dispatch("update", {
+                    documentId: document.id,
+                    newProperties: { ...response, ...{ loaded: true } }
+                });
+            });
+        }
     },
 
-    ignoreFeed({commit}, feed) {
+    followFeed({ commit }, feed) {
+        api.post(route("feed.follow", feed));
+        commit("ignoreFeed", { feed: feed, ignored: false });
+    },
+
+    ignoreFeed({ commit }, feed) {
         api.post(route("feed.ignore", feed));
-        commit("ignoreFeed", {feed: feed, ignored: true});
+        commit("ignoreFeed", { feed: feed, ignored: true });
     }
 };

@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Facades\ThemeManager;
+use App\Services\Exporter;
 use App\Services\Importer;
 use Illuminate\Http\Request;
-use App\Services\Exporter;
 
 class HomeController extends Controller
 {
@@ -124,5 +124,13 @@ class HomeController extends Controller
     public function history()
     {
         return view('account.history');
+    }
+
+    /**
+     * Manage groups
+     */
+    public function groups()
+    {
+        return view('account.groups');
     }
 }

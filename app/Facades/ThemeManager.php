@@ -2,8 +2,8 @@
 
 namespace App\Facades;
 
-use Illuminate\Support\Facades\Facade;
 use App\Services\ThemeManager as BaseClass;
+use Illuminate\Support\Facades\Facade;
 
 class ThemeManager extends Facade
 {

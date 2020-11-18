@@ -20,7 +20,7 @@
             {{ __("Data imported") }}
         </div>
         <div v-if="error" class="alert error">
-            {{ __("A problem occured, interrupting importation") }}
+            {{ __("A problem occurred, interrupting importation") }}
         </div>
     </div>
 </template>

@@ -19,15 +19,24 @@ export default {
     computed: {
         ...mapGetters({
             feedItems: "feedItems/feedItems",
-            canLoadMore: "feedItems/canLoadMore"
+            canLoadMore: "feedItems/canLoadMore",
+            selectedFolder: "folders/selectedFolder",
         }),
         /**
          * Return list of feed items sorted by published date
          */
         sortedList: function () {
             const self = this;
+            let collection = collect(self.feedItems).sortByDesc("published_at");
 
-            return collect(self.feedItems).sortByDesc("published_at").all();
+            if (
+                self.selectedFolder &&
+                self.selectedFolder.type === "unread_items"
+            ) {
+                collection = collection.where("feed_item_states_count", ">", 0);
+            }
+
+            return collection.all();
         },
     },
     watch: {
@@ -52,12 +61,12 @@ export default {
         /**
          * Selected feed items has changed
          */
-        onSelectedFeedItemsChanged: function(feedItems) {
+        onSelectedFeedItemsChanged: function (feedItems) {
             const self = this;
 
             self.$emit("selected-feeditems-changed", feedItems);
         },
-        
+
         onScroll: function ($event) {
             const scrollTop = $event.target.scrollTop;
             const innerHeight = $event.target.clientHeight;

@@ -28,6 +28,7 @@
         "textcolor": "^1.0.2",
         "vue": "^2.6.12",
         "vue-template-compiler": "^2.6.12",
+        "vuedraggable": "^2.24.3",
         "vuex": "^3.5.1"
     }
 }

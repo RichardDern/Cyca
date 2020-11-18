@@ -6,6 +6,7 @@ use App\Contracts\ImportAdapter;
 use App\Models\Document;
 use App\Models\Feed;
 use App\Models\Folder;
+use App\Models\Group;
 use App\Models\Highlight;
 use App\Models\IgnoredFeed;
 use App\Models\User;
@@ -47,6 +48,12 @@ class Importer
     protected $dataArray = [];
 
     /**
+     * Group to import data to
+     * @var \App\Models\Group
+     */
+    protected $inGroup = null;
+
+    /**
      * Indicates which adapter to use for importation
      *
      * @param string $adapterName
@@ -75,6 +82,19 @@ class Importer
     public function forUser(User $user)
     {
         $this->forUser = $user;
+
+        return $this;
+    }
+
+    /**
+     * Defines the group to import data to
+     *
+     * @param \App\Models\Group $group
+     * @return self
+     */
+    public function inGroup(Group $group)
+    {
+        $this->inGroup = $group;
 
         return $this;
     }
@@ -160,8 +180,12 @@ class Importer
      */
     public function import()
     {
+        if (empty($this->inGroup)) {
+            $this->inGroup = $this->forUser->groups()->wherePivot('status', '=', 'own')->first();
+        }
+
         if (empty($this->inFolder)) {
-            $this->inFolder = $this->forUser->folders()->ofType('root')->first();
+            $this->inFolder = $this->inGroup->folders()->ofType('root')->first();
         }
 
         if ($this->withHighlights && !empty($this->dataArray['highlights'])) {
@@ -215,9 +239,10 @@ class Importer
     protected function importFolders($folder, $foldersData)
     {
         foreach ($foldersData as $folderData) {
-            $children = $this->forUser->folders()->save(new Folder([
+            $children = $this->inGroup->folders()->save(new Folder([
                 'title'     => $folderData['title'],
                 'parent_id' => $folder->id,
+                'user_id'   => $this->forUser->id,
             ]));
 
             $this->importDocuments($children, $folderData['documents']);

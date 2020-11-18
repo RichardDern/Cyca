@@ -3,7 +3,8 @@
 namespace App\Models\Observers;
 
 use App\Models\Folder;
-use App\Models\HistoryEntry;
+use App\Notifications\UnreadItemsChanged;
+use Illuminate\Support\Facades\Notification;
 
 class FolderObserver
 {
@@ -13,13 +14,14 @@ class FolderObserver
      * @param  \App\Models\Folder  $folder
      * @return void
      */
-    public function created(Folder  $folder)
+    public function created(Folder $folder)
     {
         $folder->addHistoryEntry('folder_created', [
-            'user' => $folder->user->toHistoryArray(),
-            'folder' => $folder->toHistoryArray(),
-            'breadcrumbs' => !empty($folder->parent_id) ? $folder->parent->breadcrumbs : null
+            'user'        => $folder->user->toHistoryArray(),
+            'breadcrumbs' => $folder->breadcrumbs,
         ], $folder->user);
+
+        //TODO: Add history entries for users in the same group
     }
 
     /**
@@ -28,11 +30,24 @@ class FolderObserver
      * @param  \App\Models\Folder  $folder
      * @return void
      */
-    public function deleting(Folder $folder) {
+    public function deleting(Folder $folder)
+    {
         $folder->addHistoryEntry('folder_deleted', [
-            'user' => $folder->user->toHistoryArray(),
-            'folder' => $folder->toHistoryArray(),
-            'breadcrumbs' => !empty($folder->parent_id) ? $folder->parent->breadcrumbs : null
+            'user'        => $folder->user->toHistoryArray(),
+            'breadcrumbs' => $folder->breadcrumbs,
         ], $folder->user);
+
+        //TODO: Add history entries for users in the same group
+    }
+
+    /**
+     * Handle the folder "deleted" event.
+     *
+     * @param  \App\Models\Folder  $folder
+     * @return void
+     */
+    public function deleted(Folder $folder)
+    {
+        Notification::send($folder->group->activeUsers, new UnreadItemsChanged(['folders' => [$folder]]));
     }
 }

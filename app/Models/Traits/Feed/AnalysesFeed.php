@@ -8,10 +8,10 @@ use App\Models\IgnoredFeed;
 use App\Notifications\UnreadItemsChanged;
 use DomDocument;
 use DOMXPath;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use SimplePie;
 use \ForceUTF8\Encoding as UTF8;
-use Illuminate\Support\Facades\Notification;
 
 trait AnalysesFeed
 {
@@ -36,8 +36,8 @@ trait AnalysesFeed
     public function analyze()
     {
         // Don't bother if feed isn't attached to any document anymore
-        if($this->documents()->count() === 0) {
-            if(!empty($this->checked_at) && $this->checked_at->addDays(config('cyca.maxOrphanAge.feed'))->lt(now())) {
+        if ($this->documents()->count() === 0) {
+            if (!empty($this->checked_at) && $this->checked_at->addDays(config('cyca.maxOrphanAge.feed'))->lt(now())) {
                 $this->delete();
             }
 
@@ -55,9 +55,9 @@ trait AnalysesFeed
             $this->url = $this->client->subscribe_url();
         }
 
-        $this->title       = $this->cleanupString($this->client->get_title(), true, true);
+        $this->title = $this->cleanupString($this->client->get_title(), true, true);
         $this->description = $this->cleanupString($this->client->get_description());
-        $this->checked_at  = now();
+        $this->checked_at = now();
 
         $this->save();
 
@@ -85,7 +85,7 @@ trait AnalysesFeed
      */
     protected function createItems($items)
     {
-        $toSync   = $this->feedItems()->pluck('feed_items.id')->all();
+        $toSync = $this->feedItems()->pluck('feed_items.id')->all();
         $newItems = [];
 
         foreach ($items as $item) {
@@ -97,14 +97,14 @@ trait AnalysesFeed
 
             $feedItem = new FeedItem();
 
-            $feedItem->hash         = $item->get_id(true);
-            $feedItem->title        = $this->cleanupString($item->get_title(), true, true);
-            $feedItem->url          = $item->get_permalink();
-            $feedItem->description  = $this->formatText($item->get_description(true));
-            $feedItem->content      = $this->formatText($item->get_content(true));
+            $feedItem->hash = $item->get_id(true);
+            $feedItem->title = $this->cleanupString($item->get_title(), true, true);
+            $feedItem->url = $item->get_permalink();
+            $feedItem->description = $this->formatText($item->get_description(true));
+            $feedItem->content = $this->formatText($item->get_content(true));
             $feedItem->published_at = $item->get_gmdate();
 
-            if($feedItem->published_at->addDays(config('cyca.maxOrphanAge.feeditems'))->lt(now())) {
+            if ($feedItem->published_at->addDays(config('cyca.maxOrphanAge.feeditems'))->lt(now())) {
                 continue;
             }
 
@@ -134,7 +134,7 @@ trait AnalysesFeed
         $string = UTF8::toUTF8($string, UTF8::ICONV_TRANSLIT);
         $string = html_entity_decode($string, ENT_QUOTES | ENT_HTML5, 'UTF-8');
 
-        if($removeExtraSpaces) {
+        if ($removeExtraSpaces) {
             $string = preg_replace('#[\s\t\r\n]+#', ' ', $string);
         }
 
@@ -186,52 +186,50 @@ trait AnalysesFeed
 
     protected function createUnreadItems($feedItems)
     {
-        $ignoredFeeds = [];
+        $ignoredByUsers = $this->ignored()->pluck('user_id')->all();
+        $documentsChanged = [];
+        $foldersChanged = [];
         $usersToNotify = [];
+        
+        foreach ($this->documents()->get() as $document) {
+            $folders = $document->folders()->get();
 
-        foreach ($feedItems as $feedItem) {
-            $feedItemId = $feedItem->id;
+            foreach ($folders as $folder) {
+                if (!array_key_exists($folder->id, $foldersChanged)) {
+                    $foldersChanged[$folder->id] = $folder;
+                }
 
-            foreach ($feedItem->feeds()->get() as $feed) {
-                $feedId = $feed->id;
+                $users = $folder->group->activeUsers()->whereNotIn('users.id', $ignoredByUsers)->get();
 
-                $ignoredFeeds[$feedId] = IgnoredFeed::where('feed_id', $feedId)->get()->pluck('user_id')->all();
+                foreach ($users as $user) {
+                    if (!array_key_exists($user->id, $usersToNotify)) {
+                        $usersToNotify[$user->id] = $user;
+                    }
+                    
+                    foreach ($feedItems as $feedItem) {
+                        $feedItemStateData = [
+                            'document_id'  => $document->id,
+                            'feed_id'      => $this->id,
+                            'user_id'      => $user->id,
+                            'feed_item_id' => $feedItem->id
+                        ];
 
-                foreach ($feed->documents()->get() as $document) {
-                    $documentId = $document->id;
-
-                    foreach ($document->folders()->get() as $folder) {
-                        $folderId = $folder->id;
-                        $userId   = $folder->user_id;
-
-                        if (in_array($userId, $ignoredFeeds[$feedId])) {
-                            continue;
-                        }
-
-                        $feedItemState = FeedItemState::where('user_id', $userId)
-                            ->where('feed_item_id', $feedItemId)
+                        $feedItemState = FeedItemState::where('user_id', $user->id)
+                            ->where('feed_item_id', $feedItem->id)
                             ->first();
 
                         if (!$feedItemState) {
-                            FeedItemState::create([
-                                'user_id'      => $userId,
-                                'folder_id'    => $folderId,
-                                'document_id'  => $documentId,
-                                'feed_id'      => $feedId,
-                                'feed_item_id' => $feedItemId,
-                            ]);
+                            FeedItemState::create($feedItemStateData);
 
-                            $usersToNotify[] = $folder->user;
+                            if (!in_array($document->id, $documentsChanged)) {
+                                $documentsChanged[] = $document->id;
+                            }
                         }
                     }
                 }
             }
         }
 
-        $this->notifyUsers($usersToNotify);
-    }
-
-    protected function notifyUsers($users) {
-        Notification::send($users, new UnreadItemsChanged());
+        Notification::send($usersToNotify, new UnreadItemsChanged(['folders' => $foldersChanged, 'documents' => $documentsChanged]));
     }
 }

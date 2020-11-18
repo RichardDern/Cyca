@@ -19,8 +19,6 @@ resources/docker
 .DS_Store
 ._.DS_Store
 .gitmodules
-resources/themes/cyca_theme_dark
-resources/themes/cyca_theme_light
 public/themes
 Dockerfile.dev
 resources/container/entrypoint.dev.sh

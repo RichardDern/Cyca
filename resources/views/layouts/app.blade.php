@@ -16,7 +16,7 @@
     <meta name="icons-file-url" content="{{ $iconsFileUrl }}" />
 
     @auth
-        <meta name="user-id" content="{{ auth()->user()->id }}" />
+    <meta name="user-id" content="{{ auth()->user()->id }}" />
     @endauth
 
     <link rel="icon" href="{{ asset('images/favicon.png') }}" />

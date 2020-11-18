@@ -36,7 +36,7 @@ class HighlightController extends Controller
      */
     public function update(StoreHighlightRequest $request, Highlight $highlight)
     {
-        if($highlight->user_id !== $request->user()->id) {
+        if ($highlight->user_id !== $request->user()->id) {
             abort(404);
         }
 
@@ -57,7 +57,7 @@ class HighlightController extends Controller
      */
     public function destroy(Request $request, Highlight $highlight)
     {
-        if($highlight->user_id !== $request->user()->id) {
+        if ($highlight->user_id !== $request->user()->id) {
             abort(404);
         }
 

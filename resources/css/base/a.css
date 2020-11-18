@@ -4,7 +4,7 @@
 
 /* Normal state */
 a {
-    @apply underline;
+    @apply underline break-all;
 
     color: theme("colors.a.normal");
 }
@@ -12,4 +12,46 @@ a {
 /* Hovered */
 a:hover {
     color: theme("colors.a.hover");
+}
+
+.readable,
+a.readable {
+    font-family: "serif";
+    font-size: 1.2rem;
+    text-decoration: none;
+    letter-spacing: 0.2rem;
+}
+
+.readable .letter {
+    color: theme("colors.a.letter");
+}
+
+.readable .capital {
+    color: theme("colors.a.capital");
+    font-weight: bold;
+}
+
+.readable .number {
+    color: theme("colors.a.number");
+}
+
+.readable .other {
+    color: theme("colors.a.other");
+    font-weight: bold;
+}
+
+.readable .empty::before {
+    display: inline-block;
+    content: "❡";
+    color: theme("colors.a.empty");
+}
+
+.readable .operator {
+    color: theme("colors.a.operator");
+    font-weight: bold;
+}
+
+.readable .suspicious {
+    color: theme("colors.a.suspicious");
+    font-weight: bold;
 }
