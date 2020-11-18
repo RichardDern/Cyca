@@ -100,20 +100,6 @@
                 </div>
             </form>
 
-            <div class="mt-6" v-if="can('can_delete_folder')">
-                <button class="danger" v-on:click="onDeleteFolder">
-                    <svg
-                        fill="currentColor"
-                        width="16"
-                        height="16"
-                        class="mr-1"
-                    >
-                        <use v-bind:xlink:href="icon('trash')" />
-                    </svg>
-                    {{ __("Delete") }}
-                </button>
-            </div>
-
             <details
                 v-if="
                     can('can_change_permissions') &&
@@ -153,6 +139,20 @@
                     ></permission-box>
                 </div>
             </details>
+
+            <div class="mt-6" v-if="can('can_delete_folder')">
+                <button class="danger" v-on:click="onDeleteFolder">
+                    <svg
+                        fill="currentColor"
+                        width="16"
+                        height="16"
+                        class="mr-1"
+                    >
+                        <use v-bind:xlink:href="icon('trash')" />
+                    </svg>
+                    {{ __("Delete") }}
+                </button>
+            </div>
         </div>
     </article>
 </template>
