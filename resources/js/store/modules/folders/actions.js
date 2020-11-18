@@ -99,10 +99,15 @@ export default {
         commit("update", { folder: folder, newProperties: newProperties });
     },
 
-    updatePermission({ commit }, { folder, ability, granted }) {
+    updatePermission({ dispatch }, { folder, ability, granted }) {
         api.post(route("folder.set_permission", folder), {
             ability: ability,
             granted: granted
+        }).then(function(response) {
+            dispatch("updateProperties", {
+                folderId: folder.id,
+                newProperties: response
+            });
         });
     },
 

@@ -11,7 +11,8 @@ const sets = {
         "FeedItemsList",
         "FolderItem",
         "FoldersTree",
-        "GroupItem"
+        "GroupItem",
+        "Details/PermissionBox"
     ],
     import: ["Importers/ImportFromCyca", "Importer"],
     themesBrowser: ["ThemeCard", "ThemesBrowser"],

@@ -126,41 +126,31 @@
                 </summary>
 
                 <div class="grid grid-cols-3">
-                    <label class="my-2 mx-2">
-                        <input
-                            type="checkbox"
-                            v-model="canCreateFolderByDefault"
-                        />
-                        {{ __("Create folder") }}
-                    </label>
-                    <label class="my-2 mx-2">
-                        <input
-                            type="checkbox"
-                            v-model="canUpdateFolderByDefault"
-                        />
-                        {{ __("Update folder") }}
-                    </label>
-                    <label class="my-2 mx-2">
-                        <input
-                            type="checkbox"
-                            v-model="canDeleteFolderByDefault"
-                        />
-                        {{ __("Delete folder") }}
-                    </label>
-                    <label class="my-2 mx-2">
-                        <input
-                            type="checkbox"
-                            v-model="canCreateDocumentByDefault"
-                        />
-                        {{ __("Create document") }}
-                    </label>
-                    <label class="my-2 mx-2">
-                        <input
-                            type="checkbox"
-                            v-model="canDeleteDocumentByDefault"
-                        />
-                        {{ __("Delete document") }}
-                    </label>
+                    <permission-box
+                        v-bind:text="__('Create folder')"
+                        ability="can_create_folder"
+                        v-bind:folder="folder"
+                    ></permission-box>
+                    <permission-box
+                        v-bind:text="__('Update folder')"
+                        ability="can_update_folder"
+                        v-bind:folder="folder"
+                    ></permission-box>
+                    <permission-box
+                        v-bind:text="__('Delete folder')"
+                        ability="can_delete_folder"
+                        v-bind:folder="folder"
+                    ></permission-box>
+                    <permission-box
+                        v-bind:text="__('Create document')"
+                        ability="can_create_document"
+                        v-bind:folder="folder"
+                    ></permission-box>
+                    <permission-box
+                        v-bind:text="__('Delete document')"
+                        ability="can_delete_document"
+                        v-bind:folder="folder"
+                    ></permission-box>
                 </div>
             </details>
         </div>
@@ -186,96 +176,6 @@ export default {
             group: "groups/selectedGroup",
             folder: "folders/selectedFolder",
         }),
-        canCreateFolderByDefault: {
-            get() {
-                if ("default_permissions" in this.folder) {
-                    return this.folder.default_permissions.can_create_folder;
-                }
-
-                return false;
-            },
-            set(value) {
-                const self = this;
-
-                self.updatePermission({
-                    ability: "can_create_folder",
-                    granted: value,
-                    folder: self.folder,
-                });
-            },
-        },
-        canUpdateFolderByDefault: {
-            get() {
-                if ("default_permissions" in this.folder) {
-                    return this.folder.default_permissions.can_update_folder;
-                }
-
-                return false;
-            },
-            set(value) {
-                const self = this;
-
-                self.updatePermission({
-                    ability: "can_update_folder",
-                    granted: value,
-                    folder: self.folder,
-                });
-            },
-        },
-        canDeleteFolderByDefault: {
-            get() {
-                if ("default_permissions" in this.folder) {
-                    return this.folder.default_permissions.can_delete_folder;
-                }
-
-                return false;
-            },
-            set(value) {
-                const self = this;
-
-                self.updatePermission({
-                    ability: "can_delete_folder",
-                    granted: value,
-                    folder: self.folder,
-                });
-            },
-        },
-        canCreateDocumentByDefault: {
-            get() {
-                if ("default_permissions" in this.folder) {
-                    return this.folder.default_permissions.can_create_document;
-                }
-
-                return false;
-            },
-            set(value) {
-                const self = this;
-
-                self.updatePermission({
-                    ability: "can_create_document",
-                    granted: value,
-                    folder: self.folder,
-                });
-            },
-        },
-        canDeleteDocumentByDefault: {
-            get() {
-                if ("default_permissions" in this.folder) {
-                    return this.folder.default_permissions.can_delete_document;
-                }
-
-                return false;
-            },
-            set(value) {
-                const self = this;
-
-                self.updatePermission({
-                    ability: "can_delete_document",
-                    granted: value,
-                    folder: self.folder,
-                });
-            },
-        },
     },
     /**
      * Watchers
@@ -387,10 +287,16 @@ export default {
         },
 
         can: function (permission) {
-            return (
-                this.folder.user_permissions &&
-                this.folder.user_permissions[permission]
-            );
+            const self = this;
+
+            if (
+                "user_permissions" in self.folder &&
+                permission in self.folder.user_permissions
+            ) {
+                return self.folder.user_permissions[permission];
+            }
+
+            return false;
         },
     },
 };

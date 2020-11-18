@@ -158,5 +158,7 @@ class FolderController extends Controller
         $validated = $request->validated();
 
         $folder->setDefaultPermission($validated['ability'], $validated['granted']);
+
+        return $this->details($request, $folder);
     }
 }
