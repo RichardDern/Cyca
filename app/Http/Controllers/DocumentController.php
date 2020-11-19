@@ -130,6 +130,6 @@ class DocumentController extends Controller
         $document->visits++;
         $document->save();
 
-        return $document;
+        return $this->show($request, $document);
     }
 }

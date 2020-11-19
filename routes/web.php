@@ -96,7 +96,7 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::post('/document/move/{sourceFolder}/{targetFolder}', 'DocumentController@move')->name('document.move');
         Route::post('/document/delete_bookmarks/{folder}', 'DocumentController@destroyBookmarks')->name('document.destroy_bookmarks');
-        Route::post('/document/{document}/visit/{folder}', 'DocumentController@visit')->name('document.visit');
+        Route::post('/document/{document}/visit', 'DocumentController@visit')->name('document.visit');
 
         Route::resource('document', 'DocumentController')->only([
             'show',

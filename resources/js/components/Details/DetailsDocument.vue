@@ -185,6 +185,11 @@
 import { mapGetters, mapActions } from "vuex";
 
 export default {
+    data: function () {
+        return {
+            dupplicateInFolders: [],
+        };
+    },
     computed: {
         ...mapGetters({
             document: "documents/selectedDocument",
@@ -193,41 +198,33 @@ export default {
         }),
 
         /**
-         * Filters dupplicates provided by the document by excluding current
-         * folder
-         */
-        dupplicateInFolders: function () {
-            const self = this;
-
-            return collect(self.document.dupplicates)
-                .reject((folder) => folder.id === self.selectedFolder.id)
-                .all();
-        },
-
-        /**
          * Return document's initial URL instead of the real URL, unless there
          * is not attached bookmark
          */
         url: function () {
             const self = this;
 
-            if (self.document.bookmark.initial_url) {
-                return self.document.bookmark.initial_url;
-            }
-
             return self.document.url;
         },
     },
     watch: {
         document: function (document) {
+            const self = this;
+
             if (document && document.id) {
-                this.load(document);
+                self.load(document).then(function () {
+                    self.findDupplicateInFolders();
+                });
             }
         },
     },
     mounted: function () {
-        if (this.document && this.document.id) {
-            this.load(this.document);
+        const self = this;
+
+        if (self.document && self.document.id) {
+            self.load(self.document).then(function () {
+                self.findDupplicateInFolders();
+            });
         }
     },
     methods: {
@@ -238,6 +235,20 @@ export default {
             followFeed: "documents/followFeed",
             load: "documents/load",
         }),
+
+        /**
+         * Filters dupplicates provided by the document by excluding current
+         * folder
+         */
+        findDupplicateInFolders: function () {
+            const self = this;
+
+            const dupplicates = collect(self.document.dupplicates)
+                .reject((folder) => folder.id === self.selectedFolder.id)
+                .all();
+
+            self.dupplicateInFolders = dupplicates;
+        },
 
         /**
          * Mark as read button clicked

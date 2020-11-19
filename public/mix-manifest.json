@@ -1,12 +1,12 @@
 {
-    "/js/app.js": "/js/app.js?id=e38b6124e9f1c2f0ff9a",
-    "/themes/cyca-dark/theme.css": "/themes/cyca-dark/theme.css?id=e29a17c9206c1115cdc5",
-    "/themes/cyca-light/theme.css": "/themes/cyca-light/theme.css?id=8477ce9a3672bfafbcf7",
-    "/js/groups.js": "/js/groups.js?id=9c55f5dc6cdee281536e",
-    "/js/highlights.js": "/js/highlights.js?id=6e71fef60983c8258dd6",
-    "/js/history.js": "/js/history.js?id=4a02fb154dff9a4c67e8",
-    "/js/import.js": "/js/import.js?id=e437c179ffc2e003c16f",
-    "/js/themes-browser.js": "/js/themes-browser.js?id=a882fa1f29feeab8dcb7",
-    "/themes/cyca-dark/theme.json": "/themes/cyca-dark/theme.json?id=e6af9f523b70bc467aa4",
-    "/themes/cyca-light/theme.json": "/themes/cyca-light/theme.json?id=bb59033be8f29999311e"
+    "/js/app.js": "/js/app.js",
+    "/themes/cyca-dark/theme.css": "/themes/cyca-dark/theme.css",
+    "/themes/cyca-light/theme.css": "/themes/cyca-light/theme.css",
+    "/js/groups.js": "/js/groups.js",
+    "/js/highlights.js": "/js/highlights.js",
+    "/js/history.js": "/js/history.js",
+    "/js/import.js": "/js/import.js",
+    "/js/themes-browser.js": "/js/themes-browser.js",
+    "/themes/cyca-dark/theme.json": "/themes/cyca-dark/theme.json",
+    "/themes/cyca-light/theme.json": "/themes/cyca-light/theme.json"
 }

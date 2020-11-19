@@ -204,12 +204,16 @@ export default {
      */
     load({ dispatch }, document) {
         if (!document.loaded) {
-            api.get(route("document.show", document)).then(function(response) {
-                dispatch("update", {
-                    documentId: document.id,
-                    newProperties: { ...response, ...{ loaded: true } }
+            return api
+                .get(route("document.show", document))
+                .then(function(response) {
+                    response.loaded = true;
+
+                    return dispatch("update", {
+                        documentId: document.id,
+                        newProperties: response
+                    });
                 });
-            });
         }
     },
 
