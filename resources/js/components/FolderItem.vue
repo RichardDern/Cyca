@@ -70,6 +70,14 @@ export default {
                 block: "center",
             });
         }
+
+        self.$watch("folder.is_selected", function (value) {
+            if (value) {
+                self.$el.scrollIntoView({
+                    block: "center",
+                });
+            }
+        });
     },
     /**
      * Computed properties
