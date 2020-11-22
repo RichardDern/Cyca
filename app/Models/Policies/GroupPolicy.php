@@ -30,7 +30,9 @@ class GroupPolicy
      */
     public function view(User $user, Group $group)
     {
-        return $this->checkGroupAuthorization($user, $group);
+        return $this->checkGroupAuthorization($user, $group, [
+            Group::$STATUS_ACCEPTED
+        ]);
     }
 
     /**
@@ -64,6 +66,21 @@ class GroupPolicy
      * @return mixed
      */
     public function invite(User $user, Group $group)
+    {
+        return $this->checkGroupAuthorization($user, $group, [
+            Group::$STATUS_OWN,
+            Group::$STATUS_CREATED,
+        ]);
+    }
+
+    /**
+     * Determine whether the user can approve someone to join specified group.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Group  $group
+     * @return mixed
+     */
+    public function approve(User $user, Group $group)
     {
         return $this->checkGroupAuthorization($user, $group, [
             Group::$STATUS_OWN,
@@ -122,12 +139,12 @@ class GroupPolicy
         }
 
         $userGroup = $user->groups()->active()->find($group->id);
-
-        if (!empty($userGroup)) {
-            return true;
+        
+        if (!$userGroup) {
+            return false;
         }
-
-        if (!empty($statuses) && in_array($userGroup->pivot->status, $statuses)) {
+        
+        if (!empty($statuses) && $userGroup->pivot && in_array($userGroup->pivot->status, $statuses)) {
             return true;
         }
 

@@ -34,7 +34,34 @@
             >
             </group-form>
         </div>
-        <div class="right-panel"></div>
+        <div class="right-panel">
+            <article id="my-groups">
+                <header>
+                    <h1>
+                        <div class="flex justify-between items-center w-full">
+                            <div class="mr-4">
+                                {{ __("Public groups") }}
+                            </div>
+                            <input
+                                type="search"
+                                v-bind:placeholder="__('Search')"
+                                class="alt"
+                                v-model="search"
+                            />
+                        </div>
+                    </h1>
+                </header>
+                <div class="body mt-4">
+                    <groups-browser-item
+                        v-for="group in publicGroups"
+                        v-bind:group="group"
+                        v-bind:key="group.id"
+                        v-bind:movable="false"
+                        v-on:join="onJoinGroup"
+                    ></groups-browser-item>
+                </div>
+            </article>
+        </div>
     </div>
 </template>
 
@@ -47,12 +74,15 @@ export default {
         return {
             positions: [],
             selectedGroup: null,
+            publicGroups: [],
+            search: "",
         };
     },
     mounted: function () {
         const self = this;
 
         self.indexMyGroups();
+        self.loadPublicGroups();
     },
     computed: {
         ...mapGetters({
@@ -75,6 +105,11 @@ export default {
             },
         },
     },
+    watch: {
+        search: function (value) {
+            this.loadPublicGroups();
+        },
+    },
     methods: {
         ...mapActions({
             indexMyGroups: "groups/indexMyGroups",
@@ -84,6 +119,16 @@ export default {
             deleteGroup: "groups/deleteGroup",
             updatePositions: "groups/updatePositions",
         }),
+
+        loadPublicGroups: function () {
+            const self = this;
+
+            api.get(route("group.index"), { search: self.search }).then(
+                function (response) {
+                    self.publicGroups = response.data;
+                }
+            );
+        },
 
         onGroupCreated: function (group) {
             const self = this;
@@ -152,6 +197,19 @@ export default {
 
             api.post(route("group.leave", group)).then(function () {
                 self.indexMyGroups();
+                self.loadPublicGroups();
+                self.selectedGroup = null;
+            });
+
+            //TODO: Handle errors
+        },
+
+        onJoinGroup: function (group) {
+            const self = this;
+
+            api.post(route("group.join", group)).then(function () {
+                self.indexMyGroups();
+                self.loadPublicGroups();
                 self.selectedGroup = null;
             });
 

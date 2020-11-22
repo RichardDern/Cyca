@@ -43,7 +43,13 @@
                 v-bind:src="document.favicon"
                 class="favicon inline mr-1 mb-1"
             />
-            <div class="mt-6" v-if="selectedFolder.type !== 'unread_items'">
+            <div
+                class="mt-6"
+                v-if="
+                    selectedFolder.type !== 'unread_items' &&
+                    selectedFolder.user_permissions.can_delete_document
+                "
+            >
                 <button class="danger" v-on:click="onDeleteDocument">
                     <svg
                         fill="currentColor"

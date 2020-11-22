@@ -2,7 +2,7 @@
     <article>
         <h1>
             <div class="title">
-                {{ id === null ? __("Create group") : name }}
+                {{ title }}
             </div>
         </h1>
 
@@ -22,21 +22,13 @@
                 "
             >
                 <input type="hidden" name="id" v-model="id" />
-                <div class="form-group justify-between items-center">
-                    <div class="flex-grow">
-                        <input
-                            type="text"
-                            class="w-full"
-                            v-model="name"
-                            v-bind:placeholder="__('Group name')"
-                        />
-                    </div>
-                    <div class="flex items-center">
-                        <label class="inline"
-                            ><input type="checkbox" v-model="inviteOnly" />
-                            {{ __("Invite only") }}</label
-                        >
-                    </div>
+                <div class="form-group">
+                    <input
+                        type="text"
+                        class="w-full"
+                        v-model="name"
+                        v-bind:placeholder="__('Group name')"
+                    />
                 </div>
                 <div class="form-group">
                     <input
@@ -46,7 +38,17 @@
                         v-bind:placeholder="__('Description')"
                     />
                 </div>
-                <div class="flex justify-between">
+
+                <label class="my-0"
+                    ><input type="checkbox" v-model="inviteOnly" />
+                    {{ __("Invite only") }}</label
+                >
+                <label class="my-0"
+                    ><input type="checkbox" v-model="autoAcceptUsers" />
+                    {{ __("Auto-accept users") }}</label
+                >
+
+                <div class="flex justify-between mt-4">
                     <button class="button success" type="submit">
                         <svg
                             fill="currentColor"
@@ -159,7 +161,14 @@
                 </button>
             </div>
 
-            <div v-if="group && group.pivot.status === 'accepted'" class="mt-4">
+            <div
+                v-if="
+                    group &&
+                    (group.pivot.status === 'accepted' ||
+                        group.pivot.status === 'joining')
+                "
+                class="mt-4"
+            >
                 <button class="danger" v-on:click="$emit('leave', group)">
                     <svg fill="currentColor" width="16" height="16">
                         <use v-bind:xlink:href="icon('logout')" />
@@ -180,8 +189,18 @@ export default {
             name: null,
             description: null,
             inviteOnly: false,
+            autoAcceptUsers: false,
             inviteEmail: null,
         };
+    },
+    computed: {
+        title: function () {
+            if (this.group) {
+                return this.group.name;
+            }
+
+            return this.__("Create group");
+        },
     },
     watch: {
         group: function (group) {
@@ -190,12 +209,16 @@ export default {
                 this.name = null;
                 this.description = null;
                 this.inviteOnly = false;
+                this.autoAcceptUsers = false;
             } else {
                 this.id = group.id;
                 this.name = group.name;
                 this.description = group.description;
                 this.inviteOnly = group.invite_only;
+                this.autoAcceptUsers = group.auto_accept_users;
             }
+
+            this.$forceUpdate();
         },
     },
     methods: {
@@ -205,6 +228,7 @@ export default {
                 name: self.name,
                 description: self.description,
                 invite_only: self.inviteOnly,
+                auto_accept_users: self.autoAcceptUsers,
             };
 
             if (!properties.name) {
@@ -222,6 +246,7 @@ export default {
                 self.name = null;
                 self.description = null;
                 self.inviteOnly = false;
+                self.autoAcceptUsers = false;
             }
         },
 

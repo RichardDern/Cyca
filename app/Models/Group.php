@@ -64,6 +64,7 @@ class Group extends Model
         'description',
         'user_id',
         'invite_only',
+        'auto_accept_users'
     ];
 
     /**
@@ -72,8 +73,9 @@ class Group extends Model
      * @var array
      */
     protected $casts = [
-        'invite_only'            => 'boolean',
-        'feed_item_states_count' => 'integer',
+        'invite_only'                  => 'boolean',
+        'auto_accept_users'            => 'boolean',
+        'feed_item_states_count'       => 'integer',
     ];
 
     /**

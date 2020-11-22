@@ -4,7 +4,7 @@
 
 /* Badge - used to display number of unread feed items, for instance */
 .badge {
-    @apply flex-none py-0.5 rounded text-xs px-2 ml-2;
+    @apply flex-none py-0.5 rounded text-xs px-2 ml-2 whitespace-no-wrap;
 }
 
 .badge.default {

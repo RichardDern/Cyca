@@ -33,6 +33,9 @@ class StoreRequest extends FormRequest
             'invite_only' => [
                 'boolean',
             ],
+            'auto_accept_users' => [
+                'boolean',
+            ],
         ];
     }
 }

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Groups\InviteUserRequest;
 use Notification;
 use App\Notifications\InvitedToJoinGroup;
+use App\Notifications\AsksToJoinGroup;
 
 class GroupController extends Controller
 {
@@ -26,9 +27,21 @@ class GroupController extends Controller
      */
     public function index(Request $request)
     {
-        $user = $request->user();
+        $user   = $request->user();
+        $search = $request->input('search');
 
-        return Group::visible()->whereNotIn('id', $user->groups->pluck('id'))->withCount('activeUsers')->simplePaginate(25);
+        $query = Group::visible()
+            ->whereNotIn('id', $user->groups->pluck('id'))
+            ->with('creator:id,name')
+            ->withCount('activeUsers');
+
+        if (!empty($search)) {
+            $query = $query->where('groups.name', 'like', '%' . $search . '%');
+        }
+
+        return $query
+            ->orderBy('name')
+            ->simplePaginate(25);
     }
 
     /**
@@ -55,10 +68,10 @@ class GroupController extends Controller
         $user = $request->user();
 
         return $user->groups()->withCount('activeUsers', 'pendingUsers')
-        ->whereNotIn('status', [
-            Group::$STATUS_REJECTED,
-            Group::$STATUS_LEFT
-        ])->orderBy('position')->orderBy('id')->get();
+            ->whereNotIn('status', [
+                Group::$STATUS_REJECTED,
+                Group::$STATUS_LEFT
+            ])->orderBy('position')->orderBy('id')->get();
     }
 
     /**
@@ -108,9 +121,10 @@ class GroupController extends Controller
     {
         $validated = $request->validated();
 
-        $group->name        = $validated['name'];
-        $group->description = $validated['description'];
-        $group->invite_only = $validated['invite_only'];
+        $group->name              = $validated['name'];
+        $group->description       = $validated['description'];
+        $group->invite_only       = $validated['invite_only'];
+        $group->auto_accept_users = $validated['auto_accept_users'];
 
         $group->save();
 
@@ -175,6 +189,12 @@ class GroupController extends Controller
      */
     public function inviteUser(InviteUserRequest $request, Group $group)
     {
+        $user = $request->user();
+
+        if (!$user->can('invite', $group)) {
+            abort(403);
+        }
+
         $validated   = $request->validated();
         $invitedUser = User::where('email', $validated['email'])->first();
 
@@ -204,6 +224,21 @@ class GroupController extends Controller
         }
     }
 
+    public function approveUser(Request $request, Group $group, User $user)
+    {
+        $creator = $request->user();
+
+        if (!$creator->can('approve', $group)) {
+            abort(403);
+        }
+
+        $user->updateGroupStatus($group, Group::$STATUS_ACCEPTED);
+
+        //TODO: Add history entry
+
+        return redirect()->route('account.groups');
+    }
+
     public function rejectInvitation(Request $request, Group $group)
     {
         $user = $request->user();
@@ -217,7 +252,23 @@ class GroupController extends Controller
     public function leave(Request $request, Group $group)
     {
         $user = $request->user();
-        $user->updateGroupStatus($group, Group::$STATUS_LEFT);
+        $user->groups()->detach($group);
+
+        //TODO: Add history entry
+    }
+
+    public function join(Request $request, Group $group)
+    {
+        $user = $request->user();
+
+        if ($group->auto_accept_users) {
+            $user->updateGroupStatus($group, Group::$STATUS_ACCEPTED);
+        } else {
+            $user->updateGroupStatus($group, Group::$STATUS_JOINING);
+
+            Notification::route('mail', $group->creator->email)
+                ->notify(new AsksToJoinGroup($request->user(), $group));
+        }
 
         //TODO: Add history entry
     }

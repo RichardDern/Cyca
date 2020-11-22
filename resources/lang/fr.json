@@ -115,5 +115,9 @@
     "Create folder": "Créer un dossier",
     "Delete folder": "Supprimer un dossier",
     "Create document": "Créer un document",
-    "Delete document": "Supprimer un document"
+    "Delete document": "Supprimer un document",
+    "Auto-accept users": "Les nouveaux utilisateurs sont automatiquement acceptés",
+    "New users must be approved": "Les nouveaux utilisateurs doivent être approuvés",
+    "Waiting for joining": "En attente d'acceptation",
+    "Edit": "Modifier"
 }

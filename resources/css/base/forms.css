@@ -88,6 +88,14 @@ textarea {
     background-color: theme("colors.input.bg");
 }
 
+.form-group input.alt,
+input.alt,
+select.alt,
+textarea.alt {
+    color: theme("colors.input.alt.text");
+    background-color: theme("colors.input.alt.bg");
+}
+
 input[type="color"] {
     @apply p-1;
 }

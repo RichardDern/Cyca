@@ -65,10 +65,12 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/group/update_positions', 'GroupController@updatePositions')->name('group.update_positions');
         Route::post('/group/{group}/invite', 'GroupController@inviteUser')->name('group.invite_user');
         Route::post('/group/{group}/leave', 'GroupController@leave')->name('group.leave');
+        Route::post('/group/{group}/join', 'GroupController@join')->name('group.join');
 
         Route::get('/group/{group}/accept_invitation', 'GroupController@acceptInvitation')->name('group.signed_accept_invitation')->middleware('signed');
         Route::post('/group/{group}/accept_invitation', 'GroupController@acceptInvitation')->name('group.accept_invitation');
         Route::post('/group/{group}/reject_invitation', 'GroupController@rejectInvitation')->name('group.reject_invitation');
+        Route::get('/group/{group}/{user}/approve', 'GroupController@approveUser')->name('group.signed_approve_user')->middleware('signed');
 
         Route::resource('group', 'GroupController')->only([
             'index',

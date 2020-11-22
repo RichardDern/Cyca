@@ -33,6 +33,12 @@
     border: solid 1px theme("colors.groups-browser.item.border");
 }
 
+/* Element of a list in the groups browser - Alternative design */
+#groups-browser .group-item.alt {
+    background-color: theme("colors.groups-browser.item.alt.bg");
+    border: solid 1px theme("colors.groups-browser.item.alt.border");
+}
+
 #groups-browser .group-item.selected {
     background-color: theme("colors.groups-browser.selected-item.bg");
     border: solid 1px theme("colors.groups-browser.selected-item.border");

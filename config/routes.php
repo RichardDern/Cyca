@@ -44,6 +44,7 @@ return [
         'group.index',
         'group.index_active',
         'group.invite_user',
+        'group.join',
         'group.leave',
         'group.my_groups',
         'group.reject_invitation',
