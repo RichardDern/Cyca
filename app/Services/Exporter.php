@@ -96,7 +96,7 @@ class Exporter
     public function export()
     {
         if (empty($this->fromFolder)) {
-            $this->fromFolder = $this->forUser->folders()->ofType('root')->first();
+            $this->fromFolder = $this->forUser->groups()->active()->first()->folders()->ofType('root')->first();
         }
 
         $rootArray = [
