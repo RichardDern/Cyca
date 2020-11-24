@@ -28,3 +28,8 @@
     color: theme("colors.groups-browser.status.joining.bg");
     background-color: theme("colors.badge.bg");
 }
+
+.badge.danger {
+    color: theme("colors.groups-browser.status.rejected.bg");
+    background-color: theme("colors.badge.bg");
+}

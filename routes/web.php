@@ -85,6 +85,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/folder/{folder}/toggle_branch', 'FolderController@toggleBranch')->name('folder.toggle_branch');
         Route::get('/folder/{folder}/details', 'FolderController@details')->name('folder.details');
         Route::post('/folder/{folder}/set_permission', 'FolderController@setPermission')->name('folder.set_permission');
+        Route::get('/folder/{folder}/per_user_permissions', 'FolderController@perUserPermissions')->name('folder.per_user_permissions');
+        Route::get('/folder/{folder}/users_without_permissions', 'FolderController@usersWithoutPermissions')->name('folder.users_without_permissions');
+        Route::delete('/folder/{folder}/remove_permissions/{user}', 'FolderController@removePermissions')->name('folder.remove_permissions');
 
         Route::resource('folder', 'FolderController')->only([
             'destroy',

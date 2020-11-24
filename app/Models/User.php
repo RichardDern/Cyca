@@ -95,6 +95,16 @@ class User extends Authenticatable implements MustVerifyEmail, HasLocalePreferen
         return $this->hasMany(HistoryEntry::class);
     }
 
+    /**
+     * Permissions affected to this user
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function permissions()
+    {
+        return $this->hasMany(Permission::class);
+    }
+
     # --------------------------------------------------------------------------
     # ----| Methods |-----------------------------------------------------------
     # --------------------------------------------------------------------------

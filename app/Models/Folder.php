@@ -390,20 +390,24 @@ class Folder extends Model
         ];
     }
 
-    public function setDefaultPermission($ability, $granted)
+    public function setDefaultPermission($ability = null, $granted = null)
     {
-        $defaultPermissions = $this->permissions()->whereNull('user_id')->first();
+        $permissions = $this->permissions()->whereNull('user_id')->first();
+        
+        if (!$permissions) {
+            $permissions = new Permission();
 
-        if (empty($defaultPermissions)) {
-            $this->permissions()->save(
-                new Permission([
-                    $ability => $granted
-                ])
-            );
-        } else {
-            $defaultPermissions->$ability = $granted;
+            $permissions->folder()->associate($this);
 
-            $defaultPermissions->save();
+            $permissions->can_create_folder       = false;
+            $permissions->can_update_folder       = false;
+            $permissions->can_delete_folder       = false;
+            $permissions->can_create_document     = false;
+            $permissions->can_delete_document     = false;
         }
+
+        $permissions->$ability = $granted;
+
+        $permissions->save();
     }
 }

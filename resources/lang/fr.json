@@ -119,5 +119,7 @@
     "Auto-accept users": "Les nouveaux utilisateurs sont automatiquement acceptés",
     "New users must be approved": "Les nouveaux utilisateurs doivent être approuvés",
     "Waiting for joining": "En attente d'acceptation",
-    "Edit": "Modifier"
+    "Edit": "Modifier",
+    "Per-user permissions": "Permissions par utilisateur",
+    "Add explicit permissions for": "Ajouter des permissions explicites pour"
 }

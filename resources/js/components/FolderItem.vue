@@ -17,10 +17,7 @@
         v-if="branchIsExpanded"
     >
         <div class="list-item-label" v-bind:style="{ 'padding-left': indent }">
-            <span
-                class="caret"
-                v-if="folder.type === 'folder' || folder.type === 'root'"
-            >
+            <span class="caret">
                 <svg
                     fill="currentColor"
                     width="16"

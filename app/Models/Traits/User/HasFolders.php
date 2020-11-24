@@ -4,6 +4,7 @@ namespace App\Models\Traits\User;
 
 use App\Models\Folder;
 use App\Models\Group;
+use App\Models\Permission;
 
 trait HasFolders
 {
@@ -218,5 +219,32 @@ trait HasFolders
         while ($folder = $folder->parent) {
             $this->setFolderExpandedState(true, $folder);
         }
+    }
+
+    /**
+     * Define this user permission for specified folder and ability
+     */
+    public function setFolderPermissions(Folder $folder, $ability = null, $grant = false)
+    {
+        $permissions = $this->permissions()->where('folder_id', $folder->id)->first();
+
+        if (!$permissions) {
+            $permissions = new Permission();
+
+            $permissions->user()->associate($this);
+            $permissions->folder()->associate($folder);
+        }
+
+        $defaultPermissions = $folder->getDefaultPermissions();
+
+        if ($ability !== null) {
+            $permissions->{$ability} = $grant;
+        } else {
+            foreach ($defaultPermissions as $defaultAbility => $defaultGrant) {
+                $permissions->{$defaultAbility} = $defaultGrant;
+            }
+        }
+
+        $permissions->save();
     }
 }

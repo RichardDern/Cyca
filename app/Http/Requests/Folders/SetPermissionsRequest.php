@@ -26,7 +26,7 @@ class SetPermissionsRequest extends FormRequest
     {
         return [
             'ability' => [
-                'required',
+                'nullable',
                 Rule::in([
                     'can_create_folder',
                     'can_update_folder',
@@ -36,8 +36,12 @@ class SetPermissionsRequest extends FormRequest
                 ])
             ],
             'granted' => [
-                'required',
+                'nullable',
                 'boolean'
+            ],
+            'user_id' => [
+                'nullable',
+                Rule::exists('users', 'id')
             ]
         ];
     }

@@ -100,45 +100,23 @@
                 </div>
             </form>
 
-            <details
-                v-if="
-                    can('can_change_permissions') &&
-                    (folder.type === 'root' || folder.type === 'folder')
-                "
-                class="feeds-list mt-4"
-            >
-                <summary>
-                    {{ __("Users without explicit permissions can") }}:
-                </summary>
+            <div v-if="folder.group && folder.group.active_users_count > 1">
+                <default-folder-permissions
+                    v-bind:folder="folder"
+                    v-if="
+                        can('can_change_permissions') &&
+                        (folder.type === 'root' || folder.type === 'folder')
+                    "
+                ></default-folder-permissions>
 
-                <div class="grid grid-cols-3">
-                    <permission-box
-                        v-bind:text="__('Create folder')"
-                        ability="can_create_folder"
-                        v-bind:folder="folder"
-                    ></permission-box>
-                    <permission-box
-                        v-bind:text="__('Update folder')"
-                        ability="can_update_folder"
-                        v-bind:folder="folder"
-                    ></permission-box>
-                    <permission-box
-                        v-bind:text="__('Delete folder')"
-                        ability="can_delete_folder"
-                        v-bind:folder="folder"
-                    ></permission-box>
-                    <permission-box
-                        v-bind:text="__('Create document')"
-                        ability="can_create_document"
-                        v-bind:folder="folder"
-                    ></permission-box>
-                    <permission-box
-                        v-bind:text="__('Delete document')"
-                        ability="can_delete_document"
-                        v-bind:folder="folder"
-                    ></permission-box>
-                </div>
-            </details>
+                <per-user-folder-permissions
+                    v-bind:folder="folder"
+                    v-if="
+                        can('can_change_permissions') &&
+                        (folder.type === 'root' || folder.type === 'folder')
+                    "
+                ></per-user-folder-permissions>
+            </div>
 
             <div class="mt-6" v-if="can('can_delete_folder')">
                 <button class="danger" v-on:click="onDeleteFolder">
@@ -159,8 +137,11 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import DefaultFolderPermissions from "./DefaultFolderPermissions.vue";
+import PerUserFolderPermissions from "./PerUserFolderPermissions.vue";
 
 export default {
+    components: { DefaultFolderPermissions, PerUserFolderPermissions },
     data: function () {
         return {
             updateFolderTitle: null,

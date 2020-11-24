@@ -54,3 +54,11 @@
 .inline-document .favicon {
     @apply inline-block;
 }
+
+.vertical-text {
+    vertical-align: bottom;
+    display: inline-block;
+    width: 1%;
+    white-space: nowrap;
+    transform: rotate(-90deg);
+}

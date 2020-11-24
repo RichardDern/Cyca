@@ -8,6 +8,7 @@ use App\Models\Folder;
 use App\Models\Group;
 use App\Http\Requests\Folders\SetPermissionsRequest;
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class FolderController extends Controller
 {
@@ -83,8 +84,56 @@ class FolderController extends Controller
 
         $folder->user_permissions    = $folder->getUserPermissions($user);
         $folder->default_permissions = $folder->getDefaultPermissions();
+        $folder->group->loadCount('activeUsers');
         
         return $folder;
+    }
+
+    /**
+     * Load per-user permissions for specified folder
+     *
+     * @param  \App\Models\Folder  $folder
+     * @return \Illuminate\Http\Response
+     */
+    public function perUserPermissions(Request $request, Folder $folder)
+    {
+        if (!$request->user()->can('setPermission', $folder)) {
+            abort(404);
+        }
+
+        $users = $folder->group->activeUsers()->whereNotIn('users.id', [$request->user()->id])
+            ->whereHas('permissions', function ($query) use ($folder) {
+                $query->where('folder_id', $folder->id);
+            })
+            ->with(['permissions'=> function ($query) use ($folder) {
+                $query->where('folder_id', $folder->id);
+            }])
+            ->select(['users.id', 'users.name', 'users.email'])
+            ->get();
+
+        return $users;
+    }
+
+    /**
+     * Load list of users with no expicit permissions for specified folder
+     *
+     * @param  \App\Models\Folder  $folder
+     * @return \Illuminate\Http\Response
+     */
+    public function usersWithoutPermissions(Request $request, Folder $folder)
+    {
+        if (!$request->user()->can('setPermission', $folder)) {
+            abort(404);
+        }
+
+        $users = $folder->group->activeUsers()->whereNotIn('users.id', [$request->user()->id])
+            ->whereDoesntHave('permissions', function ($query) use ($folder) {
+                $query->where('folder_id', $folder->id);
+            })
+            ->select(['users.id', 'users.name', 'users.email'])
+            ->get();
+
+        return $users;
     }
 
     /**
@@ -153,12 +202,53 @@ class FolderController extends Controller
         return $user->getFlatTree();
     }
 
+    /**
+     * Set permissions for specified folder, optionally for specified user
+     *
+     * @param  App\Http\Requests\Folder\SetPermissionsRequest $request
+     * @param  \App\Models\Folder  $folder
+     * @return \Illuminate\Http\Response
+     */
     public function setPermission(SetPermissionsRequest $request, Folder $folder)
     {
+        if (!$request->user()->can('setPermission', $folder)) {
+            abort(404);
+        }
+
         $validated = $request->validated();
 
-        $folder->setDefaultPermission($validated['ability'], $validated['granted']);
+        $ability = !empty($validated['ability']) ? $validated['ability'] : null;
+        $granted = !empty($validated['granted']) ? $validated['granted'] : false;
 
-        return $this->details($request, $folder);
+        if (empty($validated['user_id'])) {
+            $folder->setDefaultPermission($ability, $granted);
+
+            return $this->details($request, $folder);
+        } else {
+            $user = $folder->group->activeUsers()->findOrFail($validated['user_id']);
+
+            $user->setFolderPermissions($folder, $ability, $granted);
+
+            return $this->perUserPermissions($request, $folder);
+        }
+    }
+
+    /**
+     * Remove permissions for specified user in specified folder
+     *
+     * @param  App\Http\Requests\Folder\SetPermissionsRequest $request
+     * @param  \App\Models\Folder  $folder
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function removePermissions(Request $request, Folder $folder, User $user)
+    {
+        if (!$request->user()->can('setPermission', $folder)) {
+            abort(404);
+        }
+
+        $user->permissions()->where('folder_id', $folder->id)->delete();
+
+        return $this->perUserPermissions($request, $folder);
     }
 }

@@ -1,5 +1,8 @@
 <template>
-    <label class="my-2 mx-2">
+    <label
+        class="badge inline"
+        v-bind:class="{ success: granted, danger: !granted }"
+    >
         <input
             type="checkbox"
             v-model="granted"
@@ -8,6 +11,7 @@
                     ability: ability,
                     granted: $event.target.checked,
                     folder: folder,
+                    user: user ? user.id : null,
                 })
             "
         />
@@ -18,19 +22,23 @@
 <script>
 import { mapActions } from "vuex";
 export default {
-    props: ["folder", "ability", "text"],
-    data: function() {
+    props: ["folder", "user", "ability", "text"],
+    data: function () {
         return {
-            granted: false
+            granted: false,
         };
     },
     watch: {
-        folder: function() {
+        folder: function () {
             this.granted = this.canByDefault(this.ability);
             this.$forceUpdate();
-        }
+        },
+        user: function () {
+            this.granted = this.canByDefault(this.ability);
+            this.$forceUpdate();
+        },
     },
-    mounted: function() {
+    mounted: function () {
         this.granted = this.canByDefault(this.ability);
     },
     methods: {
@@ -41,6 +49,12 @@ export default {
             const self = this;
 
             if (
+                self.user &&
+                "permissions" in self.user &&
+                permission in self.user.permissions[0]
+            ) {
+                return self.user.permissions[0][permission];
+            } else if (
                 "default_permissions" in self.folder &&
                 permission in self.folder.default_permissions
             ) {
