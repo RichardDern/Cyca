@@ -11,8 +11,10 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+import FeedItem from "./FeedItem";
 
 export default {
+    components: { FeedItem },
     /**
      * Computed properties
      */

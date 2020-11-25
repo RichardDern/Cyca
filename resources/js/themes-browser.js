@@ -1,6 +1,7 @@
 require("./modules/bootstrap");
-require("./modules/components")("themesBrowser");
+const components = require("./modules/components")("themesBrowser");
 
 const app = new Vue({
+    components: { components },
     el: "#app"
 });

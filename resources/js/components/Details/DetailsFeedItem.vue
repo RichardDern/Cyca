@@ -98,8 +98,10 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+import DateTime from "../DateTime";
 
 export default {
+    components: { DateTime },
     /**
      * Computed properties
      */

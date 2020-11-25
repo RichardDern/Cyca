@@ -1,11 +1,12 @@
 require("./modules/bootstrap");
 require("./modules/websockets");
-require("./modules/components")("app");
+const components = require("./modules/components")("app");
 
 import store from "./store";
-import { mapGetters, mapActions, mapMutations } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 const app = new Vue({
+    components: { components },
     el: "#app",
     store,
     data: function() {

@@ -11,8 +11,10 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+import DocumentItem from "./DocumentItem";
 
 export default {
+    components: { DocumentItem },
     data: function () {
         return {
             selectedFeeds: [],
@@ -26,7 +28,7 @@ export default {
             documents: "documents/documents",
             selectedFolder: "folders/selectedFolder",
         }),
-        sortedList: function() {
+        sortedList: function () {
             const self = this;
             let collection = collect(self.documents).sortBy("title");
 
@@ -38,7 +40,7 @@ export default {
             }
 
             return collection.all();
-        }
+        },
     },
     /**
      * Methods
@@ -47,11 +49,11 @@ export default {
         /**
          * Selected documents have changed
          */
-        onSelectedDocumentsChanged: function(documents) {
+        onSelectedDocumentsChanged: function (documents) {
             const self = this;
 
             self.$emit("selected-documents-changed", documents);
-        }
+        },
     },
 };
 </script>

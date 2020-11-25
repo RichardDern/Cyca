@@ -49,12 +49,15 @@
 </template>
 
 <script>
+import Highlight from "./Highlight";
+
 export default {
+    components: { Highlight },
     data: function () {
         return {
             highlights: highlights,
             newExpression: null,
-            newColor: '#000000',
+            newColor: "#000000",
         };
     },
     computed: {
@@ -76,7 +79,7 @@ export default {
             });
 
             self.newExpression = null;
-            self.newColor = '#000000';
+            self.newColor = "#000000";
         },
         onDestroy: async function (id) {
             const self = this;

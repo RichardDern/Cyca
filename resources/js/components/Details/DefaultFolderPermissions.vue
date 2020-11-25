@@ -33,7 +33,10 @@
 </template>
 
 <script>
+import PermissionBox from "./PermissionBox.vue";
+
 export default {
+    components: { PermissionBox },
     props: ["folder"],
     methods: {
         can: function (permission) {

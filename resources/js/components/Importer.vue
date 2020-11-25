@@ -7,11 +7,14 @@
                 v-bind:key="importerName"
                 v-bind:value="importerName"
             >
-                {{ importerData['name'] }}
+                {{ importerData["name"] }}
             </option>
         </select>
 
-        <component v-bind:is="availableImporters[importer]['view']" v-on:import="onImport"></component>
+        <component
+            v-bind:is="availableImporters[importer]['view']"
+            v-on:import="onImport"
+        ></component>
 
         <div v-if="uploading" class="mt-2">
             {{ __("Importing, please wait...") }}
@@ -26,11 +29,14 @@
 </template>
 
 <script>
+import ImportFromCyca from "./Importers/ImportFromCyca";
+
 export default {
+    components: { ImportFromCyca },
     props: ["availableImporters"],
     data: function () {
         return {
-            importer: 'cyca',
+            importer: "cyca",
             uploading: false,
             uploaded: false,
             error: false,

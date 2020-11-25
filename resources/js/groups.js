@@ -1,5 +1,5 @@
 require("./modules/bootstrap");
-require("./modules/components")("groups");
+const components = require("./modules/components")("groups");
 
 import Vuex from "vuex";
 import groups from "./store/modules/groups";
@@ -15,7 +15,8 @@ const store = new Vuex.Store({
     strict: debug
 });
 
-const app = new Vue({    
+const app = new Vue({   
+    components: { components }, 
     el: "#app",
     store
 });

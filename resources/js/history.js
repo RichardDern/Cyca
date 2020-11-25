@@ -1,6 +1,7 @@
 require("./modules/bootstrap");
-require("./modules/components")("historyBrowser");
+const components = require("./modules/components")("historyBrowser");
 
 const app = new Vue({
+    components: { components },
     el: "#app"
 });

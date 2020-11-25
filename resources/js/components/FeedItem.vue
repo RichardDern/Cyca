@@ -25,8 +25,10 @@
 <script>
 import TEXTColor from "textcolor";
 import { mapGetters, mapActions } from "vuex";
+import DateTime from "./DateTime";
 
 export default {
+    components: { DateTime },
     props: ["feedItem"],
     computed: {
         ...mapGetters({

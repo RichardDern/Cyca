@@ -61,8 +61,11 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import GroupItem from "./GroupItem.vue";
+import FolderItem from "./FolderItem.vue";
 
 export default {
+    components: { GroupItem, FolderItem },
     mounted: function () {
         const self = this;
 

@@ -33,7 +33,10 @@
 </template>
 
 <script>
+import ThemeCard from "./ThemeCard";
+
 export default {
+    components: { ThemeCard },
     data: function () {
         return {
             themes: [],

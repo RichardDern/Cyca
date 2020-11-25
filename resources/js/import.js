@@ -1,6 +1,7 @@
 require("./modules/bootstrap");
-require("./modules/components")("import");
+const components = require("./modules/components")("import");
 
 const app = new Vue({
+    components: { components },
     el: "#app"
 });

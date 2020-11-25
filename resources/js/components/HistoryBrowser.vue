@@ -23,7 +23,10 @@
 </template>
 
 <script>
+import DateTime from "./DateTime";
+
 export default {
+    components: { DateTime },
     data: function () {
         return {
             entries: [],

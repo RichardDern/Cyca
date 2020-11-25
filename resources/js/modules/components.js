@@ -4,24 +4,16 @@ const sets = {
         "Details/DetailsDocuments",
         "Details/DetailsFeedItem",
         "Details/DetailsFolder",
-        "DateTime",
-        "DocumentItem",
         "DocumentsList",
-        "FeedItem",
         "FeedItemsList",
-        "FolderItem",
         "FoldersTree",
-        "GroupItem",
-        "Details/PermissionBox"
     ],
-    import: ["Importers/ImportFromCyca", "Importer"],
+    import: ["Importer"],
     themesBrowser: ["ThemeCard", "ThemesBrowser"],
     highlights: ["Highlights", "Highlight"],
-    historyBrowser: ["HistoryBrowser", "DateTime"],
+    historyBrowser: ["HistoryBrowser"],
     groups: [
-        "GroupsBrowser",
-        "GroupsBrowser/GroupsBrowserItem",
-        "GroupsBrowser/GroupForm"
+        "GroupsBrowser"
     ]
 };
 

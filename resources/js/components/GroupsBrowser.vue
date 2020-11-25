@@ -67,9 +67,12 @@
 
 <script>
 import draggable from "vuedraggable";
+import GroupsBrowserItem from "./GroupsBrowser/GroupsBrowserItem";
+import GroupForm from "./GroupsBrowser/GroupForm";
 import { mapActions, mapGetters } from "vuex";
 
 export default {
+    components: { GroupForm, GroupsBrowserItem },
     data: function () {
         return {
             positions: [],

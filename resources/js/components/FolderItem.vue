@@ -63,16 +63,12 @@ export default {
         const self = this;
 
         if (self.folder.is_selected) {
-            self.$el.scrollIntoView({
-                block: "center",
-            });
+            self.ensureVisible();
         }
 
         self.$watch("folder.is_selected", function (value) {
             if (value) {
-                self.$el.scrollIntoView({
-                    block: "center",
-                });
+                self.ensureVisible();
             }
         });
     },
@@ -267,6 +263,14 @@ export default {
 
             clearTimeout(self.timer);
             self.longClick = false;
+        },
+
+        ensureVisible: function () {
+            const self = this;
+
+            self.$el.scrollIntoView({
+                block: "center",
+            });
         },
     },
 };
