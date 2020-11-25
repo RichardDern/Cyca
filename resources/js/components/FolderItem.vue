@@ -57,13 +57,16 @@ export default {
             cannot_drop: false,
             timer: null,
             longClick: false,
+            enableEnsureVisible: false,
         };
     },
     mounted: function () {
         const self = this;
 
         if (self.folder.is_selected) {
+            self.enableEnsureVisible = true;
             self.ensureVisible();
+            self.enableEnsureVisible = false;
         }
 
         self.$watch("folder.is_selected", function (value) {
@@ -231,11 +234,7 @@ export default {
         onClick: function () {
             const self = this;
 
-            switch (self.folder.type) {
-                default:
-                    self.$emit("selected-folder-changed", self.folder);
-                    break;
-            }
+            self.$emit("selected-folder-changed", self.folder);
         },
 
         /**
@@ -268,9 +267,11 @@ export default {
         ensureVisible: function () {
             const self = this;
 
-            self.$el.scrollIntoView({
-                block: "center",
-            });
+            if (self.enableEnsureVisible) {
+                self.$el.scrollIntoView({
+                    block: "center",
+                });
+            }
         },
     },
 };

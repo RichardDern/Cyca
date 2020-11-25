@@ -31,6 +31,11 @@ import { mapGetters, mapActions } from "vuex";
 
 export default {
     props: ["document"],
+    data: function () {
+        return {
+            enableEnsureVisible: false,
+        };
+    },
     computed: {
         ...mapGetters({
             selectedDocuments: "documents/selectedDocuments",
@@ -124,6 +129,16 @@ export default {
             const self = this;
 
             self.stopDraggingDocuments();
+        },
+
+        ensureVisible: function () {
+            const self = this;
+
+            if (self.enableEnsureVisible) {
+                self.$el.scrollIntoView({
+                    block: "center",
+                });
+            }
         },
     },
 };

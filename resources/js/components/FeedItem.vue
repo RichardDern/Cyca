@@ -29,6 +29,11 @@ import DateTime from "./DateTime";
 
 export default {
     components: { DateTime },
+    data: function () {
+        return {
+            enableEnsureVisible: true,
+        };
+    },
     props: ["feedItem"],
     computed: {
         ...mapGetters({
@@ -60,9 +65,7 @@ export default {
             const self = this;
 
             if (selected) {
-                self.$el.scrollIntoView({
-                    block: "center",
-                });
+                self.ensureVisible();
             }
         },
     },
@@ -101,6 +104,7 @@ export default {
 
             self.$emit("selected-feeditems-changed", selectedFeedItems);
         },
+
         highlight: function (title) {
             highlights.forEach(function (highlight) {
                 var regex = new RegExp(
@@ -119,6 +123,16 @@ export default {
             });
 
             return title;
+        },
+
+        ensureVisible: function () {
+            const self = this;
+
+            if (self.enableEnsureVisible) {
+                self.$el.scrollIntoView({
+                    block: "center",
+                });
+            }
         },
     },
 };
