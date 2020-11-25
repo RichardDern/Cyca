@@ -112,9 +112,7 @@ RUN set -ex; \
     \
     [ ! -e ".env" ] && cp .env.example .env; \
     /usr/bin/composer --no-dev update; \
-    chown -R www-data:www-data /app; \
-    php /app/artisan cache:clear; \
-    php /app/artisan config:clear; \
+    chown -R www-data:www-data /app
 
 # ------------------------------------------------------------------------------
 # ----| Web server |------------------------------------------------------------
