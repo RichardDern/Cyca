@@ -82,9 +82,18 @@ class FolderController extends Controller
             abort(404);
         }
 
-        $folder->user_permissions    = $folder->getUserPermissions($user);
-        $folder->default_permissions = $folder->getDefaultPermissions();
-        $folder->group->loadCount('activeUsers');
+        if ($folder->type === 'unread_items') {
+            $folder->feed_item_states_count = $folder->group->feedItemStatesCount;
+        } else {
+            $folder->user_permissions    = $folder->getUserPermissions($user);
+            $folder->default_permissions = $folder->getDefaultPermissions();
+
+            $folder->loadCount(['feedItemStates' => function ($query) use ($user) {
+                $query->where('is_read', false)->where('user_id', $user->id);
+            }]);
+
+            $folder->group->loadCount('activeUsers');
+        }
         
         return $folder;
     }
