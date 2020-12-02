@@ -1,0 +1,400 @@
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+DROP TABLE IF EXISTS `bookmarks`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `bookmarks` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `initial_url` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `folder_id` bigint(20) unsigned NOT NULL,
+  `document_id` bigint(20) unsigned NOT NULL,
+  `visits` bigint(20) unsigned NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `bookmarks_folder_id_foreign` (`folder_id`),
+  KEY `bookmarks_document_id_foreign` (`document_id`),
+  CONSTRAINT `bookmarks_document_id_foreign` FOREIGN KEY (`document_id`) REFERENCES `documents` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `bookmarks_folder_id_foreign` FOREIGN KEY (`folder_id`) REFERENCES `folders` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `cache`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cache` (
+  `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `value` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `expiration` int(11) NOT NULL,
+  UNIQUE KEY `cache_key_unique` (`key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `document_feeds`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `document_feeds` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `document_id` bigint(20) unsigned NOT NULL,
+  `feed_id` bigint(20) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `document_feeds_document_id_foreign` (`document_id`),
+  KEY `document_feeds_feed_id_foreign` (`feed_id`),
+  CONSTRAINT `document_feeds_document_id_foreign` FOREIGN KEY (`document_id`) REFERENCES `documents` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `document_feeds_feed_id_foreign` FOREIGN KEY (`feed_id`) REFERENCES `feeds` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `documents`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `documents` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `url` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `http_status_code` smallint(5) unsigned DEFAULT NULL,
+  `mimetype` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `title` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `favicon_path` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `checked_at` datetime DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `visits` bigint(20) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `failed_jobs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `failed_jobs` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uuid` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `connection` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `queue` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `failed_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `feed_feed_items`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `feed_feed_items` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `feed_id` bigint(20) unsigned NOT NULL,
+  `feed_item_id` bigint(20) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `feed_feed_items_feed_id_foreign` (`feed_id`),
+  KEY `feed_feed_items_feed_item_id_foreign` (`feed_item_id`),
+  CONSTRAINT `feed_feed_items_feed_id_foreign` FOREIGN KEY (`feed_id`) REFERENCES `feeds` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `feed_feed_items_feed_item_id_foreign` FOREIGN KEY (`feed_item_id`) REFERENCES `feed_items` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `feed_item_states`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `feed_item_states` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) unsigned NOT NULL,
+  `document_id` bigint(20) unsigned NOT NULL,
+  `feed_id` bigint(20) unsigned NOT NULL,
+  `feed_item_id` bigint(20) unsigned NOT NULL,
+  `is_read` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `feed_item_states_user_id_foreign` (`user_id`),
+  KEY `feed_item_states_document_id_foreign` (`document_id`),
+  KEY `feed_item_states_feed_id_foreign` (`feed_id`),
+  KEY `feed_item_states_feed_item_id_foreign` (`feed_item_id`),
+  CONSTRAINT `feed_item_states_document_id_foreign` FOREIGN KEY (`document_id`) REFERENCES `documents` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `feed_item_states_feed_id_foreign` FOREIGN KEY (`feed_id`) REFERENCES `feeds` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `feed_item_states_feed_item_id_foreign` FOREIGN KEY (`feed_item_id`) REFERENCES `feed_items` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `feed_item_states_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `feed_items`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `feed_items` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `url` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `hash` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `title` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `content` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `published_at` datetime NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `feeds`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `feeds` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `url` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `error` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `title` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `favicon_path` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `checked_at` datetime DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `folders`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `folders` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) unsigned NOT NULL,
+  `parent_id` bigint(20) unsigned DEFAULT NULL,
+  `type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'folder',
+  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `position` tinyint(3) unsigned NOT NULL DEFAULT 255,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `group_id` bigint(20) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `folders_user_id_foreign` (`user_id`),
+  KEY `folders_parent_id_foreign` (`parent_id`),
+  KEY `folders_group_id_foreign` (`group_id`),
+  CONSTRAINT `folders_group_id_foreign` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `folders_parent_id_foreign` FOREIGN KEY (`parent_id`) REFERENCES `folders` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `folders_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `groups`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `groups` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) unsigned NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `invite_only` tinyint(1) NOT NULL DEFAULT 1,
+  `auto_accept_users` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `groups_user_id_foreign` (`user_id`),
+  CONSTRAINT `groups_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `highlights`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `highlights` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) unsigned NOT NULL,
+  `expression` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `color` varchar(7) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `position` int(10) unsigned NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `highlights_user_id_foreign` (`user_id`),
+  CONSTRAINT `highlights_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `ignored_feeds`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ignored_feeds` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) unsigned NOT NULL,
+  `feed_id` bigint(20) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `ignored_feeds_user_id_foreign` (`user_id`),
+  KEY `ignored_feeds_feed_id_foreign` (`feed_id`),
+  CONSTRAINT `ignored_feeds_feed_id_foreign` FOREIGN KEY (`feed_id`) REFERENCES `feeds` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `ignored_feeds_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `jobs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `jobs` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `queue` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `attempts` tinyint(3) unsigned NOT NULL,
+  `reserved_at` int(10) unsigned DEFAULT NULL,
+  `available_at` int(10) unsigned NOT NULL,
+  `created_at` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `jobs_queue_index` (`queue`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `migrations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `migrations` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `batch` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `notifications`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `notifications` (
+  `id` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `notifiable_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `notifiable_id` bigint(20) unsigned NOT NULL,
+  `data` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `read_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `notifications_notifiable_type_notifiable_id_index` (`notifiable_type`,`notifiable_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `password_resets`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `password_resets` (
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  KEY `password_resets_email_index` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `permissions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `permissions` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `folder_id` bigint(20) unsigned NOT NULL,
+  `user_id` bigint(20) unsigned DEFAULT NULL,
+  `can_create_folder` tinyint(1) NOT NULL DEFAULT 0,
+  `can_update_folder` tinyint(1) NOT NULL DEFAULT 0,
+  `can_delete_folder` tinyint(1) NOT NULL DEFAULT 0,
+  `can_create_document` tinyint(1) NOT NULL DEFAULT 0,
+  `can_delete_document` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `permissions_folder_id_foreign` (`folder_id`),
+  KEY `permissions_user_id_foreign` (`user_id`),
+  CONSTRAINT `permissions_folder_id_foreign` FOREIGN KEY (`folder_id`) REFERENCES `folders` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `permissions_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sessions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sessions` (
+  `id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `user_id` bigint(20) unsigned DEFAULT NULL,
+  `ip_address` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `user_agent` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `payload` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `last_activity` int(11) NOT NULL,
+  UNIQUE KEY `sessions_id_unique` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `user_groups`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `user_groups` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) unsigned NOT NULL,
+  `group_id` bigint(20) unsigned NOT NULL,
+  `status` enum('own','created','invited','accepted','rejected','left','joining') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `position` int(10) unsigned NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_groups_user_id_foreign` (`user_id`),
+  KEY `user_groups_group_id_foreign` (`group_id`),
+  CONSTRAINT `user_groups_group_id_foreign` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `user_groups_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `users` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email_verified_at` timestamp NULL DEFAULT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `lang` char(8) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'en',
+  `theme` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'auto',
+  `two_factor_secret` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `two_factor_recovery_codes` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `is_admin` tinyint(1) NOT NULL DEFAULT 0,
+  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `users_email_unique` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `websockets_statistics_entries`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `websockets_statistics_entries` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `app_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `peak_connection_count` int(11) NOT NULL,
+  `websocket_message_count` int(11) NOT NULL,
+  `api_message_count` int(11) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+INSERT INTO `migrations` VALUES (1,'0000_00_00_000000_create_websockets_statistics_entries_table',1);
+INSERT INTO `migrations` VALUES (2,'2014_10_12_000000_create_users_table',1);
+INSERT INTO `migrations` VALUES (3,'2014_10_12_100000_create_password_resets_table',1);
+INSERT INTO `migrations` VALUES (4,'2014_10_12_200000_add_two_factor_columns_to_users_table',1);
+INSERT INTO `migrations` VALUES (5,'2019_08_19_000000_create_failed_jobs_table',1);
+INSERT INTO `migrations` VALUES (6,'2020_08_19_194845_create_cache_table',1);
+INSERT INTO `migrations` VALUES (7,'2020_08_19_194901_create_notifications_table',1);
+INSERT INTO `migrations` VALUES (8,'2020_08_19_194910_create_jobs_table',1);
+INSERT INTO `migrations` VALUES (9,'2020_08_19_194916_create_sessions_table',1);
+INSERT INTO `migrations` VALUES (10,'2020_08_19_200056_create_folders_table',1);
+INSERT INTO `migrations` VALUES (11,'2020_08_24_155054_create_documents_table',1);
+INSERT INTO `migrations` VALUES (12,'2020_08_24_161356_create_bookmarks_table',1);
+INSERT INTO `migrations` VALUES (13,'2020_08_28_120922_create_feeds_table',1);
+INSERT INTO `migrations` VALUES (14,'2020_08_28_120929_create_feed_items_table',1);
+INSERT INTO `migrations` VALUES (15,'2020_08_28_121017_create_document_feeds_table',1);
+INSERT INTO `migrations` VALUES (16,'2020_08_28_123158_create_feed_feed_items_table',1);
+INSERT INTO `migrations` VALUES (17,'2020_09_02_215853_create_feed_item_states_table',1);
+INSERT INTO `migrations` VALUES (18,'2020_09_06_205232_create_ignored_feeds_table',1);
+INSERT INTO `migrations` VALUES (19,'2020_09_17_230935_update_foreign_keys',1);
+INSERT INTO `migrations` VALUES (20,'2020_09_23_201540_add_lang_to_users_table',1);
+INSERT INTO `migrations` VALUES (21,'2020_09_29_105715_add_theme_to_users_table',1);
+INSERT INTO `migrations` VALUES (22,'2020_10_09_221017_create_highlights_table',1);
+INSERT INTO `migrations` VALUES (23,'2020_10_20_124242_create_history_entries_table',1);
+INSERT INTO `migrations` VALUES (24,'2020_10_26_225349_add_morphed_object_to_history_entries_table',1);
+INSERT INTO `migrations` VALUES (25,'2020_10_26_231610_change_details_in_history_entries_table',1);
+INSERT INTO `migrations` VALUES (26,'2020_10_29_150159_create_groups_table',1);
+INSERT INTO `migrations` VALUES (27,'2020_10_29_150246_create_user_groups_table',1);
+INSERT INTO `migrations` VALUES (28,'2020_10_29_161727_add_group_in_folders_table',1);
+INSERT INTO `migrations` VALUES (29,'2020_10_29_161754_remove_status_fields_from_folders_table',1);
+INSERT INTO `migrations` VALUES (30,'2020_11_06_195542_add_visits_to_documents_table',1);
+INSERT INTO `migrations` VALUES (31,'2020_11_07_101418_remove_visits_from_bookmarks_table',1);
+INSERT INTO `migrations` VALUES (32,'2020_11_14_232426_remove_folder_id_from_feed_item_states_table',1);
+INSERT INTO `migrations` VALUES (33,'2020_11_17_212131_create_permissions_table',1);
+INSERT INTO `migrations` VALUES (34,'2020_11_20_093843_add_auto_accept_users_to_groups_table',1);
+INSERT INTO `migrations` VALUES (35,'2020_11_30_231123_change_theme_column_default',1);
+INSERT INTO `migrations` VALUES (36,'2020_12_01_111943_add_position_to_highlights_table',1);
