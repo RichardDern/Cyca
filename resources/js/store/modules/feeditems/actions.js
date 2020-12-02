@@ -142,21 +142,21 @@ export default {
         // Avoid unwanted reloading
         commit("setNextPage", null);
 
+        if ("feed_items" in data) {
+            dispatch("selectNextUnreadFeedItem", data.feed_items[0]);
+        } else if ("documents" in data) {
+            dispatch(
+                "documents/selectFirstDocumentWithUnreadItems",
+                { exclude: data.documents },
+                { root: true }
+            );
+        }
+
         api.post(route("feed_item.mark_as_read"), data).then(function (
             response
         ) {
             dispatch("updateUnreadFeedItemsCount", response);
             commit("setNextPage", nextPage);
-
-            if ("feed_items" in data) {
-                dispatch("selectNextUnreadFeedItem", data.feed_items[0]);
-            } else if ("documents" in data) {
-                dispatch(
-                    "documents/selectFirstDocumentWithUnreadItems",
-                    { exclude: data.documents },
-                    { root: true }
-                );
-            }
         });
     },
 
