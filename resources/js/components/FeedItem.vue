@@ -1,23 +1,34 @@
 <template>
     <a
-        class="feed-item"
         v-bind:class="{
             selected: is_selected,
-            read: feedItem.feed_item_states_count === 0,
+            emphasize: feedItem.feed_item_states_count > 0,
         }"
+        class="list-item"
         v-bind:href="feedItem.url"
         rel="noopener noreferrer"
         v-on:click.left.exact.stop.prevent="onClicked"
     >
-        <div class="feed-item-label" v-html="highlight(feedItem.title)"></div>
-        <div class="feed-item-meta">
+        <div
+            class="list-item-text mr-2"
+            v-html="highlight(feedItem.title)"
+        ></div>
+        <div class="flex justify-between items-center">
+            <div class="list horizontal compact">
+                <div class="list-item text-xs px-0">
+                    <div class="icons">
+                        <img v-bind:src="feedItem.feeds[0].favicon" />
+                    </div>
+                    <div class="list-item-text">
+                        {{ feedItem.feeds[0].title }}
+                    </div>
+                </div>
+            </div>
             <date-time
-                class="flex-none mr-4 w-2/12"
+                class="badge ml-1 default"
                 v-bind:datetime="feedItem.published_at"
                 v-bind:calendar="true"
             ></date-time>
-            <img v-bind:src="feedItem.feeds[0].favicon" class="favicon" />
-            <div class="truncate">{{ feedItem.feeds[0].title }}</div>
         </div>
     </a>
 </template>

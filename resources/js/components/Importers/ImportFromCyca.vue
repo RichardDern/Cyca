@@ -1,16 +1,16 @@
 <template>
     <div>
-        <label for="file">{{ __("File to import") }}</label>
+        <div class="form-group">
+            <label for="file">{{ __("File to import") }}</label>
 
-        <input type="file" id="file" />
+            <input type="file" id="file" />
+        </div>
 
-        <button
-            type="submit"
-            class="info p-2 mt-6"
-            v-on:click="onImport"
-        >
-            {{ __("Import") }}
-        </button>
+        <div class="form-group">
+            <button type="submit" v-on:click="onImport">
+                → {{ __("Import") }}
+            </button>
+        </div>
     </div>
 </template>
 
@@ -23,7 +23,7 @@ export default {
 
             formData.append("file", input.files[0]);
 
-            this.$emit('import', formData);
+            this.$emit("import", formData);
         },
     },
 };

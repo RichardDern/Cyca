@@ -1,0 +1,109 @@
+.cyca-prose {
+    @apply mx-auto mb-6 max-w-prose shadow-lg rounded px-2 py-2 text-justify;
+    @apply bg-white;
+    @apply dark:bg-gray-700;
+
+    max-width: 100%;
+
+    & p {
+        @apply text-justify my-4 leading-7;
+    }
+
+    & img {
+        @apply my-2;
+
+        max-width: 100%;
+    }
+
+    & figure {
+        & figcaption {
+            @apply text-center italic text-sm;
+        }
+    }
+
+    & pre {
+        @apply bg-gray-900 text-gray-400 p-2 rounded overflow-auto;
+    }
+
+    & table {
+        @apply min-w-full divide-y border;
+        @apply divide-gray-300 border-gray-300;
+        @apply dark:divide-gray-800 dark:border-gray-800;
+
+        & tbody {
+            @apply divide-y;
+            @apply divide-gray-300;
+            @apply dark:divide-gray-800;
+
+            & tr {
+                @apply odd:bg-gray-100;
+                @apply dark:odd:bg-gray-600;
+            }
+        }
+
+        & td,
+        & th {
+            @apply px-2 py-1;
+        }
+    }
+
+    & h1,
+    & h2,
+    & h3,
+    & h4,
+    & h5,
+    & h6 {
+        @apply text-black;
+        @apply dark:text-white;
+    }
+
+    & h1 {
+        @apply text-2xl my-6;
+    }
+
+    & h2 {
+        @apply text-xl my-4;
+    }
+
+    & h3 {
+        @apply text-lg my-2;
+    }
+
+    & ul,
+    & ol {
+        @apply mx-8;
+
+        & li {
+            @apply my-2 p-2 rounded;
+
+            @apply odd:bg-gray-100;
+            @apply dark:odd:bg-gray-600;
+        }
+    }
+
+    & ul {
+        @apply list-disc;
+    }
+
+    & ol {
+        @apply list-decimal;
+    }
+
+    & a {
+        @apply underline;
+        @apply text-blue-300;
+        @apply dark:text-blue-500;
+
+        &:hover {
+            @apply no-underline;
+            @apply text-blue-400;
+            @apply dark:text-blue-400;
+        }
+    }
+
+    & blockquote {
+        @apply border-l-4 pl-4 italic mx-8 rounded p-2;
+        @apply border-gray-500 bg-gray-100;
+        @apply dark:border-gray-600 dark:bg-gray-800;
+    }
+}

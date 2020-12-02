@@ -1,5 +1,5 @@
 <template>
-    <div id="documents-list">
+    <div class="vertical list spaced striped items-rounded">
         <document-item
             v-for="document in sortedList"
             v-bind:key="document.id"

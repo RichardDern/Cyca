@@ -16,12 +16,7 @@ class FolderObserver
      */
     public function created(Folder $folder)
     {
-        $folder->addHistoryEntry('folder_created', [
-            'user'        => $folder->user->toHistoryArray(),
-            'breadcrumbs' => $folder->breadcrumbs,
-        ], $folder->user);
-
-        //TODO: Add history entries for users in the same group
+        
     }
 
     /**
@@ -32,12 +27,7 @@ class FolderObserver
      */
     public function deleting(Folder $folder)
     {
-        $folder->addHistoryEntry('folder_deleted', [
-            'user'        => $folder->user->toHistoryArray(),
-            'breadcrumbs' => $folder->breadcrumbs,
-        ], $folder->user);
-
-        //TODO: Add history entries for users in the same group
+        
     }
 
     /**

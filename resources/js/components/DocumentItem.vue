@@ -16,12 +16,27 @@
         v-on:dragend="onDragEnd"
         rel="noopener noreferrer"
     >
-        <div class="list-item-label">
-            <img v-bind:src="document.favicon" class="favicon" />
-            <div class="truncate flex-grow py-0.5">{{ document.title }}</div>
+        <div class="icons">
+            <img v-bind:src="document.favicon" />
         </div>
-        <div class="badge default" v-if="document.feed_item_states_count > 0">
-            {{ document.feed_item_states_count }}
+        <div class="list-item-text">{{ document.title }}</div>
+        <div class="badges">
+            <div
+                class="badge default"
+                v-if="document.feed_item_states_count > 0"
+            >
+                <span v-if="document.has_new_unread_items">
+                    <svg
+                        fill="currentColor"
+                        width="16"
+                        height="16"
+                        class="text-blue-300"
+                    >
+                        <use v-bind:xlink:href="icon('update')" />
+                    </svg>
+                </span>
+                {{ document.feed_item_states_count }}
+            </div>
         </div>
     </a>
 </template>

@@ -1,10 +1,10 @@
 <template>
     <article>
-        <h1>
-            <div class="title">
+        <header>
+            <h1>
                 {{ title }}
-            </div>
-        </h1>
+            </h1>
+        </header>
 
         <div class="body">
             <div
@@ -12,7 +12,6 @@
                 v-html="group.description"
             ></div>
             <form
-                class="my-4"
                 v-on:submit.prevent="onSubmit"
                 v-if="
                     !group ||
@@ -25,7 +24,6 @@
                 <div class="form-group">
                     <input
                         type="text"
-                        class="w-full"
                         v-model="name"
                         v-bind:placeholder="__('Group name')"
                     />
@@ -33,29 +31,27 @@
                 <div class="form-group">
                     <input
                         type="text"
-                        class="w-full"
                         v-model="description"
                         v-bind:placeholder="__('Description')"
                     />
                 </div>
 
-                <label class="my-0"
-                    ><input type="checkbox" v-model="inviteOnly" />
-                    {{ __("Invite only") }}</label
-                >
-                <label class="my-0"
-                    ><input type="checkbox" v-model="autoAcceptUsers" />
-                    {{ __("Auto-accept users") }}</label
-                >
+                <div class="form-group">
+                    <label class="my-0"
+                        ><input type="checkbox" v-model="inviteOnly" />
+                        <span class="ml-2">{{ __("Invite only") }}</span>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="my-0"
+                        ><input type="checkbox" v-model="autoAcceptUsers" />
+                        <span class="ml-2">{{ __("Auto-accept users") }}</span>
+                    </label>
+                </div>
 
                 <div class="flex justify-between mt-4">
-                    <button class="button success" type="submit">
-                        <svg
-                            fill="currentColor"
-                            width="16"
-                            height="16"
-                            class="mr-1"
-                        >
+                    <button class="success" type="submit">
+                        <svg fill="currentColor" width="16" height="16">
                             <use
                                 v-bind:xlink:href="icon(!id ? 'add' : 'update')"
                             />
@@ -64,32 +60,22 @@
                     </button>
                     <div v-if="id !== null" class="flex items-center">
                         <button
-                            class="button secondary"
+                            class="secondary"
                             v-on:click.stop.prevent="$emit('unselect')"
                         >
-                            <svg
-                                fill="currentColor"
-                                width="16"
-                                height="16"
-                                class="mr-1"
-                            >
+                            <svg fill="currentColor" width="16" height="16">
                                 <use v-bind:xlink:href="icon('cancel')" />
                             </svg>
                             {{ __("Cancel") }}
                         </button>
                         <button
                             v-if="group.pivot.status !== 'own'"
-                            class="button danger ml-2"
+                            class="danger ml-1"
                             v-on:click.stop.prevent="
                                 $emit('group-deleted', group)
                             "
                         >
-                            <svg
-                                fill="currentColor"
-                                width="16"
-                                height="16"
-                                class="mr-1"
-                            >
+                            <svg fill="currentColor" width="16" height="16">
                                 <use v-bind:xlink:href="icon('trash')" />
                             </svg>
                             {{ __("Delete") }}
@@ -106,24 +92,26 @@
                 "
                 v-on:submit.prevent="onInviteSubmit"
             >
-                <div class="form-group items-stretched">
-                    <input
-                        type="text"
-                        name="title"
-                        v-model="inviteEmail"
-                        v-bind:placeholder="__('E-Mail Address')"
-                    />
-                    <button type="submit" class="success ml-2">
-                        <svg
-                            fill="currentColor"
-                            width="16"
-                            height="16"
-                            class="mr-1"
-                        >
-                            <use v-bind:xlink:href="icon('update')" />
-                        </svg>
-                        {{ __("Invite in group") }}
-                    </button>
+                <div class="form-group">
+                    <div class="input-group">
+                        <input
+                            type="text"
+                            name="title"
+                            v-model="inviteEmail"
+                            v-bind:placeholder="__('E-Mail Address')"
+                        />
+                        <button type="submit" class="info">
+                            <svg
+                                fill="currentColor"
+                                width="16"
+                                height="16"
+                                class="mr-1"
+                            >
+                                <use v-bind:xlink:href="icon('join')" />
+                            </svg>
+                            {{ __("Invite in group") }}
+                        </button>
+                    </div>
                 </div>
             </form>
 

@@ -1,5 +1,9 @@
 <template>
-    <div id="feeditems-list" v-on:scroll.passive="onScroll">
+    <div
+        id="feed-items-list"
+        class="list vertical spaced striped items-rounded"
+        v-on:scroll.passive="onScroll"
+    >
         <feed-item
             v-for="feedItem in sortedList"
             v-bind:key="feedItem.id"

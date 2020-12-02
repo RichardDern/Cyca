@@ -3,13 +3,12 @@
 namespace App\Models;
 
 use App\Models\Traits\Feed\AnalysesFeed;
-use App\Models\Traits\HasHistory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Traits\HasUrl;
 
 class Feed extends Model
 {
-    use AnalysesFeed, HasHistory, HasUrl;
+    use AnalysesFeed,  HasUrl;
 
     # --------------------------------------------------------------------------
     # ----| Properties |--------------------------------------------------------
@@ -56,17 +55,6 @@ class Feed extends Model
      */
     protected $dates = [
         'checked_at',
-    ];
-
-    /**
-     * Attributes used to display this model in history
-     *
-     * @var array
-     */
-    protected $historyAttributes = [
-        'url',
-        'title',
-        'favicon',
     ];
 
     # --------------------------------------------------------------------------

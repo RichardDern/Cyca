@@ -2,74 +2,82 @@
     <details class="mt-4" v-on:toggle="onToggle">
         <summary>{{ __("Per-user permissions") }}:</summary>
 
-        <form v-if="usersWithoutPermissions.length > 0" class="mt-2">
-            <div class="form-group">
-                <label for="addPermissionsForUser" class="inline"
-                    >{{ __("Add explicit permissions for") }}:</label
-                >
-                <select
-                    v-model="addPermissionsForUser"
-                    id="addPermissionsForUser"
-                >
-                    <option
-                        v-for="user in usersWithoutPermissions"
-                        v-bind:key="user.id"
-                        v-bind:value="user.id"
+        <div class="body">
+            <form v-if="usersWithoutPermissions.length > 0">
+                <div class="input-group">
+                    <label for="addPermissionsForUser"
+                        >{{ __("Add explicit permissions for") }}:</label
                     >
-                        {{ user.name }}
-                    </option>
-                </select>
-            </div>
-        </form>
+                    <select
+                        v-model="addPermissionsForUser"
+                        id="addPermissionsForUser"
+                    >
+                        <option
+                            v-for="user in usersWithoutPermissions"
+                            v-bind:key="user.id"
+                            v-bind:value="user.id"
+                        >
+                            {{ user.name }}
+                        </option>
+                    </select>
+                </div>
+            </form>
 
-        <div class="feeds-list mt-2" v-for="user in users" v-bind:key="user.id">
-            <div class="flex justify-between items-center">
-                <div>
-                    {{ user.name }}
-                    <small class="feed-item-meta inline ml-4">{{
-                        user.email
-                    }}</small>
+            <div
+                class="list vertical spaced striped items-rounded compact"
+                v-for="user in users"
+                v-bind:key="user.id"
+            >
+                <div class="list-item">
+                    <div>
+                        {{ user.name }}
+                        <small class="feed-item-meta inline ml-22">{{
+                            user.email
+                        }}</small>
+                        <div class="flex items-center space-x-2">
+                            <permission-box
+                                v-bind:text="__('Create folder')"
+                                ability="can_create_folder"
+                                v-bind:folder="folder"
+                                v-bind:user="user"
+                            ></permission-box>
+                            <permission-box
+                                v-bind:text="__('Update folder')"
+                                ability="can_update_folder"
+                                v-bind:folder="folder"
+                                v-bind:user="user"
+                            ></permission-box>
+                            <permission-box
+                                v-bind:text="__('Delete folder')"
+                                ability="can_delete_folder"
+                                v-bind:folder="folder"
+                                v-bind:user="user"
+                            ></permission-box>
+                            <permission-box
+                                v-bind:text="__('Create document')"
+                                ability="can_create_document"
+                                v-bind:folder="folder"
+                                v-bind:user="user"
+                            ></permission-box>
+                            <permission-box
+                                v-bind:text="__('Delete document')"
+                                ability="can_delete_document"
+                                v-bind:folder="folder"
+                                v-bind:user="user"
+                            ></permission-box>
+                        </div>
+                    </div>
+                    <div>
+                        <button
+                            class="info"
+                            v-on:click="onRemovePermissions(user)"
+                        >
+                            <svg fill="currentColor" width="16" height="16">
+                                <use v-bind:xlink:href="icon('cancel')" /></svg
+                            >{{ __("Apply default permissions") }}
+                        </button>
+                    </div>
                 </div>
-                <div>
-                    <button
-                        class="info inline"
-                        v-on:click="onRemovePermissions(user)"
-                    >
-                        {{ __("Apply default permissions") }}
-                    </button>
-                </div>
-            </div>
-            <div class="mt-2">
-                <permission-box
-                    v-bind:text="__('Create folder')"
-                    ability="can_create_folder"
-                    v-bind:folder="folder"
-                    v-bind:user="user"
-                ></permission-box>
-                <permission-box
-                    v-bind:text="__('Update folder')"
-                    ability="can_update_folder"
-                    v-bind:folder="folder"
-                    v-bind:user="user"
-                ></permission-box>
-                <permission-box
-                    v-bind:text="__('Delete folder')"
-                    ability="can_delete_folder"
-                    v-bind:folder="folder"
-                    v-bind:user="user"
-                ></permission-box>
-                <permission-box
-                    v-bind:text="__('Create document')"
-                    ability="can_create_document"
-                    v-bind:folder="folder"
-                    v-bind:user="user"
-                ></permission-box>
-                <permission-box
-                    v-bind:text="__('Delete document')"
-                    ability="can_delete_document"
-                    v-bind:folder="folder"
-                    v-bind:user="user"
-                ></permission-box>
             </div>
         </div>
     </details>

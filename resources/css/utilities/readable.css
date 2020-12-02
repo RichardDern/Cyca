@@ -1,0 +1,32 @@
+.readable {
+    @apply font-serif text-xl no-underline break-all;
+    letter-spacing: 0.2rem;
+
+    & .letter {
+    }
+
+    & .capital {
+        @apply font-bold;
+    }
+
+    & .number {
+        @apply text-green-400;
+    }
+
+    & .other {
+        @apply text-purple-500 font-bold;
+    }
+
+    & .empty::before {
+        @apply text-blue-400 inline-block;
+        content: "❡";
+    }
+
+    & .operator {
+        @apply text-purple-500 font-bold;
+    }
+
+    & .suspicious {
+        @apply text-red-500 font-bold;
+    }
+}

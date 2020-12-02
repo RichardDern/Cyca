@@ -7,20 +7,7 @@
  */
 
 /*!
- * Vue.js v2.6.12
- * (c) 2014-2020 Evan You
- * Released under the MIT License.
- */
-
-/*!
- * vuex v3.5.1
+ * vuex v4.0.0-rc.2
  * (c) 2020 Evan You
- * @license MIT
- */
-
-/**!
- * Sortable 1.10.2
- * @author	RubaXa   <trash@rubaxa.org>
- * @author	owenm    <owen23355@gmail.com>
  * @license MIT
  */

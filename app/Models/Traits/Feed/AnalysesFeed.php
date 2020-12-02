@@ -91,24 +91,22 @@ trait AnalysesFeed
         foreach ($items as $item) {
             $feedItem = FeedItem::where('hash', $item->get_id(true))->first();
 
-            if ($feedItem) {
-                continue;
+            if (!$feedItem) {
+                $feedItem = new FeedItem();
+
+                $feedItem->hash         = $item->get_id(true);
+                $feedItem->title        = $this->cleanupString($item->get_title(), true, true);
+                $feedItem->url          = $item->get_permalink();
+                $feedItem->description  = $this->formatText($item->get_description(true));
+                $feedItem->content      = $this->formatText($item->get_content(true));
+                $feedItem->published_at = $item->get_gmdate();
+
+                if ($feedItem->published_at->addDays(config('cyca.maxOrphanAge.feeditems'))->lt(now())) {
+                    continue;
+                }
+
+                $feedItem->save();
             }
-
-            $feedItem = new FeedItem();
-
-            $feedItem->hash = $item->get_id(true);
-            $feedItem->title = $this->cleanupString($item->get_title(), true, true);
-            $feedItem->url = $item->get_permalink();
-            $feedItem->description = $this->formatText($item->get_description(true));
-            $feedItem->content = $this->formatText($item->get_content(true));
-            $feedItem->published_at = $item->get_gmdate();
-
-            if ($feedItem->published_at->addDays(config('cyca.maxOrphanAge.feeditems'))->lt(now())) {
-                continue;
-            }
-
-            $feedItem->save();
 
             if (!in_array($feedItem->id, $toSync)) {
                 $toSync[] = $feedItem->id;

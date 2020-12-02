@@ -1,3 +1,5 @@
+import { collect } from "collect.js";
+
 /**
  * Actions on documents
  */
@@ -5,7 +7,10 @@ export default {
     /**
      * Display a listing of the resource.
      */
-    async index({ commit, dispatch, getters }, documents) {
+    async index(
+        { commit, dispatch, getters },
+        { documents, updateFeedItems = true }
+    ) {
         commit("setDocuments", documents);
 
         let selectedDocuments = getters.selectedDocuments;
@@ -14,9 +19,11 @@ export default {
             selectedDocuments = documents;
         }
 
-        await dispatch("feedItems/index", selectedDocuments, {
-            root: true
-        });
+        if (updateFeedItems) {
+            await dispatch("feedItems/index", selectedDocuments, {
+                root: true,
+            });
+        }
     },
 
     /**
@@ -26,10 +33,10 @@ export default {
         const data = await api.post(route("document.store"), {
             url: url,
             folder_id: folder_id,
-            group_id: group_id
+            group_id: group_id,
         });
 
-        dispatch("index", data);
+        dispatch("index", { documents: data });
     },
 
     /**
@@ -37,15 +44,20 @@ export default {
      */
     selectDocuments({ commit, dispatch }, { documents, selectFirstUnread }) {
         commit("setSelectedDocuments", documents);
-        dispatch("feedItems/index", documents, { root: true }).then(function() {
-            if (selectFirstUnread) {
-                dispatch("feedItems/selectFirstUnreadFeedItem", null, {
-                    root: true
-                });
-            } else {
-                commit("feedItems/setSelectedFeedItems", [], { root: true });
-            }
+
+        commit("feedItems/setSelectedFeedItems", [], {
+            root: true,
         });
+
+        dispatch("feedItems/index", documents, { root: true }).then(
+            function () {
+                if (selectFirstUnread) {
+                    dispatch("feedItems/selectFirstUnreadFeedItem", null, {
+                        root: true,
+                    });
+                }
+            }
+        );
     },
 
     /**
@@ -66,9 +78,7 @@ export default {
         { exclude, selectFirstUnread }
     ) {
         if (!exclude) {
-            exclude = collect(getters.selectedDocuments)
-                .pluck("id")
-                .all();
+            exclude = collect(getters.selectedDocuments).pluck("id").all();
         }
 
         const document = collect(getters.documents)
@@ -79,12 +89,12 @@ export default {
         if (document) {
             dispatch("selectDocuments", {
                 documents: [document],
-                selectFirstUnread: selectFirstUnread
+                selectFirstUnread: selectFirstUnread,
             });
         } else {
             if (rootGetters["folders/selectedFolder"].type === "unread_items") {
                 dispatch("selectDocuments", {
-                    selectFirstUnread: selectFirstUnread
+                    selectFirstUnread: selectFirstUnread,
                 });
             }
         }
@@ -111,9 +121,7 @@ export default {
         { getters, commit, dispatch },
         { sourceFolder, targetFolder }
     ) {
-        const documents = collect(getters.draggedDocuments)
-            .pluck("id")
-            .all();
+        const documents = collect(getters.draggedDocuments).pluck("id").all();
 
         if (!documents || documents.length === 0) {
             return;
@@ -122,10 +130,10 @@ export default {
         const response = await api.post(
             route("document.move", {
                 sourceFolder: sourceFolder.id,
-                targetFolder: targetFolder.id
+                targetFolder: targetFolder.id,
             }),
             {
-                documents: documents
+                documents: documents,
             }
         );
 
@@ -137,10 +145,10 @@ export default {
             documents
         );
 
-        dispatch("index", newDocumentsList);
+        dispatch("index", { documents: newDocumentsList });
         dispatch("feedItems/index", getters.feeds, { root: true });
         dispatch("feedItems/updateUnreadFeedItemsCount", response, {
-            root: true
+            root: true,
         });
     },
 
@@ -154,7 +162,7 @@ export default {
 
         commit("update", {
             document: document,
-            newProperties: data
+            newProperties: data,
         });
     },
 
@@ -176,20 +184,18 @@ export default {
         const data = await api.post(
             route("document.destroy_bookmarks", { folder: folder.id }),
             {
-                documents: collect(documents)
-                    .pluck("id")
-                    .all()
+                documents: collect(documents).pluck("id").all(),
             }
         );
 
-        dispatch("index", data);
+        dispatch("index", { documents: data });
     },
 
     /**
      * Update the specified resource in storage.
      */
     update({ commit, getters }, { documentId, newProperties }) {
-        const document = getters.documents.find(d => d.id == documentId);
+        const document = getters.documents.find((d) => d.id == documentId);
 
         if (!document) {
             return;
@@ -206,12 +212,12 @@ export default {
         if (!document.loaded) {
             return api
                 .get(route("document.show", document))
-                .then(function(response) {
+                .then(function (response) {
                     response.loaded = true;
 
                     return dispatch("update", {
                         documentId: document.id,
-                        newProperties: response
+                        newProperties: response,
                     });
                 });
         }
@@ -225,5 +231,5 @@ export default {
     ignoreFeed({ commit }, feed) {
         api.post(route("feed.ignore", feed));
         commit("ignoreFeed", { feed: feed, ignored: true });
-    }
+    },
 };

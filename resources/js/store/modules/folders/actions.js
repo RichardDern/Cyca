@@ -13,47 +13,60 @@ export default {
      */
     async index({ commit, dispatch }, folders) {
         commit("setFolders", folders);
-        dispatch("show");
+        dispatch("show", {});
     },
 
     /**
      * Display the specified resource.
      */
-    show({ commit, getters, dispatch }, folder) {
+    show(
+        { commit, getters, dispatch },
+        { folder, deselectDocuments = true, updateFeedItems = true }
+    ) {
         const currentSelectedFolder = getters.selectedFolder;
 
         if (!folder) {
             folder = currentSelectedFolder;
         } else if (Number.isInteger(folder)) {
-            folder = getters.folders.find(f => f.id === folder);
+            folder = getters.folders.find((f) => f.id === folder);
         }
 
         commit("setSelectedFolder", folder);
 
-        if (folder.id !== currentSelectedFolder.id) {
+        if (deselectDocuments) {
             dispatch("documents/selectDocuments", [], { root: true });
         }
 
-        api.get(route("folder.show", folder)).then(function(response) {
-            dispatch("documents/index", response, { root: true });
+        api.get(route("folder.show", folder)).then(function (response) {
+            dispatch(
+                "documents/index",
+                { documents: response, updateFeedItems: updateFeedItems },
+                { root: true }
+            );
         });
     },
 
     /**
      * Load folder's details
      */
-    loadDetails({ dispatch }, folder) {
-        if (!folder.details_loaded) {
-            return api
-                .get(route("folder.details", folder))
-                .then(function(response) {
-                    response.details_loaded = true;
+    async loadDetails({ dispatch }, folder) {
+        if (!folder.details_loaded && !folder.details_loading) {
+            dispatch("updateProperties", {
+                folderId: folder.id,
+                newProperties: {
+                    details_loading: true,
+                },
+            });
 
-                    dispatch("updateProperties", {
-                        folderId: folder.id,
-                        newProperties: response
-                    });
-                });
+            let response = await api.get(route("folder.details", folder));
+
+            response.details_loaded = true;
+            response.details_loading = false;
+
+            dispatch("updateProperties", {
+                folderId: folder.id,
+                newProperties: response,
+            });
         }
     },
 
@@ -65,12 +78,12 @@ export default {
             .post(route("folder.store"), {
                 title,
                 parent_id,
-                group_id
+                group_id,
             })
-            .then(data => {
+            .then((data) => {
                 dispatch("index", data);
             })
-            .catch(error => console.error(error));
+            .catch((error) => console.error(error));
     },
 
     /**
@@ -84,7 +97,7 @@ export default {
 
         dispatch("updateProperties", {
             folderId: folder.id,
-            newProperties: data
+            newProperties: data,
         });
     },
 
@@ -92,7 +105,7 @@ export default {
      * Update the specified resource in storage.
      */
     updateProperties({ commit, getters }, { folderId, newProperties }) {
-        const folder = getters.folders.find(f => f.id == folderId);
+        const folder = getters.folders.find((f) => f.id == folderId);
 
         if (!folder) {
             return;
@@ -105,11 +118,11 @@ export default {
         api.post(route("folder.set_permission", folder), {
             ability: ability,
             granted: granted,
-            user_id: user
-        }).then(function(response) {
+            user_id: user,
+        }).then(function (response) {
             dispatch("updateProperties", {
                 folderId: folder.id,
-                newProperties: response
+                newProperties: response,
             });
         });
     },
@@ -132,9 +145,9 @@ export default {
             newProperties: {
                 ...folder,
                 ...{
-                    is_expanded: !folder.is_expanded
-                }
-            }
+                    is_expanded: !folder.is_expanded,
+                },
+            },
         });
     },
 
@@ -193,17 +206,17 @@ export default {
         }
 
         const newProperties = {
-            parent_id: folder.id
+            parent_id: folder.id,
         };
 
         await dispatch("update", {
             folder: sourceFolder,
             newProperties: {
                 ...sourceFolder,
-                ...newProperties
-            }
-        }).then(function() {
+                ...newProperties,
+            },
+        }).then(function () {
             dispatch("groups/show", null, { root: true });
         });
-    }
+    },
 };

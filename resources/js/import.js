@@ -1,7 +1,12 @@
 require("./modules/bootstrap");
-const components = require("./modules/components")("import");
 
-const app = new Vue({
-    components: { components },
-    el: "#app"
-});
+import { createApp } from "vue";
+import mixins from "./mixins";
+import Importer from "./components/Importer.vue";
+
+createApp({
+    components: { Importer },
+    el: "#app",
+})
+    .mixin(mixins)
+    .mount("#app");

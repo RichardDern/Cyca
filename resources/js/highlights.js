@@ -1,7 +1,12 @@
 require("./modules/bootstrap");
-const components = require("./modules/components")("highlights");
 
-const app = new Vue({
-    components: { components },
-    el: "#app"
-});
+import { createApp } from "vue";
+import mixins from "./mixins";
+import Highlights from "./components/Highlights.vue";
+
+createApp({
+    components: { Highlights },
+    el: "#app",
+})
+    .mixin(mixins)
+    .mount("#app");

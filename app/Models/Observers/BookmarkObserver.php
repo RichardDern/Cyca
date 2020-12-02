@@ -17,12 +17,6 @@ class BookmarkObserver
     public function created(Bookmark $bookmark)
     {
         Notification::send($bookmark->folder->group->activeUsers, new UnreadItemsChanged(['documents' => [$bookmark->document->id]]));
-
-        $bookmark->document->addHistoryEntry('bookmark_created', [
-            'user'        => $bookmark->folder->user->toHistoryArray(),
-            'breadcrumbs' => $bookmark->folder->breadcrumbs,
-            'document'    => $bookmark->document->toHistoryArray(),
-        ], $bookmark->folder->user);
     }
 
     /**
@@ -33,10 +27,6 @@ class BookmarkObserver
      */
     public function deleting(Bookmark $bookmark)
     {
-        $bookmark->document->addHistoryEntry('bookmark_deleted', [
-            'user'        => $bookmark->folder->user->toHistoryArray(),
-            'breadcrumbs' => $bookmark->folder->breadcrumbs,
-            'document'    => $bookmark->document->toHistoryArray(),
-        ], $bookmark->folder->user);
+        
     }
 }

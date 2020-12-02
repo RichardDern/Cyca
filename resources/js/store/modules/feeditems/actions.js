@@ -7,7 +7,7 @@ export default {
     /**
      * Load feed items for specified feeds
      */
-    async index({ commit }, documents) {
+    async index({ getters, commit }, documents) {
         const feeds = collect(documents)
             .pluck("feeds")
             .flatten(1)
@@ -16,14 +16,29 @@ export default {
 
         let nextPage = 0;
         let feedItems = [];
+        const currentlySelectedItem = getters.selectedFeedItem;
 
         if (feeds.length > 0) {
             const data = await api.get(route("feed_item.index"), {
-                feeds: feeds
+                feeds: feeds,
             });
 
             feedItems = data.data;
             nextPage = data.next_page_url !== null ? data.current_page + 1 : 0;
+        }
+
+        if (currentlySelectedItem) {
+            const itemFeeds = collect(currentlySelectedItem.feeds)
+                .pluck("id")
+                .flatten(1);
+
+            if (itemFeeds.intersect(feeds)) {
+                let collection = collect(feedItems);
+
+                if (!collection.where("id", currentlySelectedItem.id).first()) {
+                    feedItems.push(currentlySelectedItem);
+                }
+            }
         }
 
         commit("setNextPage", nextPage);
@@ -42,7 +57,7 @@ export default {
         const items = getters.feedItems;
         const data = await api.get(route("feed_item.index"), {
             page: getters.nextPage,
-            feeds: getters.feeds
+            feeds: getters.feeds,
         });
 
         const newItems = [...items, ...data.data];
@@ -88,7 +103,31 @@ export default {
                 "documents/selectFirstDocumentWithUnreadItems",
                 { selectFirstUnread: true },
                 {
-                    root: true
+                    root: true,
+                }
+            );
+        }
+    },
+
+    selectNextUnreadFeedItem({ getters, dispatch }, currentId) {
+        if (!currentId) {
+            return dispatch("selectFirstUnreadFeedItem");
+        }
+
+        const nextFeedItem = collect(getters.feedItems)
+            .where("feed_item_states_count", ">", 0)
+            .skipUntil((item) => item.id === currentId)
+            .skip(1)
+            .shift();
+
+        if (nextFeedItem) {
+            dispatch("selectFeedItems", [nextFeedItem]);
+        } else {
+            dispatch(
+                "documents/selectFirstDocumentWithUnreadItems",
+                { selectFirstUnread: true },
+                {
+                    root: true,
                 }
             );
         }
@@ -103,13 +142,14 @@ export default {
         // Avoid unwanted reloading
         commit("setNextPage", null);
 
-        api.post(route("feed_item.mark_as_read"), data).then(function(
+        api.post(route("feed_item.mark_as_read"), data).then(function (
             response
         ) {
             dispatch("updateUnreadFeedItemsCount", response);
+            commit("setNextPage", nextPage);
 
             if ("feed_items" in data) {
-                dispatch("selectFirstUnreadFeedItem", data.feed_items);
+                dispatch("selectNextUnreadFeedItem", data.feed_items[0]);
             } else if ("documents" in data) {
                 dispatch(
                     "documents/selectFirstDocumentWithUnreadItems",
@@ -117,8 +157,6 @@ export default {
                     { root: true }
                 );
             }
-
-            commit("setNextPage", nextPage);
         });
     },
 
@@ -132,12 +170,12 @@ export default {
                 data.updated_feed_items
             );
 
-            feedItems.each(function(feedItem) {
+            feedItems.each(function (feedItem) {
                 commit("update", {
                     feedItem: feedItem,
                     newProperties: {
-                        feed_item_states_count: 0
-                    }
+                        feed_item_states_count: 0,
+                    },
                 });
             });
         }
@@ -149,8 +187,8 @@ export default {
                     {
                         documentId: documentId,
                         newProperties: {
-                            feed_item_states_count: data.documents[documentId]
-                        }
+                            feed_item_states_count: data.documents[documentId],
+                        },
                     },
                     { root: true }
                 );
@@ -164,8 +202,8 @@ export default {
                     {
                         folderId: folderId,
                         newProperties: {
-                            feed_item_states_count: data.folders[folderId]
-                        }
+                            feed_item_states_count: data.folders[folderId],
+                        },
                     },
                     { root: true }
                 );
@@ -179,12 +217,12 @@ export default {
                     {
                         groupId: groupId,
                         newProperties: {
-                            feed_item_states_count: data.groups[groupId]
-                        }
+                            feed_item_states_count: data.groups[groupId],
+                        },
                     },
                     { root: true }
                 );
             }
         }
-    }
+    },
 };

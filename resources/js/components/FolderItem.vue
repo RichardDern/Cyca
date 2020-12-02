@@ -1,22 +1,24 @@
 <template>
-    <button
-        class="list-item"
+    <a
+        class="list-item compact"
         v-bind:class="{
             selected: folder.is_selected,
             'dragged-over': is_dragged_over,
             'cannot-drop': cannot_drop,
             deleted: folder.deleted_at,
         }"
+        v-bind:href="route('folder.show', folder)"
         v-bind:draggable="isDraggable"
-        v-on:mousedown="onClick"
+        v-on:click.stop.prevent="onClick"
         v-on:dragstart="onDragStart"
         v-on:dragend="onDragEnd"
         v-on:drop="onDrop"
         v-on:dragleave="onDragLeave"
         v-on:dragover="onDragOver"
         v-if="branchIsExpanded"
+        v-bind:style="'padding-left:' + indent"
     >
-        <div class="list-item-label" v-bind:style="{ 'padding-left': indent }">
+        <div class="icons">
             <span class="caret">
                 <svg
                     fill="currentColor"
@@ -34,16 +36,28 @@
                 width="16"
                 height="16"
                 class="favicon"
-                v-bind:class="iconColor"
+                v-bind:class="folder.iconColor"
             >
                 <use v-bind:xlink:href="icon(folder.icon)" />
             </svg>
-            <div class="truncate flex-grow py-0.5">{{ folder.title }}</div>
         </div>
-        <div class="badge default" v-if="folder.feed_item_states_count > 0">
-            {{ folder.feed_item_states_count }}
+        <div class="list-item-text">{{ folder.title }}</div>
+        <div class="badges">
+            <div class="badge default" v-if="folder.feed_item_states_count > 0">
+                <span v-if="folder.has_new_unread_items">
+                    <svg
+                        fill="currentColor"
+                        width="16"
+                        height="16"
+                        class="text-blue-300"
+                    >
+                        <use v-bind:xlink:href="icon('update')" />
+                    </svg>
+                </span>
+                {{ folder.feed_item_states_count }}
+            </div>
         </div>
-    </button>
+    </a>
 </template>
 
 <script>
@@ -86,12 +100,7 @@ export default {
          * Folder's indentation
          */
         indent: function () {
-            const self = this;
-            var indent = self.folder.depth - 1;
-
-            indent = indent > 0 ? indent : 0;
-
-            return indent + "rem";
+            return this.folder.depth + "rem";
         },
         /**
          * Return a boolean value indicating if folder can be dragged
@@ -154,15 +163,6 @@ export default {
             }
 
             return "collapsed";
-        },
-
-        /**
-         * Color of folder's icon
-         */
-        iconColor: function () {
-            const self = this;
-
-            return self.folder.iconColor;
         },
     },
     /**

@@ -1,0 +1,53 @@
+button,
+a.button {
+    @apply rounded text-left flex-shrink flex items-center whitespace-nowrap;
+
+    & svg {
+        @apply flex-none mr-1;
+    }
+
+    &[type="submit"],
+    &.info {
+        @apply px-2 py-1 text-sm;
+        @apply bg-blue-500 text-white;
+        @apply dark:bg-blue-800 dark:text-white;
+
+        &:hover {
+            @apply bg-blue-400;
+            @apply dark:bg-blue-700;
+        }
+    }
+
+    &.success {
+        @apply px-2 py-1 text-sm;
+        @apply bg-green-500 text-white;
+        @apply dark:bg-green-800 dark:text-white;
+
+        &:hover {
+            @apply bg-green-400;
+            @apply dark:bg-green-700;
+        }
+    }
+
+    &.danger {
+        @apply px-2 py-1 text-sm;
+        @apply bg-red-500 text-white;
+        @apply dark:bg-red-800 dark:text-white;
+
+        &:hover {
+            @apply bg-red-400;
+            @apply dark:bg-red-700;
+        }
+    }
+
+    &.secondary {
+        @apply px-2 py-1 text-sm;
+        @apply bg-gray-400 text-white;
+        @apply dark:bg-gray-700 dark:text-white;
+
+        &:hover {
+            @apply bg-gray-300;
+            @apply dark:bg-gray-600;
+        }
+    }
+}

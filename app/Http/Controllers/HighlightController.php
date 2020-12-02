@@ -18,10 +18,10 @@ class HighlightController extends Controller
     {
         $data = $request->validated();
 
-        $highlight = new Highlight();
-        $highlight->user_id = $request->user()->id;
+        $highlight             = new Highlight();
+        $highlight->user_id    = $request->user()->id;
         $highlight->expression = $data['expression'];
-        $highlight->color = $data['color'];
+        $highlight->color      = $data['color'];
         $highlight->save();
 
         return $request->user()->highlights()->get();
@@ -43,7 +43,7 @@ class HighlightController extends Controller
         $data = $request->validated();
 
         $highlight->expression = $data['expression'];
-        $highlight->color = $data['color'];
+        $highlight->color      = $data['color'];
         $highlight->save();
 
         return $request->user()->highlights()->get();
@@ -63,5 +63,38 @@ class HighlightController extends Controller
 
         $highlight->delete();
         return $request->user()->highlights()->get();
+    }
+
+    /**
+     * Update my groups positions
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function updatePositions(Request $request)
+    {
+        if (!$request->has('positions')) {
+            abort(422);
+        }
+
+        $positions = $request->input('positions');
+
+        if (!is_array($positions)) {
+            abort(422);
+        }
+
+        $user = $request->user();
+
+        foreach ($positions as $highlightId => $position) {
+            if (!is_numeric($highlightId) || !is_numeric($position)) {
+                abort(422);
+            }
+
+            $highlight = $user->highlights()->findOrFail($highlightId);
+
+            $highlight->position = $positions[$highlightId];
+
+            $highlight->save();
+        }
     }
 }

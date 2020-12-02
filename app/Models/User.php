@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Traits\HasHistory;
 use App\Models\Traits\User\HasFeeds;
 use App\Models\Traits\User\HasFolders;
 use App\Models\Traits\User\HasGroups;
@@ -14,7 +13,7 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable implements MustVerifyEmail, HasLocalePreference
 {
-    use Notifiable, HasHistory, HasGroups, HasFolders, HasFeeds;
+    use Notifiable,  HasGroups, HasFolders, HasFeeds;
 
     # --------------------------------------------------------------------------
     # ----| Properties |--------------------------------------------------------
@@ -45,16 +44,6 @@ class User extends Authenticatable implements MustVerifyEmail, HasLocalePreferen
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-    ];
-
-    /**
-     * Attributes used to display this model in history
-     *
-     * @var array
-     */
-    protected $historyAttributes = [
-        'name',
-        'email',
     ];
 
     # --------------------------------------------------------------------------

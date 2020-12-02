@@ -9,7 +9,6 @@ const sets = {
         "FoldersTree",
     ],
     import: ["Importer"],
-    themesBrowser: ["ThemeCard", "ThemesBrowser"],
     highlights: ["Highlights", "Highlight"],
     historyBrowser: ["HistoryBrowser"],
     groups: [

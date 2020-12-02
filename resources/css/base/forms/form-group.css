@@ -1,0 +1,7 @@
+.form-group {
+    @apply mb-4 w-full;
+
+    &.last {
+        @apply mt-8 mb-0;
+    }
+}

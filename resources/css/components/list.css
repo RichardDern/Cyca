@@ -1,0 +1,136 @@
+.list {
+    &.vertical {
+        @apply flex flex-col p-1;
+    }
+
+    &.horizontal {
+        @apply flex flex-row flex-wrap p-0;
+    }
+
+    &.items-rounded > * {
+        @apply rounded;
+    }
+
+    &.spaced > * {
+        @apply mb-0.5;
+    }
+
+    &.compact > * {
+        @apply py-1;
+    }
+
+    & > * {
+        @apply px-2 py-2 flex-none;
+
+        &.emphasize {
+            @apply text-blue-300;
+            @apply dark:text-gray-100;
+        }
+
+        &.list-item,
+        & .list-item {
+            @apply flex items-center justify-between space-x-1;
+
+            & .list-item-text {
+                @apply flex-grow truncate;
+            }
+
+            & .list-item-title {
+                @apply w-1/4 mr-2;
+            }
+
+            & .list-item-value {
+                @apply w-3/4;
+            }
+        }
+
+        & .icons,
+        & .badges,
+        & .handle {
+            @apply flex-shrink flex items-center space-x-1;
+        }
+
+        & .handle {
+            cursor: ns-resize;
+        }
+
+        & .caret {
+            @apply dark:text-gray-500;
+
+            @apply w-4 h-4;
+        }
+
+        &.text-xs {
+            & img,
+            & svg,
+            & .caret {
+                max-width: 0.75rem;
+                max-height: 0.75rem;
+            }
+        }
+
+        & img,
+        & svg,
+        & .caret {
+            max-width: 1rem;
+            max-height: 1rem;
+        }
+
+        &:hover {
+            @apply bg-gray-200 text-gray-500;
+            @apply dark:bg-gray-600 dark:text-gray-400;
+
+            &.emphasize {
+                @apply text-blue-500;
+                @apply dark:text-white;
+            }
+
+            & .caret {
+                @apply dark:text-gray-800;
+            }
+        }
+
+        &.selected {
+            @apply bg-blue-500 text-white;
+            @apply dark:bg-blue-800 dark:text-white;
+
+            & .caret {
+                @apply dark:text-gray-500;
+            }
+
+            &:hover {
+                @apply bg-blue-400;
+                @apply dark:bg-blue-700;
+            }
+        }
+    }
+
+    &.striped > * {
+        @apply odd:bg-white;
+        @apply dark:odd:bg-gray-750;
+
+        &:hover {
+            @apply bg-gray-200 text-gray-500;
+            @apply dark:bg-gray-600 dark:text-gray-400;
+
+            &.emphasize {
+                @apply text-blue-500;
+                @apply dark:text-white;
+            }
+        }
+
+        &.selected {
+            @apply bg-blue-500 text-white;
+            @apply dark:bg-blue-800 dark:text-white;
+
+            & .caret {
+                @apply dark:text-gray-500;
+            }
+
+            &:hover {
+                @apply bg-blue-400 text-white;
+                @apply dark:bg-blue-700;
+            }
+        }
+    }
+}

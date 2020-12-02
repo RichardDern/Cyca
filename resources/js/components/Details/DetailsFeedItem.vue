@@ -1,10 +1,10 @@
 <template>
     <article>
-        <h1>
-            <div class="title">
+        <header>
+            <h1>
                 <span v-html="feedItem.title"></span>
-            </div>
-            <div class="flex items-center">
+            </h1>
+            <div class="tools">
                 <button
                     v-if="feedItem.feed_item_states_count > 0"
                     class="button info"
@@ -47,51 +47,79 @@
                     {{ __("Share") }}
                 </button>
             </div>
-        </h1>
+        </header>
 
         <div class="body">
             <div
+                class="cyca-prose"
                 v-html="
                     feedItem.content ? feedItem.content : feedItem.description
                 "
             ></div>
 
-            <dl>
-                <dt>{{ __("URL") }}</dt>
-                <dd>
-                    <a
-                        v-bind:href="feedItem.url"
-                        rel="noopener noreferrer"
-                        class="readable"
-                        v-html="feedItem.ascii_url"
-                    ></a>
-                </dd>
-                <dt>{{ __("Date of item's creation") }}</dt>
-                <dd>
-                    <date-time
-                        v-bind:datetime="feedItem.created_at"
-                        v-bind:calendar="true"
-                    ></date-time>
-                </dd>
-                <dt>{{ __("Date of item's publication") }}</dt>
-                <dd>
-                    <date-time
-                        v-bind:datetime="feedItem.published_at"
-                        v-bind:calendar="true"
-                    ></date-time>
-                </dd>
-                <dt>{{ __("Published in") }}</dt>
-                <dd>
-                    <button
-                        class="bg-gray-400 hover:bg-gray-500"
-                        v-for="feed in feedItem.feeds"
-                        v-bind:key="feed.id"
-                    >
-                        <img v-bind:src="feed.favicon" class="favicon" />
-                        <div class="py-0.5">{{ feed.title }}</div>
-                    </button>
-                </dd>
-            </dl>
+            <details open>
+                <summary>{{ __("Details") }}</summary>
+                <div class="vertical list striped items-rounded compact">
+                    <div class="list-item">
+                        <div class="list-item-title">{{ __("Real URL") }}</div>
+                        <div class="list-item-value">
+                            <a
+                                v-bind:href="feedItem.url"
+                                rel="noopener noreferrer"
+                                class="readable"
+                                v-html="feedItem.ascii_url"
+                            ></a>
+                        </div>
+                    </div>
+
+                    <div class="list-item">
+                        <div class="list-item-title">
+                            {{ __("Date of item's creation") }}
+                        </div>
+                        <div class="list-item-value">
+                            <date-time
+                                v-bind:datetime="feedItem.created_at"
+                                v-bind:calendar="true"
+                            ></date-time>
+                        </div>
+                    </div>
+
+                    <div class="list-item">
+                        <div class="list-item-title">
+                            {{ __("Date of item's publication") }}
+                        </div>
+                        <div class="list-item-value">
+                            <date-time
+                                v-bind:datetime="feedItem.published_at"
+                                v-bind:calendar="true"
+                            ></date-time>
+                        </div>
+                    </div>
+
+                    <div class="list-item">
+                        <div class="list-item-title">
+                            {{ __("Published in") }}
+                        </div>
+                        <div class="list-item-value">
+                            <div class="list horizontal compact">
+                                <div
+                                    class="list-item px-0 ml-2"
+                                    v-for="feed in feedItem.feeds"
+                                    v-bind:key="feed.id"
+                                    v-bind:title="feed.url"
+                                >
+                                    <div class="icons">
+                                        <img v-bind:src="feed.favicon" />
+                                    </div>
+                                    <div class="list-item-text">
+                                        {{ feed.title }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </details>
         </div>
     </article>
 </template>
@@ -109,6 +137,11 @@ export default {
         ...mapGetters({
             feedItem: "feedItems/selectedFeedItem",
         }),
+    },
+    watch: {
+        feedItem: function () {
+            this.$el.getElementsByClassName("body")[0].scrollTop = 0;
+        },
     },
     /**
      * Methods

@@ -23,22 +23,6 @@ Route::group(['middleware' => 'auth'], function () {
             // Password form
             Route::get('/password', 'HomeController@password')->name('account.password');
 
-            // Themes management
-            Route::prefix('theme')->group(function () {
-
-                // Main page
-                Route::get('/', 'HomeController@theme')->name('account.theme');
-
-                // Use theme
-                Route::post('/', 'HomeController@setTheme')->name('account.setTheme');
-
-                // Get theme's details
-                Route::get('/details/{name}', 'ThemeController@details')->name('account.theme.details');
-
-                // List themes
-                Route::get('/themes', 'ThemeController@index')->name('account.getThemes');
-            });
-
             // Highlights management
             Route::get('/highlights', 'HomeController@highlights')->name('account.highlights');
 
@@ -125,12 +109,14 @@ Route::group(['middleware' => 'auth'], function () {
 
         // Highlights
 
+        Route::post('/highlight/update_positions', 'HighlightController@updatePositions')->name('highlight.update_positions');
+
         Route::resource('highlight', 'HighlightController')->only([
             'destroy',
             'index',
             'store',
             'show',
-            'update',
+            'update'
         ]);
 
         // History

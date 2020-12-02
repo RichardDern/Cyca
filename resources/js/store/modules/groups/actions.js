@@ -35,10 +35,11 @@ export default {
         if (!group) {
             group = currentSelectedGroup;
         } else if (Number.isInteger(group)) {
-            group = getters.groups.find(g => g.id === group);
+            group = getters.groups.find((g) => g.id === group);
         }
 
         dispatch("selectGroup", group);
+
         dispatch("documents/selectDocuments", [], { root: true });
 
         const folders = await api.get(route("group.show", group));
@@ -46,7 +47,7 @@ export default {
         dispatch("folders/index", folders, { root: true });
 
         if (folder) {
-            dispatch("folders/show", folder, { root: true });
+            dispatch("folders/show", { folder }, { root: true });
         }
     },
 
@@ -55,7 +56,7 @@ export default {
      */
     selectGroup({ commit, getters }, group) {
         if (Number.isInteger(group)) {
-            group = getters.groups.find(g => g.id === group);
+            group = getters.groups.find((g) => g.id === group);
         }
 
         commit("setSelectedGroup", group);
@@ -65,12 +66,12 @@ export default {
      * Update a group
      */
     updateGroup({ dispatch }, { group, newProperties }) {
-        api.put(route("group.update", group), newProperties).then(function(
+        api.put(route("group.update", group), newProperties).then(function (
             response
         ) {
             dispatch("updateProperties", {
                 groupId: group.id,
-                newProperties: response
+                newProperties: response,
             });
         });
     },
@@ -79,7 +80,7 @@ export default {
      * Delete group
      */
     deleteGroup({ commit }, group) {
-        api.delete(route("group.destroy", group)).then(function(response) {
+        api.delete(route("group.destroy", group)).then(function (response) {
             commit("setGroups", response);
         });
     },
@@ -88,7 +89,7 @@ export default {
      * Update the specified resource in storage.
      */
     updateProperties({ commit, getters }, { groupId, newProperties }) {
-        const group = getters.groups.find(g => g.id == groupId);
+        const group = getters.groups.find((g) => g.id == groupId);
 
         if (!group) {
             console.warn("Group #" + groupId + " not found");
@@ -102,7 +103,7 @@ export default {
      * Create a group
      */
     createGroup({ commit }, properties) {
-        api.post(route("group.store"), properties).then(function(response) {
+        api.post(route("group.store"), properties).then(function (response) {
             commit("setGroups", response);
         });
     },
@@ -112,7 +113,7 @@ export default {
      */
     updatePositions({ getters, commit }, { positions }) {
         for (var groupId in positions) {
-            const group = getters.groups.find(g => g.id == groupId);
+            const group = getters.groups.find((g) => g.id == groupId);
 
             if (!group) {
                 console.warn("Group #" + groupId + " not found");
@@ -121,12 +122,12 @@ export default {
 
             commit("updatePosition", {
                 group: group,
-                position: positions[groupId]
+                position: positions[groupId],
             });
         }
 
         api.post(route("group.update_positions"), {
-            positions: positions
+            positions: positions,
         });
-    }
+    },
 };

@@ -4,12 +4,11 @@ namespace App\Models;
 
 use App\Models\Traits\Folder\BuildsTree;
 use App\Models\Traits\Folder\CreatesDefaultFolders;
-use App\Models\Traits\HasHistory;
 use Illuminate\Database\Eloquent\Model;
 
 class Folder extends Model
 {
-    use BuildsTree, CreatesDefaultFolders, HasHistory;
+    use BuildsTree, CreatesDefaultFolders;
 
     # --------------------------------------------------------------------------
     # ----| Properties |--------------------------------------------------------
@@ -39,18 +38,6 @@ class Folder extends Model
         'iconColor',
         'is_selected',
         'is_expanded',
-    ];
-
-    /**
-     * Attributes used to display this model in history
-     *
-     * @var array
-     */
-    protected $historyAttributes = [
-        'title',
-        'icon',
-        'iconColor',
-        'type',
     ];
 
     # --------------------------------------------------------------------------
@@ -281,13 +268,13 @@ class Folder extends Model
     {
         $unreadItemsFolder = $group->folders()->ofType('unread_items')->first();
 
-        $query = $group->folders()->with('documents:document_id');
+        $query = $group->folders()->with('documents:id');
 
         if (!in_array($unreadItemsFolder->id, $folders)) {
             $query = $query->whereIn('id', $folders);
         }
         
-        return $query->get()->pluck('documents')->flatten()->pluck('document_id')->unique();
+        return $query->get()->pluck('documents')->flatten()->pluck('id')->unique();
     }
 
     /**

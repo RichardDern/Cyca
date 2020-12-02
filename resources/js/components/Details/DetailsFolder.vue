@@ -1,7 +1,7 @@
 <template>
-    <article>
-        <h1>
-            <div class="title">
+    <article v-if="folder">
+        <header>
+            <div class="icons">
                 <svg
                     fill="currentColor"
                     width="16"
@@ -11,25 +11,29 @@
                 >
                     <use v-bind:xlink:href="icon(folder.icon)" />
                 </svg>
-                <span>{{ folder.title }}</span>
+            </div>
+            <h1>{{ folder.title }}</h1>
+            <div class="badges">
                 <div
-                    class="badge article"
+                    class="badge default"
                     v-if="folder.feed_item_states_count > 0"
                 >
                     {{ folder.feed_item_states_count }}
                 </div>
             </div>
-            <button
-                v-if="folder.feed_item_states_count > 0"
-                class="button info"
-                v-on:click="onMarkAsReadClicked"
-            >
-                <svg fill="currentColor" width="16" height="16" class="mr-1">
-                    <use v-bind:xlink:href="icon('unread_items')" />
-                </svg>
-                {{ __("Mark as read") }}
-            </button>
-        </h1>
+            <div class="tools">
+                <button
+                    v-if="folder.feed_item_states_count > 0"
+                    class="info"
+                    v-on:click="onMarkAsReadClicked"
+                >
+                    <svg fill="currentColor" width="16" height="16">
+                        <use v-bind:xlink:href="icon('unread_items')" />
+                    </svg>
+                    {{ __("Mark as read") }}
+                </button>
+            </div>
+        </header>
 
         <div class="body">
             <form
@@ -37,20 +41,15 @@
                 v-if="can('can_update_folder') && folder.type === 'folder'"
                 v-on:submit.prevent="onUpdateFolder"
             >
-                <div class="form-group items-stretched">
+                <div class="input-group">
                     <input
                         type="text"
                         name="title"
                         v-bind:value="folder.title"
                         v-on:input="updateFolderTitle = $event.target.value"
                     />
-                    <button type="submit" class="success ml-2">
-                        <svg
-                            fill="currentColor"
-                            width="16"
-                            height="16"
-                            class="mr-1"
-                        >
+                    <button type="submit" class="success">
+                        <svg fill="currentColor" width="16" height="16">
                             <use v-bind:xlink:href="icon('update')" />
                         </svg>
                         {{ __("Update folder") }}
@@ -63,15 +62,10 @@
                 v-on:submit.prevent="onAddFolder"
                 v-if="can('can_create_folder')"
             >
-                <div class="form-group items-stretched">
+                <div class="input-group">
                     <input type="text" v-model="addFolderTitle" />
-                    <button type="submit" class="success ml-2">
-                        <svg
-                            fill="currentColor"
-                            width="16"
-                            height="16"
-                            class="mr-1"
-                        >
+                    <button type="submit" class="success">
+                        <svg fill="currentColor" width="16" height="16">
                             <use v-bind:xlink:href="icon('add')" />
                         </svg>
                         {{ __("Add folder") }}
@@ -83,16 +77,12 @@
                 v-bind:action="route('document.store')"
                 v-on:submit.prevent="onAddDocument"
                 v-if="can('can_create_document')"
+                class="mb-6"
             >
-                <div class="form-group items-stretched">
+                <div class="input-group">
                     <input type="url" v-model="addDocumentUrl" />
-                    <button type="submit" class="success ml-2">
-                        <svg
-                            fill="currentColor"
-                            width="16"
-                            height="16"
-                            class="mr-1"
-                        >
+                    <button type="submit" class="success">
+                        <svg fill="currentColor" width="16" height="16">
                             <use v-bind:xlink:href="icon('add')" />
                         </svg>
                         {{ __("Add document") }}
@@ -100,7 +90,10 @@
                 </div>
             </form>
 
-            <div v-if="folder.group && folder.group.active_users_count > 1">
+            <div
+                v-if="folder.group && folder.group.active_users_count > 1"
+                class="mb-6"
+            >
                 <default-folder-permissions
                     v-bind:folder="folder"
                     v-if="
@@ -118,14 +111,9 @@
                 ></per-user-folder-permissions>
             </div>
 
-            <div class="mt-6" v-if="can('can_delete_folder')">
+            <div v-if="can('can_delete_folder')">
                 <button class="danger" v-on:click="onDeleteFolder">
-                    <svg
-                        fill="currentColor"
-                        width="16"
-                        height="16"
-                        class="mr-1"
-                    >
+                    <svg fill="currentColor" width="16" height="16">
                         <use v-bind:xlink:href="icon('trash')" />
                     </svg>
                     {{ __("Delete") }}
@@ -141,7 +129,10 @@ import DefaultFolderPermissions from "./DefaultFolderPermissions.vue";
 import PerUserFolderPermissions from "./PerUserFolderPermissions.vue";
 
 export default {
-    components: { DefaultFolderPermissions, PerUserFolderPermissions },
+    components: {
+        DefaultFolderPermissions,
+        PerUserFolderPermissions,
+    },
     data: function () {
         return {
             updateFolderTitle: null,
@@ -169,8 +160,6 @@ export default {
                 self.loadDetails(self.folder).then(function () {
                     self.$forceUpdate();
                 });
-
-                self.updateFolderTitle = self.folder.title;
             }
         },
     },

@@ -2,7 +2,7 @@
     <details class="mt-4">
         <summary>{{ __("Users without explicit permissions can") }}:</summary>
 
-        <div class="mt-2">
+        <div class="body flex items-center mt-2 space-x-2">
             <permission-box
                 v-bind:text="__('Create folder')"
                 ability="can_create_folder"

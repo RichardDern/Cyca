@@ -1,34 +1,31 @@
 {
     "private": true,
     "scripts": {
-        "dev": "npm run development",
-        "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-        "watch": "npm run development -- --watch",
-        "watch-poll": "npm run watch -- --watch-poll",
-        "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --disable-host-check --config=node_modules/laravel-mix/setup/webpack.config.js",
-        "prod": "npm run production",
-        "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+        "development": "mix",
+        "dev": "mix",
+        "watch": "mix watch",
+        "watch-poll": "mix watch -- --watch-options-poll=1000",
+        "hot": "mix watch --hot",
+        "production": "mix --production",
+        "prod": "mix --production"
     },
     "devDependencies": {
-        "@tailwindcss/typography": "^0.2",
-        "@tailwindcss/ui": "^0.4",
-        "autoprefixer": "^9.6",
+        "@vue/compiler-sfc": "^3.0.3",
+        "autoprefixer": "^10.0.2",
         "collect.js": "^4.28.2",
         "cross-env": "^7.0",
         "laravel-echo": "^1.8.1",
-        "laravel-mix": "^5.0.5",
-        "laravel-mix-tailwind": "^0.1.0",
+        "laravel-mix": "^6.0.0-beta.14",
+        "postcss": "^8.1.10",
         "postcss-import": "^12.0",
         "postcss-nested": "^4.2",
         "pusher-js": "^7.0.0",
         "resolve-url-loader": "^3.1.2",
-        "sass": "^1.26.12",
-        "sass-loader": "^8.0.0",
-        "tailwindcss": "^1.8.11",
+        "tailwindcss": "^2.0.1",
         "textcolor": "^1.0.2",
-        "vue": "^2.6.12",
-        "vue-template-compiler": "^2.6.12",
-        "vuedraggable": "^2.24.3",
-        "vuex": "^3.5.1"
+        "vue": "^3.0.3",
+        "vue-loader": "^16.0.0",
+        "vuedraggable": "^4.0.1",
+        "vuex": "^4.0.0-rc.2"
     }
 }

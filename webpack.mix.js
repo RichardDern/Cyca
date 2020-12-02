@@ -1,52 +1,32 @@
 const mix = require("laravel-mix");
 const path = require("path");
-const fs = require("fs");
+const webpack = require("webpack");
 
 mix.webpackConfig({
     resolve: {
         alias: {
-            ziggy: path.resolve("vendor/tightenco/ziggy/src/js/route.js")
-        }
-    }
+            ziggy: path.resolve("vendor/tightenco/ziggy/src/js/route.js"),
+        },
+    },
+    plugins: [
+        new webpack.DefinePlugin({
+            __VUE_OPTIONS_API__: true,
+            __VUE_PROD_DEVTOOLS__: false,
+        }),
+    ],
 });
 
-const publicDir = "public/themes";
-const themesDir = "resources/themes";
-const themes = fs.readdirSync(themesDir);
+mix.postCss("resources/css/app.css", "public/css/app.css", [
+    require("postcss-import"),
+    require("tailwindcss"),
+    require("postcss-nested"),
+    require("autoprefixer"),
+]);
 
-themes.forEach(theme => {
-    const themeDir = themesDir + "/" + theme;
-
-    if (fs.lstatSync(themeDir).isDirectory()) {
-        const json = require("./" + themeDir + "/theme.json");
-        const themeName = json["name"]
-            .match(
-                /[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g
-            )
-            .map(x => x.toLowerCase())
-            .join("-");
-
-        const publicThemeDir = publicDir + "/" + themeName;
-
-        mix.postCss(themeDir + "/theme.css", publicThemeDir + "/theme.css", [
-            require("postcss-import"),
-            require("tailwindcss")(themeDir + "/theme.js"),
-            require("postcss-nested"),
-            require("autoprefixer")
-        ]);
-
-        mix.copy(themeDir + "/theme.json", publicThemeDir + "/");
-        mix.copy(themeDir + "/resources/", publicThemeDir + "/");
-        mix.copy(publicThemeDir, themeDir + "/dist");
-    }
-});
-
-mix.js("resources/js/app.js", "public/js");
-mix.js("resources/js/themes-browser.js", "public/js");
-mix.js("resources/js/import.js", "public/js");
-mix.js("resources/js/highlights.js", "public/js");
-mix.js("resources/js/history.js", "public/js");
-mix.js("resources/js/groups.js", "public/js");
+mix.js("resources/js/app.js", "public/js").vue();
+mix.js("resources/js/groups.js", "public/js").vue();
+mix.js("resources/js/highlights.js", "public/js").vue();
+mix.js("resources/js/import.js", "public/js").vue();
 
 if (mix.inProduction()) {
     mix.version();

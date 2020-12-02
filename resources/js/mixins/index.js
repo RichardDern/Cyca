@@ -2,13 +2,13 @@ import router from "../modules/router";
 
 window.route = router;
 
-Vue.mixin({
+export default {
     methods: {
         route: (name, params) => route(name, params),
         /**
          * Return url to an icon
          */
-        icon: name => {
+        icon: (name) => {
             const iconsFileUrl = document
                 .querySelector('meta[name="icons-file-url"]')
                 .getAttribute("content");
@@ -22,7 +22,7 @@ Vue.mixin({
          * Translate specified string
          * @param {*} langString
          */
-        __: function(langString) {
+        __: function (langString) {
             const translation = lang[langString];
 
             if (translation) {
@@ -30,6 +30,6 @@ Vue.mixin({
             }
 
             return langString;
-        }
-    }
-});
+        },
+    },
+};

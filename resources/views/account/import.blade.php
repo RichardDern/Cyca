@@ -5,9 +5,7 @@
 @endpush
 
 @section('content')
-    <div id="account-content-wrapper">
-        <div class="w-full flex flex-col">
-            <importer v-bind:available-importers='@json(config('importers.adapters'))'></importer>
-        </div>
-    </div>
+<div class="my-auto w-1/4 p-6">
+    <importer v-bind:available-importers='@json(config('importers.adapters'))'></importer>
+</div>
 @endsection

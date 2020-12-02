@@ -1,42 +1,37 @@
-/* -------------------------------------------------------------------------- */
-/* ----| Article |----------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
-
-/* Article wrapper */
 article {
-    @apply pb-3;
-}
+    @apply h-full w-full flex flex-col;
 
-/* Main title */
-article h1 {
-    @apply py-3 px-4 mb-4 flex justify-between items-center leading-normal text-lg border-t border-b sticky top-0;
+    & header {
+        @apply flex-none flex flex-row items-center justify-between text-lg p-2;
+        @apply bg-gray-200;
+        @apply dark:bg-gray-600 dark:text-white;
 
-    color: theme("colors.article.text");
-    background-color: theme("colors.article.bg");
-    border-color: theme("colors.article.border");
-}
+        & .icons,
+        & .badges,
+        & .tools {
+            @apply flex-shrink flex items-center;
+        }
 
-article h1 .title {
-    @apply flex items-center py-1;
-}
+        & h1 {
+            @apply flex-grow truncate;
+        }
 
-/* Article body */
-article .body {
-    @apply text-justify leading-normal px-4;
+        & .badges,
+        & .tools > * {
+            @apply ml-2;
+        }
 
-    color: theme("colors.article.body");
-}
+        & img,
+        & svg,
+        & .caret {
+            @apply mr-1;
 
-article .body p {
-    @apply my-2;
-}
+            max-width: 1.125rem;
+            max-height: 1.125rem;
+        }
+    }
 
-/* Sub-titles */
-
-article .body h2 {
-    @apply font-bold text-lg mt-4 mb-1;
-}
-
-article .body h3 {
-    @apply font-bold mt-4 mb-1;
+    & .body {
+        @apply flex-grow overflow-auto xl:p-4;
+    }
 }

@@ -14,11 +14,6 @@ class GroupObserver
      */
     public function created(Group $group)
     {
-        $group->addHistoryEntry('group_created', [
-            'user'  => $group->creator->toHistoryArray(),
-            'group' => $group->toHistoryArray(),
-        ], $group->creator);
-
         $group->createDefaultFolders();
     }
 }

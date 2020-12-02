@@ -1,0 +1,3 @@
+label {
+    @apply mb-1 flex-shrink whitespace-nowrap flex items-center;
+}

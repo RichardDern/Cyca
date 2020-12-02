@@ -1,7 +1,5 @@
-window.Vue = require('vue');
-window.collect = require('collect.js');
+//window.Vue = require('vue');
+window.collect = require("collect.js");
 
-import api from './api';
+import api from "./api";
 window.api = api;
-
-require("../mixins");

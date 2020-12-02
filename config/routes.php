@@ -58,7 +58,7 @@ return [
         'highlight.destroy',
         'highlight.store',
         'highlight.update',
-        'history_entry.index',
+        'highlight.update_positions',
         'home',
         'logout',
     ],

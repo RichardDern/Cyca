@@ -5,8 +5,5 @@
 @endpush
 
 @section('content')
-    <div id="account-content-wrapper" class="large">
-        <h2>{{ __("Highlights") }}</h2>
-        <highlights></highlights>
-    </div>
+    <highlights></highlights>
 @endsection

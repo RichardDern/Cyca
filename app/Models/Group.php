@@ -3,13 +3,12 @@
 namespace App\Models;
 
 use App\Models\FeedItemState;
-use App\Models\Traits\HasHistory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Group extends Model
 {
-    use HasFactory, HasHistory;
+    use HasFactory;
 
     # --------------------------------------------------------------------------
     # ----| Constants |---------------------------------------------------------
@@ -76,15 +75,6 @@ class Group extends Model
         'invite_only'                  => 'boolean',
         'auto_accept_users'            => 'boolean',
         'feed_item_states_count'       => 'integer',
-    ];
-
-    /**
-     * Attributes used to display this model in history
-     *
-     * @var array
-     */
-    protected $historyAttributes = [
-        'name',
     ];
 
     /**

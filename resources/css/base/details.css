@@ -1,0 +1,13 @@
+details {
+    @apply mb-1 rounded;
+    @apply bg-gray-100;
+    @apply dark:bg-gray-700;
+
+    & summary {
+        @apply px-2 py-1 cursor-pointer;
+    }
+
+    & .body {
+        @apply p-2;
+    }
+}

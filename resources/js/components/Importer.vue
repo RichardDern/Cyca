@@ -1,15 +1,17 @@
 <template>
     <div>
-        <label for="importer">{{ __("Import from") }}:</label>
-        <select v-model="importer" id="importer">
-            <option
-                v-for="(importerData, importerName) in availableImporters"
-                v-bind:key="importerName"
-                v-bind:value="importerName"
-            >
-                {{ importerData["name"] }}
-            </option>
-        </select>
+        <div class="form-group">
+            <label for="importer">{{ __("Import from") }}:</label>
+            <select v-model="importer" id="importer">
+                <option
+                    v-for="(importerData, importerName) in availableImporters"
+                    v-bind:key="importerName"
+                    v-bind:value="importerName"
+                >
+                    {{ importerData["name"] }}
+                </option>
+            </select>
+        </div>
 
         <component
             v-bind:is="availableImporters[importer]['view']"

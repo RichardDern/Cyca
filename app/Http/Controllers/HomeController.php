@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Facades\ThemeManager;
 use App\Services\Exporter;
 use App\Services\Importer;
 use Illuminate\Http\Request;
@@ -56,29 +55,6 @@ class HomeController extends Controller
     }
 
     /**
-     * Theme selection page
-     */
-    public function theme()
-    {
-        $availableThemes = ThemeManager::listAvailableThemes();
-
-        return view('account.themes')->with(['availableThemes' => $availableThemes]);
-    }
-
-    /**
-     * Save theme to user's profile
-     */
-    public function setTheme(Request $request)
-    {
-        if (!ThemeManager::themeExists($request->input('theme'))) {
-            abort(422);
-        }
-
-        $request->user()->theme = $request->input('theme');
-        $request->user()->save();
-    }
-
-    /**
      * Manage user's highlights
      */
     public function highlights()
@@ -116,14 +92,6 @@ class HomeController extends Controller
         }, sprintf('%s - Export.json', $request->user()->name), [
             'Content-Type' => 'application/x-json',
         ]);
-    }
-
-    /**
-     * Browse user's history
-     */
-    public function history()
-    {
-        return view('account.history');
     }
 
     /**

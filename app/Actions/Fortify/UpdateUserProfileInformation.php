@@ -32,6 +32,11 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             'lang' => [
                 'required',
                 Rule::in(array_keys(config('lang')))
+            ],
+
+            'theme' => [
+                'nullable',
+                Rule::in(['light', 'dark', 'auto'])
             ]
         ])->validateWithBag('updateProfileInformation');
 
@@ -40,9 +45,10 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             $this->updateVerifiedUser($user, $input);
         } else {
             $user->forceFill([
-                'name' => $input['name'],
+                'name'  => $input['name'],
                 'email' => $input['email'],
-                'lang' => $input['lang']
+                'lang'  => $input['lang'],
+                'theme' => $input['theme']
             ])->save();
         }
     }
@@ -57,9 +63,10 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
     protected function updateVerifiedUser($user, array $input)
     {
         $user->forceFill([
-            'name' => $input['name'],
-            'email' => $input['email'],
-            'lang' => $input['lang'],
+            'name'              => $input['name'],
+            'email'             => $input['email'],
+            'lang'              => $input['lang'],
+            'theme'             => $input['theme'],
             'email_verified_at' => null,
         ])->save();
 

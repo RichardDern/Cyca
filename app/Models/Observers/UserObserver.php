@@ -15,8 +15,6 @@ class UserObserver
      */
     public function created(User $user)
     {
-        $user->addHistoryEntry('user_created', ['user' => $user->toHistoryArray()], $user);
-
         $group = $user->createOwnGroup();
         
         $user->importInitialData($group);

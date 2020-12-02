@@ -1,0 +1,24 @@
+/* The emerging W3C standard
+   that is currently Firefox-only */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: theme("colors.white") theme("colors.gray.300");
+
+    &:dark {
+        scrollbar-color: theme("colors.gray.900") theme("colors.gray.800");
+    }
+}
+
+/* Works on Chrome/Edge/Safari */
+*::-webkit-scrollbar {
+    @apply w-2;
+}
+*::-webkit-scrollbar-track {
+    @apply bg-gray-300;
+    @apply dark:bg-gray-900;
+}
+*::-webkit-scrollbar-thumb {
+    @apply rounded;
+    @apply bg-white;
+    @apply dark:bg-gray-500;
+}

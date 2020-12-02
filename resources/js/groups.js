@@ -1,22 +1,24 @@
 require("./modules/bootstrap");
-const components = require("./modules/components")("groups");
 
-import Vuex from "vuex";
+import { createApp } from "vue";
+import { createStore } from "vuex";
+import mixins from "./mixins";
 import groups from "./store/modules/groups";
-
-Vue.use(Vuex);
+import GroupsBrowser from "./components/GroupsBrowser.vue";
 
 const debug = process.env.NODE_ENV !== "production";
 
-const store = new Vuex.Store({
+const store = createStore({
     modules: {
-        groups
+        groups,
     },
-    strict: debug
+    strict: debug,
 });
 
-const app = new Vue({   
-    components: { components }, 
+createApp({
+    components: { GroupsBrowser },
     el: "#app",
-    store
-});
+})
+    .mixin(mixins)
+    .use(store)
+    .mount("#app");

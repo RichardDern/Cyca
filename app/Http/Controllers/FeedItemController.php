@@ -54,6 +54,8 @@ class FeedItemController extends Controller
             $query->where('is_read', false)->where('user_id', $request->user()->id);
         }]);
 
+        $feedItem->loadMissing('feeds');
+
         return $feedItem;
     }
 

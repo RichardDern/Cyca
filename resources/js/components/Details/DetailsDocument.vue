@@ -1,20 +1,24 @@
 <template>
-    <article>
-        <h1>
-            <div class="title">
-                <img v-bind:src="document.favicon" class="favicon" />
-                <span>{{ document.title }}</span>
+    <article v-if="document">
+        <header>
+            <div class="icons">
+                <img v-bind:src="document.favicon" />
+            </div>
+
+            <h1>{{ document.title }}</h1>
+
+            <div class="badges">
                 <div
-                    class="badge article"
+                    class="badge default"
                     v-if="document.feed_item_states_count > 0"
                 >
                     {{ document.feed_item_states_count }}
                 </div>
             </div>
-            <div class="flex items-center">
+            <div class="tools">
                 <button
                     v-if="document.feed_item_states_count > 0"
-                    class="button info"
+                    class="info"
                     v-on:click="onMarkAsReadClicked"
                 >
                     <svg
@@ -28,7 +32,7 @@
                     {{ __("Mark as read") }}
                 </button>
                 <a
-                    class="button info ml-2"
+                    class="button info"
                     v-bind:href="url"
                     rel="noopener noreferrer"
                     v-on:click.left.stop.prevent="
@@ -52,7 +56,7 @@
                     </svg>
                     {{ __("Open") }}
                 </a>
-                <button class="button info ml-2" v-on:click="onShareClicked">
+                <button class="info" v-on:click="onShareClicked">
                     <svg
                         fill="currentColor"
                         width="16"
@@ -64,105 +68,155 @@
                     {{ __("Share") }}
                 </button>
             </div>
-        </h1>
+        </header>
 
         <div class="body">
             <div
+                class="cyca-prose"
                 v-if="document.description"
                 v-html="document.description"
             ></div>
 
-            <dl>
-                <dt>{{ __("Real URL") }}</dt>
-                <dd>
-                    <a
-                        v-bind:href="document.url"
-                        rel="noopener noreferrer"
-                        v-on:click.left.stop.prevent="
-                            openDocument({
-                                document: document,
-                            })
-                        "
-                        class="readable"
-                        v-html="document.ascii_url"
-                    ></a>
-                </dd>
-                <dt v-if="document.visits">{{ __("Visits") }}</dt>
-                <dd v-if="document.visits">
-                    {{ document.visits }}
-                </dd>
-                <dt>{{ __("Date of document's last check") }}</dt>
-                <dd>
-                    <date-time
-                        v-bind:datetime="document.checked_at"
-                        v-bind:calendar="true"
-                    ></date-time>
-                </dd>
-                <dt v-if="dupplicateInFolders.length > 0">
-                    {{ __("Also exists in") }}
-                </dt>
-                <dd v-if="dupplicateInFolders.length > 0">
-                    <div
-                        v-for="dupplicateInFolder in dupplicateInFolders"
-                        v-bind:key="dupplicateInFolder.id"
-                        v-on:click="
-                            $emit(
-                                'folder-selected',
-                                dupplicateInFolder.id,
-                                dupplicateInFolder.group_id
-                            )
-                        "
-                        v-html="dupplicateInFolder.breadcrumbs"
-                        class="cursor-pointer mb-1"
-                    ></div>
-                </dd>
-            </dl>
-
-            <h2 v-if="document.feeds && document.feeds.length > 0">
-                {{ __("Feeds") }}
-            </h2>
-
-            <div
-                v-for="feed in document.feeds"
-                v-bind:key="feed.id"
-                class="feeds-list"
-            >
-                <div class="flex justify-between items-center">
-                    <div class="flex items-center my-0 py-0">
-                        <img v-bind:src="feed.favicon" class="favicon" />
-                        <div>{{ feed.title }}</div>
+            <details open>
+                <summary>{{ __("Details") }}</summary>
+                <div class="vertical list striped items-rounded compact">
+                    <div class="list-item">
+                        <div class="list-item-title">{{ __("Real URL") }}</div>
+                        <div class="list-item-value">
+                            <a
+                                v-bind:href="document.url"
+                                rel="noopener noreferrer"
+                                v-on:click.left.stop.prevent="
+                                    openDocument({
+                                        document: document,
+                                    })
+                                "
+                                class="readable"
+                                v-html="document.ascii_url"
+                            ></a>
+                        </div>
                     </div>
-                    <button
-                        class="button success"
-                        v-if="feed.is_ignored"
-                        v-on:click="follow(feed)"
+                    <div class="list-item" v-if="document.visits">
+                        <div class="list-item-title">{{ __("Visits") }}</div>
+                        <div class="list-item-value">
+                            {{ document.visits }}
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-title">
+                            {{ __("Date of document's last check") }}
+                        </div>
+                        <div class="list-item-value">
+                            <date-time
+                                v-bind:datetime="document.checked_at"
+                                v-bind:calendar="true"
+                            ></date-time>
+                        </div>
+                    </div>
+                    <div
+                        class="list-item"
+                        v-if="dupplicateInFolders.length > 0"
                     >
-                        {{ __("Follow") }}
-                    </button>
-                    <button
-                        class="button danger"
-                        v-if="!feed.is_ignored"
-                        v-on:click="ignore(feed)"
-                    >
-                        {{ __("Ignore") }}
-                    </button>
+                        <div class="list-item-title">
+                            {{ __("Also exists in") }}
+                        </div>
+                        <div class="list-item-value">
+                            <div
+                                v-for="dupplicateInFolder in dupplicateInFolders"
+                                v-bind:key="dupplicateInFolder.id"
+                                v-on:click="
+                                    $emit(
+                                        'folder-selected',
+                                        dupplicateInFolder.id,
+                                        dupplicateInFolder.group_id
+                                    )
+                                "
+                                v-html="dupplicateInFolder.breadcrumbs"
+                                class="cursor-pointer mb-1"
+                            ></div>
+                        </div>
+                    </div>
                 </div>
-                <div v-if="feed.description" v-html="feed.description"></div>
+            </details>
 
-                <dl>
-                    <dt>{{ __("Real URL") }}</dt>
-                    <dd>
-                        <div class="readable" v-html="feed.ascii_url"></div>
-                    </dd>
-                    <dt>{{ __("Date of document's last check") }}</dt>
-                    <dd>
-                        <date-time
-                            v-bind:datetime="feed.checked_at"
-                            v-bind:calendar="true"
-                        ></date-time>
-                    </dd>
-                </dl>
-            </div>
+            <details v-if="document.feeds.length > 0">
+                <summary>{{ __("Feeds") }}</summary>
+
+                <div class="list vertical striped items-rounded">
+                    <div v-for="feed in document.feeds" v-bind:key="feed.id">
+                        <div class="list-item">
+                            <div class="icons">
+                                <img v-bind:src="feed.favicon" />
+                            </div>
+                            <div class="list-item-text">{{ feed.title }}</div>
+                            <div class="badges">
+                                <button
+                                    class="success"
+                                    v-if="feed.is_ignored"
+                                    v-on:click="follow(feed)"
+                                >
+                                    <svg
+                                        fill="currentColor"
+                                        width="16"
+                                        height="16"
+                                        class="mr-1"
+                                    >
+                                        <use v-bind:xlink:href="icon('join')" />
+                                    </svg>
+                                    {{ __("Follow") }}
+                                </button>
+                                <button
+                                    class="danger"
+                                    v-if="!feed.is_ignored"
+                                    v-on:click="ignore(feed)"
+                                >
+                                    <svg
+                                        fill="currentColor"
+                                        width="16"
+                                        height="16"
+                                        class="mr-1"
+                                    >
+                                        <use
+                                            v-bind:xlink:href="icon('cancel')"
+                                        />
+                                    </svg>
+                                    {{ __("Ignore") }}
+                                </button>
+                            </div>
+                        </div>
+
+                        <div
+                            class="vertical list striped items-rounded compact mt-2 bg-gray-100 dark:bg-gray-800 rounded"
+                        >
+                            <div class="list-item" v-if="feed.description">
+                                <div v-html="feed.description"></div>
+                            </div>
+                            <div class="list-item">
+                                <div class="list-item-title">
+                                    {{ __("Real URL") }}
+                                </div>
+                                <div class="list-item-value">
+                                    <div
+                                        class="readable"
+                                        v-html="feed.ascii_url"
+                                    ></div>
+                                </div>
+                            </div>
+                            <div class="list-item">
+                                <div class="list-item-title">
+                                    {{ __("Date of document's last check") }}
+                                </div>
+                                <div class="list-item-value">
+                                    <date-time
+                                        v-bind:datetime="feed.checked_at"
+                                        v-bind:calendar="true"
+                                    ></date-time>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </details>
 
             <div
                 class="mt-6"

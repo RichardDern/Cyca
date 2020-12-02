@@ -1,0 +1,24 @@
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="url"] {
+    @apply w-full flex-grow rounded px-2 py-1 border;
+    @apply bg-white text-gray-500 border-gray-300;
+    @apply dark:bg-gray-600 dark:text-gray-100 dark:border-gray-600;
+}
+
+input[type="search"] {
+    @apply w-full flex-grow rounded px-2 py-1 border;
+    @apply bg-white text-gray-500 border-gray-300;
+    @apply dark:bg-gray-500 dark:text-gray-100 dark:border-gray-600;
+}
+
+input[type="password"] {
+    @apply tracking-widest;
+}
+
+input[type="color"] {
+    @apply rounded p-0 m-0 h-8 w-12 border-none appearance-none;
+    @apply bg-white;
+    @apply dark:bg-gray-600;
+}

@@ -1,27 +1,33 @@
 <template>
-    <div id="groups-browser">
-        <div class="left-panel">
-            <article id="my-groups">
-                <div class="body mt-4">
-                    <draggable
-                        group="my_groups"
-                        handle=".handle"
-                        draggable=".group-item"
-                        v-model="myGroupsSorted"
-                    >
+    <div class="flex w-full h-screen">
+        <div class="w-1/2 h-screen flex flex-col">
+            <div class="h-1/2 overflow-auto">
+                <draggable
+                    class="list vertical striped spaced items-rounded"
+                    v-model="myGroupsSorted"
+                    group="myGroups"
+                    @start="drag = true"
+                    @end="drag = false"
+                    item-key="id"
+                    v-bind:force-fallback="true"
+                    v-bind:fallback-tolerance="10"
+                    handle=".handle"
+                >
+                    <template #item="{ element }">
                         <groups-browser-item
-                            v-for="group in myGroupsSorted"
-                            v-bind:group="group"
-                            v-bind:key="group.id"
+                            class="select-none"
+                            v-bind:group="element"
                             v-bind:movable="true"
-                            v-on:selected="selectedGroup = group"
-                            v-bind:class="{ selected: selectedGroup === group }"
+                            v-on:selected="selectedGroup = element"
+                            v-bind:class="{
+                                selected: selectedGroup === element,
+                            }"
                         ></groups-browser-item>
-                    </draggable>
-                </div>
-            </article>
+                    </template>
+                </draggable>
+            </div>
             <group-form
-                id="created-group-form"
+                class="h-1/2"
                 v-bind:group="selectedGroup"
                 v-on:unselect="selectedGroup = null"
                 v-on:group-created="onGroupCreated"
@@ -34,8 +40,8 @@
             >
             </group-form>
         </div>
-        <div class="right-panel">
-            <article id="my-groups">
+        <div class="w-1/2 bg-gray-50 dark:bg-gray-850">
+            <article>
                 <header>
                     <h1>
                         <div class="flex justify-between items-center w-full">
@@ -45,13 +51,12 @@
                             <input
                                 type="search"
                                 v-bind:placeholder="__('Search')"
-                                class="alt"
                                 v-model="search"
                             />
                         </div>
                     </h1>
                 </header>
-                <div class="body mt-4">
+                <div class="list vertical striped spaced items-rounded">
                     <groups-browser-item
                         v-for="group in publicGroups"
                         v-bind:group="group"
@@ -66,19 +71,20 @@
 </template>
 
 <script>
-import draggable from "vuedraggable";
 import GroupsBrowserItem from "./GroupsBrowser/GroupsBrowserItem";
 import GroupForm from "./GroupsBrowser/GroupForm";
+import draggable from "vuedraggable";
 import { mapActions, mapGetters } from "vuex";
 
 export default {
-    components: { GroupForm, GroupsBrowserItem },
+    components: { draggable, GroupForm, GroupsBrowserItem },
     data: function () {
         return {
             positions: [],
             selectedGroup: null,
             publicGroups: [],
             search: "",
+            drag: false,
         };
     },
     mounted: function () {

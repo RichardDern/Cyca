@@ -1,35 +1,27 @@
-/* -------------------------------------------------------------------------- */
-/* ----| Badge element |----------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
-
-/* Badge - used to display number of unread feed items, for instance */
 .badge {
-    @apply flex-none py-0.5 rounded text-xs px-2 ml-2 whitespace-no-wrap;
-}
+    @apply rounded-full text-xs flex items-center whitespace-nowrap px-2 py-0.5;
 
-.badge.default {
-    color: theme("colors.badge.text");
-    background-color: theme("colors.badge.bg");
-}
+    &.default {
+        @apply bg-gray-100 text-gray-500;
+        @apply dark:bg-gray-500 dark:text-white;
+    }
 
-.badge.article {
-    @apply mr-2;
+    &.success {
+        @apply bg-green-500 text-white;
+        @apply dark:bg-green-800 dark:text-white;
+    }
 
-    color: theme("colors.badge.text");
-    background-color: theme("colors.badge.bg-article");
-}
+    &.danger {
+        @apply bg-red-500 text-white;
+        @apply dark:bg-red-800 dark:text-white;
+    }
 
-.badge.success {
-    color: theme("colors.groups-browser.status.accepted.bg");
-    background-color: theme("colors.badge.bg");
-}
+    &.warning {
+        @apply bg-orange-500 text-white;
+    }
 
-.badge.warning {
-    color: theme("colors.groups-browser.status.joining.bg");
-    background-color: theme("colors.badge.bg");
-}
-
-.badge.danger {
-    color: theme("colors.groups-browser.status.rejected.bg");
-    background-color: theme("colors.badge.bg");
+    &.info {
+        @apply bg-blue-400 text-white;
+        @apply dark:bg-blue-800 dark:text-white;
+    }
 }

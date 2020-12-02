@@ -1,6 +1,9 @@
 <template>
-    <div id="folders-tree">
-        <div id="tree-top" v-if="sortedGroups.count() > 1">
+    <div class="flex flex-col">
+        <div
+            class="list vertical items-rounded spaced striped flex-none overflow-auto max-h-36 bg-gray-50 dark:bg-gray-800"
+            v-if="sortedGroups.count() > 1"
+        >
             <group-item
                 v-for="group in sortedGroups"
                 v-bind:key="group.id"
@@ -8,7 +11,9 @@
                 v-on:selected-group-changed="onSelectedGroupChanged"
             ></group-item>
         </div>
-        <div id="tree" class="flex-grow">
+        <div
+            class="list vertical items-rounded overflow-auto flex-grow compact"
+        >
             <folder-item
                 v-for="folder in folders"
                 v-bind:key="folder.id"
@@ -17,44 +22,39 @@
                 v-on:item-dropped="onItemDropped"
             ></folder-item>
         </div>
-        <div id="tree-bottom">
-            <a class="list-item" v-bind:href="route('account')">
-                <div class="list-item-label pl-0">
+        <div
+            class="list vertical items-rounded spaced striped flex-none bg-gray-50 dark:bg-gray-800"
+        >
+            <a v-bind:href="route('account')" class="list-item">
+                <div class="icons">
                     <svg
                         fill="currentColor"
                         width="16"
                         height="16"
-                        class="favicon folder-account"
+                        class="text-green-500"
                     >
                         <use v-bind:xlink:href="icon('account')" />
                     </svg>
-                    <div class="truncate flex-grow py-0.5">
-                        {{ __("My account") }}
-                    </div>
+                </div>
+                <div class="list-item-text">
+                    {{ __("My account") }}
                 </div>
             </a>
-            <form
-                id="logout-form"
-                v-bind:action="route('logout')"
-                method="POST"
-            >
-                <input type="hidden" name="_token" v-bind:value="csrf" />
-                <button type="submit" class="list-item">
-                    <div class="list-item-label pl-0">
-                        <svg
-                            fill="currentColor"
-                            width="16"
-                            height="16"
-                            class="favicon folder-logout"
-                        >
-                            <use v-bind:xlink:href="icon('logout')" />
-                        </svg>
-                        <div class="truncate flex-grow py-0.5">
-                            {{ __("Logout") }}
-                        </div>
-                    </div>
-                </button>
-            </form>
+            <a href="#" class="list-item" v-on:click="logout">
+                <div class="icons">
+                    <svg
+                        fill="currentColor"
+                        width="16"
+                        height="16"
+                        class="text-red-500"
+                    >
+                        <use v-bind:xlink:href="icon('logout')" />
+                    </svg>
+                </div>
+                <div class="list-item-text">
+                    {{ __("Logout") }}
+                </div>
+            </a>
         </div>
     </div>
 </template>
@@ -70,8 +70,6 @@ export default {
         const self = this;
 
         self.indexGroups().then(function () {
-            self.$emit("groups-loaded");
-
             self.showGroup();
         });
     },
@@ -123,6 +121,10 @@ export default {
             const self = this;
 
             self.$emit("item-dropped", folder);
+        },
+
+        logout: function () {
+            document.forms.logout_form.submit();
         },
     },
 };

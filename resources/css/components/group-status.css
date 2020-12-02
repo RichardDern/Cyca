@@ -1,0 +1,26 @@
+.group-status-own {
+    @apply text-white bg-green-800;
+}
+
+.group-status-created {
+    @apply text-white bg-green-800;
+}
+
+.group-status-invited {
+    @apply text-white bg-orange-700;
+}
+
+.group-status-accepted {
+    @apply text-white bg-green-800;
+}
+
+.group-status-rejected {
+    @apply text-white bg-red-800;
+}
+
+.group-status-left {
+}
+
+.group-status-joining {
+    @apply text-white bg-orange-700;
+}

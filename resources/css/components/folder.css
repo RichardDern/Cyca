@@ -1,0 +1,19 @@
+/* Regular folder */
+.folder-common {
+    @apply text-orange-400;
+}
+
+/* Unread items folder - with unread items */
+.folder-unread-not-empty {
+    @apply text-purple-400;
+}
+
+/* Unread items folder - empty */
+.folder-unread {
+    @apply text-gray-500;
+}
+
+/* Root folder */
+.folder-root {
+    @apply text-blue-400;
+}

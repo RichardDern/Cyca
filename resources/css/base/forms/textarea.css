@@ -1,0 +1,5 @@
+textarea {
+    @apply rounded w-full;
+    @apply bg-white;
+    @apply dark:bg-gray-500 dark:text-white;
+}

@@ -1,11 +1,12 @@
 <template>
     <label
-        class="badge inline"
+        class="badge cursor-pointer"
         v-bind:class="{ success: granted, danger: !granted }"
     >
         <input
             type="checkbox"
             v-model="granted"
+            class="hidden"
             v-on:input="
                 updatePermission({
                     ability: ability,
@@ -15,7 +16,18 @@
                 })
             "
         />
-        {{ text }}
+        <svg fill="currentColor" width="16" height="16" class="mr-1">
+            <use
+                v-bind:xlink:href="
+                    granted
+                        ? icon('permission_granted')
+                        : icon('permission_denied')
+                "
+            />
+        </svg>
+        <span>
+            {{ text }}
+        </span>
     </label>
 </template>
 

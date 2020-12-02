@@ -1,8 +1,8 @@
-<a href="mailto:{{ $user['email'] }}"><svg
+<a href="mailto:{{ $user['email'] }}" class="inline-block"><div class="flex items-center space-x-1"><svg
         fill="currentColor"
         width="16"
         height="16"
-        class="favicon folder-account inline"
+        class="text-green-500"
     >
-        <use xlink:href="{{ $iconsFileUrl }}#account" />
-    </svg>{{ $user['name'] }}</a>
+        <use xlink:href="{{ asset('images/icons.svg') }}#account" />
+    </svg>{{ $user['name'] }}</div></a>

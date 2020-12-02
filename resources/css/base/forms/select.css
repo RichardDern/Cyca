@@ -1,0 +1,5 @@
+select {
+    @apply mt-1 block w-full py-0 px-2 border rounded focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm;
+    @apply border-gray-300 bg-white;
+    @apply dark:border-gray-500 dark:bg-gray-500 dark:text-white;
+}
