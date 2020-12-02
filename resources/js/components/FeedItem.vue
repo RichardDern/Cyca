@@ -120,7 +120,7 @@ export default {
             highlights.forEach(function (highlight) {
                 var regex = new RegExp(
                     "(" + highlight.expression + ")(?![^<]*>|[^<>]*</)",
-                    "i"
+                    "ig"
                 );
                 let textColor = TEXTColor.findTextColor(highlight.color);
                 title = title.replace(
