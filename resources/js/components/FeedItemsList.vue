@@ -78,7 +78,10 @@ export default {
             const innerHeight = $event.target.clientHeight;
             const scrollHeight = $event.target.scrollHeight;
 
-            if (scrollTop + innerHeight >= scrollHeight && this.canLoadMore) {
+            if (
+                scrollTop + innerHeight >= scrollHeight - 20 &&
+                this.canLoadMore
+            ) {
                 this.loadMoreFeedItems();
             }
         },
