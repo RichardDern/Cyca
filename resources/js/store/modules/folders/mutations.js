@@ -17,7 +17,7 @@ export default {
      * @param {*} folder
      */
     setSelectedFolder(state, folder) {
-        state.folders.find(f => f.is_selected = false);
+        state.folders.find((f) => (f.is_selected = false));
 
         folder.is_selected = true;
     },
@@ -27,9 +27,17 @@ export default {
      * @param {*} state
      * @param {*} param1
      */
-    update(state, {folder, newProperties}) {
-        for(var property in newProperties) {
+    update(state, { folder, newProperties }) {
+        for (var property in newProperties) {
             folder[property] = newProperties[property];
+        }
+
+        if (folder.type === "unread_items") {
+            if (folder.feed_item_states_count) {
+                folder.iconColor = "folder-unread-not-empty";
+            } else {
+                folder.iconColor = "folder-unread";
+            }
         }
     },
 
@@ -41,4 +49,4 @@ export default {
     setDraggedFolder(state, folder) {
         state.draggedFolder = folder;
     },
-}
+};
