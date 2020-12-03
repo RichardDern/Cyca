@@ -29,7 +29,7 @@ export default {
     /**
      * Display the specified resource.
      */
-    async show({ getters, dispatch }, group, folder) {
+    show({ getters, dispatch, rootGetters }, { group, folder }) {
         const currentSelectedGroup = getters.selectedGroup;
 
         if (!group) {
@@ -42,13 +42,17 @@ export default {
 
         dispatch("documents/selectDocuments", [], { root: true });
 
-        const folders = await api.get(route("group.show", group));
-
-        dispatch("folders/index", folders, { root: true });
-
-        if (folder) {
-            dispatch("folders/show", { folder }, { root: true });
-        }
+        api.get(route("group.show", group)).then(function (folders) {
+            if (folder) {
+                dispatch(
+                    "folders/index",
+                    { folders: folders, show: folder },
+                    { root: true }
+                );
+            } else {
+                dispatch("folders/index", { folders: folders }, { root: true });
+            }
+        });
     },
 
     /**

@@ -143,7 +143,7 @@ createApp({
         onSelectedGroupChanged: function (group) {
             const self = this;
 
-            self.showGroup(group);
+            self.showGroup({ group: group, folder: "unread_items" });
         },
 
         /**
@@ -172,7 +172,7 @@ createApp({
             }
 
             if (group && group != self.selectedGroup.id) {
-                self.showGroup(group, folder);
+                self.showGroup({ group, folder });
             } else {
                 self.showFolder({ folder });
             }

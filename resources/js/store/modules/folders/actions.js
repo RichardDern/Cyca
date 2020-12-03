@@ -11,9 +11,18 @@ export default {
     /**
      * Display a listing of the resource.
      */
-    async index({ commit, dispatch }, folders) {
+    async index({ getters, commit, dispatch }, { folders, show }) {
         commit("setFolders", folders);
-        dispatch("show", {});
+
+        if (show) {
+            if (show === "unread_items") {
+                show = getters.getUnreadItemsFolder;
+            }
+
+            dispatch("show", { folder: show });
+        } else {
+            dispatch("show", {});
+        }
     },
 
     /**

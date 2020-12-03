@@ -2,7 +2,6 @@
     <div class="flex flex-col">
         <div
             class="list vertical items-rounded spaced striped flex-none overflow-auto max-h-36 bg-gray-50 dark:bg-gray-800"
-            v-if="sortedGroups.count() > 1"
         >
             <group-item
                 v-for="group in sortedGroups"
@@ -70,7 +69,7 @@ export default {
         const self = this;
 
         self.indexGroups().then(function () {
-            self.showGroup();
+            self.showGroup({});
         });
     },
     /**
