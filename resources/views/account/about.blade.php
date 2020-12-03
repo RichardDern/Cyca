@@ -8,7 +8,7 @@
 
     <ul>
         <li><a href="https://www.getcyca.com" target="_blank">{{ __("Official website") }}</a></li>
-        <li><a href="https://microblog.getcyca.com/@richard" target="_blank">{{ __("Microblog") }}</a></li>
+        <li><a href="https://microblog.getcyca.com/richard" target="_blank">{{ __("Microblog") }}</a></li>
         <li><a href="https://github.com/RichardDern/Cyca" target="_blank"
                 rel="noopener noreferrer">{{ __("GitHub repository") }}</a></li>
     </ul>
