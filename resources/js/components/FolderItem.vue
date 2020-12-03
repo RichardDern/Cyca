@@ -83,11 +83,19 @@ export default {
             self.enableEnsureVisible = false;
         }
 
-        self.$watch("folder.is_selected", function (value) {
-            if (value) {
-                self.ensureVisible();
+        self.$watch(
+            () => self.folder.is_selected,
+            function (value) {
+                if (value) {
+                    if (self.folder.type === "unread_items") {
+                        self.enableEnsureVisible = true;
+                    }
+
+                    self.ensureVisible();
+                    self.enableEnsureVisible = false;
+                }
             }
-        });
+        );
     },
     /**
      * Computed properties
