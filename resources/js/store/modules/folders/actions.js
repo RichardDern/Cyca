@@ -90,7 +90,7 @@ export default {
                 group_id,
             })
             .then((data) => {
-                dispatch("index", data);
+                dispatch("index", { folders: data });
             })
             .catch((error) => console.error(error));
     },
@@ -142,7 +142,7 @@ export default {
     async destroy({ dispatch }, folder) {
         const data = await api.delete(route("folder.destroy", folder));
 
-        dispatch("index", data);
+        dispatch("index", { folders: data });
     },
 
     /**
