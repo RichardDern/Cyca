@@ -225,7 +225,7 @@ export default {
                 ...newProperties,
             },
         }).then(function () {
-            dispatch("groups/show", null, { root: true });
+            dispatch("groups/show", {}, { root: true });
         });
     },
 };
