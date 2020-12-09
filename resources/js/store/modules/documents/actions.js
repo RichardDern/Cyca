@@ -51,7 +51,7 @@ export default {
 
         dispatch("feedItems/index", documents, { root: true }).then(
             function () {
-                if (selectFirstUnread) {
+                if (selectFirstUnread && documents) {
                     dispatch("feedItems/selectFirstUnreadFeedItem", null, {
                         root: true,
                     });
