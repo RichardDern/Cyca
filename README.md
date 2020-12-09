@@ -1,6 +1,6 @@
 # Cyca
 
-![](https://www.getcyca.com/images/cover.png)
+![](https://www.getcyca.com/images/covers/cyca-1.0-cover.png)
 
 ## About
 
@@ -27,6 +27,7 @@ Cyca is a web-based, desktop-centric, multi-user bookmarks and feeds manager.
       feeds) and unread feed item are private and not known to other users
     - Already existing documents and feeds are quicker to display when adding
       a bookmark
+    - Groups management: create and join groups to share bookmarks and feeds
 - Desktop-centric
     - Features a three-columns layout which provides direct access to any
       information you need quickly
@@ -45,16 +46,6 @@ at all, which could introduce new people to these technologies.
 
 ## Installation
 
-I don't recommand any installation method in particular, except the one you're
-most comfortable with.
-
-### Via Docker
-
-Please read docker specific documentation from 
-[Cyca's official website](https://www.getcyca.com/docs/install-cyca-with-docker/).
-
-### Manually
-
 Please read native installation documentation from 
 [Cyca's official website](https://www.getcyca.com/docs/native-installation/).
 
@@ -68,4 +59,5 @@ copy of this license in the LICENSE file at the root of Cyca's archive.
 Cyca's creator is Richard Dern.
 
 - Website: https://getcyca.com/
+- Microblog: https://microblog.getcyca.com/
 - GitHub: https://github.com/RichardDern
