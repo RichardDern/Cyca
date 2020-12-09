@@ -1,1 +1,44 @@
-{"highlights":[{"expression":"cyca","color":"#4f7a28"}],"bookmarks":{"documents":[],"folders":[{"title":"Cyca","documents":[{"url":"https:\/\/www.getcyca.com\/","feeds":[{"url":"https:\/\/www.getcyca.com\/index.xml","is_ignored":false}]},{"url":"https:\/\/alternativeto.net\/software\/cyca\/","feeds":[{"url":"https:\/\/alternativeto.net\/news\/feed\/","is_ignored":false}]},{"url":"https:\/\/hub.docker.com\/r\/richarddern\/cyca","feeds":[]},{"url":"https:\/\/github.com\/RichardDern\/Cyca","feeds":[{"url":"https:\/\/github.com\/RichardDern\/Cyca\/commits\/master.atom","is_ignored":false}]}],"folders":[]}]}}
+{
+    "highlights": [{ "expression": "cyca", "color": "#1e40af" }],
+    "bookmarks": {
+        "documents": [],
+        "folders": [
+            {
+                "title": "Cyca",
+                "documents": [
+                    {
+                        "url": "https://www.getcyca.com/",
+                        "feeds": [
+                            {
+                                "url": "https://www.getcyca.com/index.xml",
+                                "is_ignored": false
+                            }
+                        ]
+                    },
+                    {
+                        "url": "https://alternativeto.net/software/cyca/",
+                        "feeds": [
+                            {
+                                "url": "https://alternativeto.net/news/feed/",
+                                "is_ignored": false
+                            }
+                        ]
+                    },
+                    {
+                        "url": "https://github.com/RichardDern/Cyca",
+                        "feeds": [
+                            {
+                                "url": "https://github.com/RichardDern/Cyca/commits/master.atom",
+                                "is_ignored": false
+                            }
+                        ]
+                    },
+                    {
+                        "url": "https://microblog.getcyca.com/"
+                    }
+                ],
+                "folders": []
+            }
+        ]
+    }
+}
