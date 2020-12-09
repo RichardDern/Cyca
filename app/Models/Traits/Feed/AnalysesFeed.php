@@ -163,7 +163,7 @@ trait AnalysesFeed
 
         $domDocument = new DomDocument('1.0', 'UTF-8');
 
-        $domDocument->loadHtml($text, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        $domDocument->loadHtml(\tidy_repair_string($text), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 
         libxml_clear_errors();
 
