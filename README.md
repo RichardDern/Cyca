@@ -59,5 +59,5 @@ copy of this license in the LICENSE file at the root of Cyca's archive.
 Cyca's creator is Richard Dern.
 
 - Website: https://getcyca.com/
-- Microblog: https://microblog.getcyca.com/
+- Microblog: https://microblog.getcyca.com/richard
 - GitHub: https://github.com/RichardDern
