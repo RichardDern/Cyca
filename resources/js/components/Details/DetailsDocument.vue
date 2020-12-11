@@ -113,6 +113,23 @@
                             ></date-time>
                         </div>
                     </div>
+                    <div class="list-item">
+                        <div class="list-item-title">
+                            {{ __("HTTP Status Code") }}
+                        </div>
+                        <div
+                            class="list-item-value flex items-center space-x-2"
+                            v-bind:class="statusClass"
+                        >
+                            <span v-if="statusIcon">
+                                <svg fill="currentColor" width="16" height="16">
+                                    <use v-bind:xlink:href="icon(statusIcon)" />
+                                </svg>
+                            </span>
+                            <span>{{ document.http_status_code }}</span>
+                            <span>{{ document.http_status_text }}</span>
+                        </div>
+                    </div>
                     <div
                         class="list-item"
                         v-if="dupplicateInFolders.length > 0"
@@ -267,6 +284,48 @@ export default {
             const self = this;
 
             return self.document.url;
+        },
+
+        statusClass: function () {
+            const code = this.document.http_status_code;
+            let className = null;
+
+            if (code === 0) {
+                className = "http-status-general-error";
+            } else if (code >= 100 && code <= 199) {
+                className = "http-status-info";
+            } else if (code >= 200 && code <= 299) {
+                className = "http-status-success";
+            } else if (code >= 300 && code <= 399) {
+                className = "http-status-redirection";
+            } else if (code >= 400 && code <= 499) {
+                className = "http-status-client-error";
+            } else if (code >= 500 && code <= 599) {
+                className = "http-status-server-error";
+            }
+
+            return className;
+        },
+
+        statusIcon: function () {
+            const code = this.document.http_status_code;
+            let icon = null;
+
+            if (code === 0) {
+                icon = "error";
+            } else if (code >= 100 && code <= 199) {
+                icon = "info";
+            } else if (code >= 200 && code <= 299) {
+                icon = "success";
+            } else if (code >= 300 && code <= 399) {
+                icon = "redirect";
+            } else if (code >= 400 && code <= 499) {
+                icon = "warning";
+            } else if (code >= 500 && code <= 599) {
+                icon = "error";
+            }
+
+            return icon;
         },
     },
     watch: {

@@ -120,5 +120,7 @@
     "Waiting for joining": "En attente d'acceptation",
     "We have emailed your password reset link!": "Nous vous avons envoyé un lien de réinitialisation par email!",
     "You can import the following types of file": "Vous pouvez importer des fichiers de type",
-    "Your profile has been updated": "Votre profil a été mis à jour"
+    "Your profile has been updated": "Votre profil a été mis à jour",
+    "Cyca did not check this document yet": "Cyca n'a pas encore vérifié ce document",
+    "Cyca could not reach this document URL": "Cyca ne peut pas atteindre l'URL de ce document"
 }

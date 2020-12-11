@@ -1,0 +1,23 @@
+.http-status-general-error {
+    @apply text-red-500;
+}
+
+.http-status-info {
+
+}
+
+.http-status-success {
+    @apply text-green-500;
+}
+
+.http-status-redirection {
+    @apply text-blue-500;
+}
+
+.http-status-client-error {
+    @apply text-orange-500;
+}
+
+.http-status-server-error {
+    @apply text-red-500;
+}

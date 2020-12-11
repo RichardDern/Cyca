@@ -105,6 +105,20 @@ class Document extends Model
         return asset('storage/' . str_replace('public/', '', $this->attributes['favicon_path']));
     }
 
+    public function getHttpStatusTextAttribute() {
+        if (!empty($this->attributes['http_status_text'])) {
+            return $this->attributes['http_status_text'];
+        }
+
+        if(empty($this->http_status_code)) {
+            if(empty($this->checked_at)) {
+                return __("Cyca did not check this document yet");
+            }
+
+            return __("Cyca could not reach this document URL");
+        }
+    }
+
     # --------------------------------------------------------------------------
     # ----| Relations |---------------------------------------------------------
     # --------------------------------------------------------------------------

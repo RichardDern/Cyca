@@ -153,6 +153,7 @@ trait AnalysesDocument
         }
 
         $this->http_status_code = $this->response->status();
+        $this->http_status_text = $this->response->getReasonPhrase();
     }
 
     /**

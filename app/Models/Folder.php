@@ -299,9 +299,11 @@ class Folder extends Model
             'documents.id',
             'documents.url',
             'documents.http_status_code',
+            'documents.http_status_text',
             'documents.mimetype',
             'documents.title',
             'documents.favicon_path',
+            'documents.checked_at',
         ];
 
         if ($this->type === 'unread_items') {
