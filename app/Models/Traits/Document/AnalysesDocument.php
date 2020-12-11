@@ -94,8 +94,8 @@ trait AnalysesDocument
     public function analyze()
     {
         // Don't bother if document isn't bookmarked anymore
-        if($this->folders()->count() === 0) {
-            if(!empty($this->checked_at) && $this->checked_at->addDays(config('cyca.maxOrphanAge.document'))->lt(now())) {
+        if ($this->folders()->count() === 0) {
+            if (!empty($this->checked_at) && $this->checked_at->addDays(config('cyca.maxOrphanAge.document'))->lt(now())) {
                 $this->delete();
             }
 
@@ -133,8 +133,9 @@ trait AnalysesDocument
      */
     protected function fetchContent()
     {
-        $storageRoot  = $this->getStoragePath();
-        $bodyFilename = $storageRoot . '/body';
+        $storageRoot      = $this->getStoragePath();
+        $bodyFilename     = $storageRoot . '/body';
+        $responseFilename = $storageRoot . '/response.json';
 
         try {
             $this->response = Http::timeout(10)->get($this->url);
@@ -145,6 +146,15 @@ trait AnalysesDocument
 
             return;
         }
+
+        $psrResponse = $this->response->toPsrResponse();
+
+        $responseData = [
+            'headers'          => $this->response->headers(),
+            'protocol_version' => $psrResponse->getProtocolVersion()
+        ];
+
+        Storage::put($responseFilename, json_encode($responseData));
 
         if ($this->response->ok()) {
             Storage::put($bodyFilename, $this->body);
@@ -246,7 +256,7 @@ trait AnalysesDocument
      */
     protected function runHtmlAnalyzer()
     {
-        if(empty($this->body)) {
+        if (empty($this->body)) {
             return;
         }
 
@@ -391,21 +401,21 @@ trait AnalysesDocument
         if (!empty($data['charset'])) {
             $group = 'charset';
             $name  = 'charset';
-        } else if (!empty($data['name'])) {
+        } elseif (!empty($data['name'])) {
             $group = 'meta';
             $name  = $data['name'];
 
             $data['originalName'] = $data['name'];
 
             unset($data['name']);
-        } else if (!empty($data['property'])) {
+        } elseif (!empty($data['property'])) {
             $group = 'properties';
             $name  = $data['property'];
 
             $data['originalName'] = $data['property'];
 
             unset($data['property']);
-        } else if (!empty($data['http-equiv'])) {
+        } elseif (!empty($data['http-equiv'])) {
             $group = 'pragma';
             $name  = $data['http-equiv'];
 
@@ -496,7 +506,7 @@ trait AnalysesDocument
 
             try {
                 $response = Http::timeout(10)->get($url);
-            } catch(\Exception $ex) {
+            } catch (\Exception $ex) {
                 report($ex);
 
                 continue;
