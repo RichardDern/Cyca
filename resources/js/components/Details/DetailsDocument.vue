@@ -130,6 +130,14 @@
                             <span>{{ document.http_status_text }}</span>
                         </div>
                     </div>
+                    <div class="list-item" v-if="document.mimetype">
+                        <div class="list-item-title">
+                            {{ __("MIME type") }}
+                        </div>
+                        <div class="list-item-value">
+                            {{ document.mimetype }}
+                        </div>
+                    </div>
                     <div
                         class="list-item"
                         v-if="dupplicateInFolders.length > 0"
