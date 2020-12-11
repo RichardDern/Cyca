@@ -42,7 +42,8 @@ class UpdateDocuments extends Command
     {
         $oldest = now()->subMinute(config('cyca.maxAge.document'));
 
-        $documents = Document::where('checked_at', '<', $oldest)->get();
+        $documents = Document::where('checked_at', '<', $oldest)->orWhereNull('checked_at')->get();
+        $count = 0;
 
         foreach ($documents as $document) {
             $cacheKey = sprintf('queue_document_%d', $document->id);
@@ -51,8 +52,11 @@ class UpdateDocuments extends Command
                 Cache::forever($cacheKey, now());
 
                 EnqueueDocumentUpdate::dispatch($document);
+                $count++;
             }
         }
+
+        $this->line(sprintf('%s document(s) queued for update', $count));
 
         return 0;
     }
