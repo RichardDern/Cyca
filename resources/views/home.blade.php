@@ -5,12 +5,12 @@
 @endpush
 
 @section('main_content')
-<folders-tree class="lg:w-3/12 xl:w-2/12 h-screen bg-gray-150 dark:bg-gray-900" v-on:groups-loaded="onGroupsLoaded"
+<folders-tree class="sm:w-3/12 xl:w-2/12 h-screen bg-gray-150 dark:bg-gray-900" v-on:groups-loaded="onGroupsLoaded"
     v-on:folders-loaded="onFoldersLoaded" v-on:selected-folder-changed="onSelectedFolderChanged"
     v-on:selected-group-changed="onSelectedGroupChanged" v-on:item-dropped="onItemDropped"></folders-tree>
-<documents-list class="lg:w-4/12 xl:w-3/12 h-screen overflow-auto bg-gray-100 dark:bg-gray-850"
+<documents-list class="sm:w-4/12 xl:w-3/12 h-screen overflow-auto bg-gray-100 dark:bg-gray-850"
     v-on:selected-documents-changed="onSelectedDocumentsChanged"></documents-list>
-<div class="lg:w-5/12 xl:w-7/12 h-screen flex flex-col bg-gray-50 dark:bg-gray-800">
+<div class="sm:w-5/12 xl:w-7/12 h-screen flex flex-col bg-gray-50 dark:bg-gray-800">
     <feed-items-list class="h-2/6 overflow-auto" v-on:selected-feeditems-changed="onSelectedFeedItemsChanged">
     </feed-items-list>
     <div class="h-4/6">
