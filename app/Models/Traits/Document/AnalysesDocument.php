@@ -678,7 +678,12 @@ trait AnalysesDocument
                 continue;
             }
 
-            $url = $this->makeUrlAbsolute($alternateLink['href']);
+            try {
+                $url = $this->makeUrlAbsolute($alternateLink['href']);
+            } catch (\Exception $ex) {
+                // Malformed URL
+                continue;
+            }
 
             $client = new SimplePie();
 
