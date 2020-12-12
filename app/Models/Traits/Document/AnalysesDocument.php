@@ -243,11 +243,13 @@ trait AnalysesDocument
      */
     protected function runAnalyzers()
     {
-        switch ($this->mimetype) {
-            // Handle everything not HTML here before "default"
-            default:
-                $this->runHtmlAnalyzer();
-                break;
+        if (array_key_exists($this->mimetype, config('analyzers'))) {
+            $className = config(sprintf('analyzers.%s', $this->mimetype));
+            $instance  = new $className();
+
+            $instance->setDocument($this)->setBody($this->body)->analyze();
+        } else {
+            $this->runHtmlAnalyzer();
         }
     }
 
