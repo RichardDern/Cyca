@@ -145,7 +145,7 @@ trait AnalysesDocument
         try {
             $this->response = Http::withOptions(array_merge([
                 'debug' => $debugStream,
-            ], config('http_client')))->timeout(10)->get($this->url);
+            ], config('http_client')))->timeout(30)->get($this->url);
 
             $this->body = $this->response->body();
         } catch (\Exception $ex) {
