@@ -99,23 +99,33 @@ class Document extends Model
     public function getFaviconAttribute()
     {
         if (empty($this->attributes['favicon_path'])) {
+            if ($this->mimetype) {
+                $filename = str_replace('/', '-', $this->mimetype);
+                $path     = sprintf('images/icons/mimetypes/%s.svg', $filename);
+
+                if (file_exists(realpath(public_path($path)))) {
+                    return asset($path);
+                }
+            }
+
             return null;
         }
 
         return asset('storage/' . str_replace('public/', '', $this->attributes['favicon_path']));
     }
 
-    public function getHttpStatusTextAttribute() {
+    public function getHttpStatusTextAttribute()
+    {
         if (!empty($this->attributes['http_status_text'])) {
             return $this->attributes['http_status_text'];
         }
 
-        if(empty($this->http_status_code)) {
-            if(empty($this->checked_at)) {
-                return __("Cyca did not check this document yet");
+        if (empty($this->http_status_code)) {
+            if (empty($this->checked_at)) {
+                return __('Cyca did not check this document yet');
             }
 
-            return __("Cyca could not reach this document URL");
+            return __('Cyca could not reach this document URL');
         }
     }
 
