@@ -108,7 +108,7 @@ class Document extends Model
                 }
             }
 
-            return null;
+            return asset('images/icons/mimetypes/unknown.svg');
         }
 
         return asset('storage/' . str_replace('public/', '', $this->attributes['favicon_path']));
