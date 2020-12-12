@@ -98,7 +98,7 @@ class Document extends Model
      */
     public function getFaviconAttribute()
     {
-        if (empty($this->attributes['favicon_path'])) {
+        if (empty($this->attributes['favicon_path']) || !file_exists(storage_path('app/' . $this->attributes['favicon_path']))) {
             if ($this->mimetype) {
                 $filename = str_replace('/', '-', $this->mimetype);
                 $path     = sprintf('images/icons/mimetypes/%s.svg', $filename);
