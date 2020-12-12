@@ -4,7 +4,7 @@
         v-bind:class="{
             selected: folder.is_selected,
             'dragged-over': is_dragged_over,
-            'cannot-drop': cannot_drop,
+            'cannot-drop': is_dragged_over && cannot_drop,
             deleted: folder.deleted_at,
         }"
         v-bind:href="route('folder.show', folder)"

@@ -99,6 +99,16 @@
                 @apply dark:bg-blue-700;
             }
         }
+
+        &.dragged-over {
+            @apply bg-green-200 text-gray-500;
+            @apply dark:bg-green-800 dark:text-white;
+        }
+
+        &.cannot-drop {
+            @apply bg-red-200 text-gray-500;
+            @apply dark:bg-red-800 dark:text-white;
+        }
     }
 
     &.striped > * {
