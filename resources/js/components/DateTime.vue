@@ -15,13 +15,25 @@ export default {
             return new Date(this.datetime).toISOString();
         },
         formatted: function () {
+            const date = new Date(this.datetime);
+
             if (this.onlyTime) {
-                return new Date(this.datetime).toLocaleTimeString();
+                return date.toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                });
             } else if (this.onlyDate) {
-                return new Date(this.datetime).toLocaleDateString();
+                return date.toLocaleDateString();
             }
 
-            return new Date(this.datetime).toLocaleString();
+            return (
+                date.toLocaleDateString() +
+                ", " +
+                date.toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                })
+            );
         },
     },
 };

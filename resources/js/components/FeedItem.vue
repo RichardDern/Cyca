@@ -13,7 +13,7 @@
             class="list-item-text mr-2"
             v-html="highlight(feedItem.title)"
         ></div>
-        <div class="flex justify-between items-center">
+        <div class="flex justify-between items-center space-x-2">
             <div class="list horizontal compact">
                 <div class="list-item text-xs px-0">
                     <div class="icons">
@@ -25,7 +25,7 @@
                 </div>
             </div>
             <date-time
-                class="badge ml-1 default"
+                class="text-2xs font-mono badge shadow dark:bg-gray-850"
                 v-bind:datetime="feedItem.published_at"
                 v-bind:calendar="true"
             ></date-time>
