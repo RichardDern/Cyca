@@ -136,14 +136,25 @@ trait AnalysesDocument
         $storageRoot      = $this->getStoragePath();
         $bodyFilename     = $storageRoot . '/body';
         $responseFilename = $storageRoot . '/response.json';
+        $debugFilename    = $storageRoot . '/debug';
+
+        Storage::put($debugFilename, null);
+        
+        $debugStream      = fopen(storage_path('app/' . $debugFilename), 'w');
 
         try {
-            $this->response = Http::timeout(10)->get($this->url);
+            $this->response = Http::withOptions(array_merge([
+                'debug' => $debugStream,
+            ], config('http_client')))->timeout(10)->get($this->url);
 
             $this->body = $this->response->body();
         } catch (\Exception $ex) {
             report($ex);
+        } finally {
+            fclose($debugStream);
+        }
 
+        if (!$this->response) {
             return;
         }
 
@@ -151,7 +162,8 @@ trait AnalysesDocument
 
         $responseData = [
             'headers'          => $this->response->headers(),
-            'protocol_version' => $psrResponse->getProtocolVersion()
+            'protocol_version' => $psrResponse->getProtocolVersion(),
+            'response'         => $this->response
         ];
 
         Storage::put($responseFilename, json_encode($responseData));
