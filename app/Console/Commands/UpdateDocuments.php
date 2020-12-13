@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use App\Jobs\EnqueueDocumentUpdate;
 use App\Models\Document;
-use Cache;
 use Illuminate\Console\Command;
 
 class UpdateDocuments extends Command
@@ -43,17 +42,11 @@ class UpdateDocuments extends Command
         $oldest = now()->subMinute(config('cyca.maxAge.document'));
 
         $documents = Document::where('checked_at', '<', $oldest)->orWhereNull('checked_at')->get();
-        $count = 0;
+        $count     = 0;
 
         foreach ($documents as $document) {
-            $cacheKey = sprintf('queue_document_%d', $document->id);
-
-            if (!Cache::has($cacheKey)) {
-                Cache::forever($cacheKey, now());
-
-                EnqueueDocumentUpdate::dispatch($document);
-                $count++;
-            }
+            EnqueueDocumentUpdate::dispatch($document);
+            $count++;
         }
 
         $this->line(sprintf('%s document(s) queued for update', $count));

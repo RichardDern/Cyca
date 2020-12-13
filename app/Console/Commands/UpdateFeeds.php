@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use App\Jobs\EnqueueFeedUpdate;
 use App\Models\Feed;
-use Cache;
 use Illuminate\Console\Command;
 
 class UpdateFeeds extends Command
@@ -45,13 +44,7 @@ class UpdateFeeds extends Command
         $feeds = Feed::where('checked_at', '<', $oldest)->orWhereNull('checked_at')->get();
 
         foreach ($feeds as $feed) {
-            $cacheKey = sprintf('queue_feed_%d', $feed->id);
-
-            if (!Cache::has($cacheKey)) {
-                Cache::forever($cacheKey, now());
-
-                EnqueueFeedUpdate::dispatch($feed);
-            }
+            EnqueueFeedUpdate::dispatch($feed);
         }
 
         return 0;
