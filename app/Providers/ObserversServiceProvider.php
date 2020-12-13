@@ -17,6 +17,8 @@ use App\Models\Observers\IgnoredFeedObserver;
 use App\Models\Observers\UserObserver;
 use App\Models\User;
 use Illuminate\Support\ServiceProvider;
+use App\Models\FeedItem;
+use App\Models\Observers\FeedItemObserver;
 
 class ObserversServiceProvider extends ServiceProvider
 {
@@ -34,5 +36,6 @@ class ObserversServiceProvider extends ServiceProvider
         Bookmark::observe(BookmarkObserver::class);
         IgnoredFeed::observe(IgnoredFeedObserver::class);
         Group::observe(GroupObserver::class);
+        FeedItem::observe(FeedItemObserver::class);
     }
 }

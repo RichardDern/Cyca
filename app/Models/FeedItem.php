@@ -54,4 +54,27 @@ class FeedItem extends Model
     {
         return $this->hasMany(FeedItemState::class);
     }
+
+    # --------------------------------------------------------------------------
+    # ----| Methods |-----------------------------------------------------------
+    # --------------------------------------------------------------------------
+
+    /**
+     * Return path to root folder for storing this document's assets. This path
+     * can then be used to store and retrieve files using the Storage facade, so
+     * it does not return the full path of a directory rather than the path
+     * related to configured storage disk
+     *
+     * @return string
+     */
+    public function getStoragePath()
+    {
+        if (empty($this->storagePath)) {
+            $hash = $this->hash;
+
+            $this->storagePath = 'public/feeditems/' . implode('/', str_split(($hash)));
+        }
+
+        return $this->storagePath;
+    }
 }

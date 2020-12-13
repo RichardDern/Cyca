@@ -57,9 +57,9 @@ trait AnalysesFeed
             $this->url = $this->client->subscribe_url();
         }
 
-        $this->title = $this->cleanupString($this->client->get_title(), true, true);
+        $this->title       = $this->cleanupString($this->client->get_title(), true, true);
         $this->description = $this->cleanupString($this->client->get_description());
-        $this->checked_at = now();
+        $this->checked_at  = now();
 
         $this->save();
 
@@ -87,7 +87,7 @@ trait AnalysesFeed
      */
     protected function createItems($items)
     {
-        $toSync = $this->feedItems()->pluck('feed_items.id')->all();
+        $toSync   = $this->feedItems()->pluck('feed_items.id')->all();
         $newItems = [];
 
         foreach ($items as $item) {
@@ -108,6 +108,8 @@ trait AnalysesFeed
                 }
 
                 $feedItem->save();
+
+                Storage::put($feedItem->getStoragePath() . '/data.json', \json_encode($item->data));
             }
 
             if (!in_array($feedItem->id, $toSync)) {
@@ -165,7 +167,7 @@ trait AnalysesFeed
         $config->set('Core.EnableIDNA', true);
 
         $purifier = new HTMLPurifier($config);
-        $text = $purifier->purify($text);
+        $text     = $purifier->purify($text);
 
         $text = mb_convert_encoding($text, 'HTML-ENTITIES', 'UTF-8');
 
@@ -194,10 +196,10 @@ trait AnalysesFeed
 
     protected function createUnreadItems($feedItems)
     {
-        $ignoredByUsers = $this->ignored()->pluck('user_id')->all();
+        $ignoredByUsers   = $this->ignored()->pluck('user_id')->all();
         $documentsChanged = [];
-        $foldersChanged = [];
-        $usersToNotify = [];
+        $foldersChanged   = [];
+        $usersToNotify    = [];
         
         foreach ($this->documents()->get() as $document) {
             $folders = $document->folders()->get();
