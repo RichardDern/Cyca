@@ -3,14 +3,14 @@
 namespace App\Jobs;
 
 use App\Models\Document;
-use Cache;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 
-class EnqueueDocumentUpdate implements ShouldQueue
+class EnqueueDocumentUpdate implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -45,12 +45,16 @@ class EnqueueDocumentUpdate implements ShouldQueue
      */
     public function handle()
     {
-        $cacheKey = sprintf('queue_document_%d', $this->document->id);
+        $this->document->analyze();
+    }
 
-        try {
-            $this->document->analyze();
-        } finally {
-            Cache::forget($cacheKey);
-        }
+    /**
+    * The unique ID of the job.
+    *
+    * @return string
+    */
+    public function uniqueId()
+    {
+        return $this->document->id;
     }
 }

@@ -9,8 +9,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 
-class EnqueueFeedUpdate implements ShouldQueue
+class EnqueueFeedUpdate implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -45,12 +46,16 @@ class EnqueueFeedUpdate implements ShouldQueue
      */
     public function handle()
     {
-        $cacheKey = sprintf('queue_feed_%d', $this->feed->id);
+        $this->feed->analyze();
+    }
 
-        try {
-            $this->feed->analyze();
-        } finally {
-            Cache::forget($cacheKey);
-        }
+    /**
+    * The unique ID of the job.
+    *
+    * @return string
+    */
+    public function uniqueId()
+    {
+        return $this->feed->id;
     }
 }
