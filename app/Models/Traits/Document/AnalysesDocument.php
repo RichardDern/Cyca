@@ -144,7 +144,7 @@ trait AnalysesDocument
 
         try {
             $this->response = Http::withOptions(array_merge([
-                'debug' => $debugStream,
+                'debug' => env('APP_DEBUG') ? $debugStream : false,
             ], config('http_client')))->timeout(30)->get($this->url);
 
             $this->body = $this->response->body();
