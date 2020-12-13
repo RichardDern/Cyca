@@ -15,7 +15,10 @@
         ></div>
         <div class="flex justify-between items-center space-x-2">
             <div class="list horizontal compact overflow-hidden">
-                <div class="list-item px-0">
+                <div
+                    class="list-item px-0"
+                    v-bind:title="feedItem.feeds[0].title"
+                >
                     <div class="icons">
                         <img v-bind:src="feedItem.feeds[0].favicon" />
                     </div>
