@@ -76,8 +76,6 @@ class DocumentController extends Controller
             $sourceFolder->documents()->updateExistingPivot($bookmark->id, ['folder_id' => $targetFolder->id]);
         }
 
-        FeedItemState::where('folder_id', $sourceFolder->id)->whereIn('document_id', $request->input('documents'))->update(['folder_id' => $targetFolder->id]);
-
         $usersToNotify = $sourceFolder->group->activeUsers->merge($targetFolder->group->activeUsers);
 
         Notification::send($usersToNotify, new UnreadItemsChanged([

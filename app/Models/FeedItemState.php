@@ -18,7 +18,6 @@ class FeedItemState extends Model
      */
     public $fillable = [
         'user_id',
-        'folder_id',
         'document_id',
         'feed_id',
         'feed_item_id',
