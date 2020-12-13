@@ -113,31 +113,6 @@
                             ></date-time>
                         </div>
                     </div>
-                    <div class="list-item">
-                        <div class="list-item-title">
-                            {{ __("HTTP Status Code") }}
-                        </div>
-                        <div
-                            class="list-item-value flex items-center space-x-2"
-                            v-bind:class="statusClass"
-                        >
-                            <span v-if="statusIcon">
-                                <svg fill="currentColor" width="16" height="16">
-                                    <use v-bind:xlink:href="icon(statusIcon)" />
-                                </svg>
-                            </span>
-                            <span>{{ document.http_status_code }}</span>
-                            <span>{{ document.http_status_text }}</span>
-                        </div>
-                    </div>
-                    <div class="list-item" v-if="document.mimetype">
-                        <div class="list-item-title">
-                            {{ __("MIME type") }}
-                        </div>
-                        <div class="list-item-value">
-                            {{ document.mimetype }}
-                        </div>
-                    </div>
                     <div
                         class="list-item"
                         v-if="dupplicateInFolders.length > 0"
@@ -161,6 +136,48 @@
                             ></div>
                         </div>
                     </div>
+                </div>
+                <div class="list-item">
+                    <details>
+                        <summary>{{ __("HTTP response") }}</summary>
+                        <div
+                            class="vertical list striped items-rounded compact"
+                        >
+                            <div class="list-item">
+                                <div class="list-item-title">
+                                    {{ __("HTTP Status Code") }}
+                                </div>
+                                <div
+                                    class="list-item-value flex items-center space-x-2"
+                                    v-bind:class="statusClass"
+                                >
+                                    <span v-if="statusIcon">
+                                        <svg
+                                            fill="currentColor"
+                                            width="16"
+                                            height="16"
+                                        >
+                                            <use
+                                                v-bind:xlink:href="
+                                                    icon(statusIcon)
+                                                "
+                                            />
+                                        </svg>
+                                    </span>
+                                    <span>{{ document.http_status_code }}</span>
+                                    <span>{{ document.http_status_text }}</span>
+                                </div>
+                            </div>
+                            <div class="list-item" v-if="document.mimetype">
+                                <div class="list-item-title">
+                                    {{ __("MIME type") }}
+                                </div>
+                                <div class="list-item-value">
+                                    {{ document.mimetype }}
+                                </div>
+                            </div>
+                        </div>
+                    </details>
                 </div>
             </details>
 
