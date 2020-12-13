@@ -1,5 +1,9 @@
 <template>
-    <details class="mt-4" v-on:toggle="onToggle">
+    <stateful-details
+        name="per_user_folders_permissions_details"
+        class="mt-4"
+        v-on:toggle="onToggle"
+    >
         <summary>{{ __("Per-user permissions") }}:</summary>
 
         <div class="body">
@@ -80,14 +84,15 @@
                 </div>
             </div>
         </div>
-    </details>
+    </stateful-details>
 </template>
 
 <script>
 import PermissionBox from "./PermissionBox.vue";
+import StatefulDetails from "../StatefulDetails.vue";
 
 export default {
-    components: { PermissionBox },
+    components: { PermissionBox, StatefulDetails },
     props: ["folder"],
     data: function () {
         return {

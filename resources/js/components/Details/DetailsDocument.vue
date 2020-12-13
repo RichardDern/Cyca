@@ -77,7 +77,7 @@
                 v-html="document.description"
             ></div>
 
-            <details open>
+            <stateful-details name="document_details">
                 <summary>{{ __("Details") }}</summary>
                 <div class="vertical list striped items-rounded compact">
                     <div class="list-item">
@@ -138,7 +138,7 @@
                     </div>
                 </div>
                 <div class="list-item">
-                    <details>
+                    <stateful-details name="http_response_details">
                         <summary>{{ __("HTTP response") }}</summary>
                         <div
                             class="vertical list striped items-rounded compact"
@@ -177,11 +177,11 @@
                                 </div>
                             </div>
                         </div>
-                    </details>
+                    </stateful-details>
                 </div>
-            </details>
+            </stateful-details>
 
-            <details v-if="document.feeds.length > 0">
+            <stateful-details name="feeds_details" v-if="document.feeds.length > 0">
                 <summary>{{ __("Feeds") }}</summary>
 
                 <div class="list vertical striped items-rounded">
@@ -258,7 +258,7 @@
                         </div>
                     </div>
                 </div>
-            </details>
+            </stateful-details>
 
             <div
                 class="mt-6"
@@ -286,12 +286,14 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import DateTime from "../DateTime";
+import StatefulDetails from "../StatefulDetails.vue";
 
 export default {
-    components: { DateTime },
+    components: { DateTime, StatefulDetails },
     data: function () {
         return {
             dupplicateInFolders: [],
+            localStorage: localStorage,
         };
     },
     computed: {

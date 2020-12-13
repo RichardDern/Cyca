@@ -1,5 +1,5 @@
 <template>
-    <details class="mt-4">
+    <stateful-details name="default_folder_permissions_details" class="mt-4">
         <summary>{{ __("Users without explicit permissions can") }}:</summary>
 
         <div class="body flex items-center mt-2 space-x-2">
@@ -29,14 +29,15 @@
                 v-bind:folder="folder"
             ></permission-box>
         </div>
-    </details>
+    </stateful-details>
 </template>
 
 <script>
 import PermissionBox from "./PermissionBox.vue";
+import StatefulDetails from "../StatefulDetails.vue";
 
 export default {
-    components: { PermissionBox },
+    components: { PermissionBox, StatefulDetails },
     props: ["folder"],
     methods: {
         can: function (permission) {

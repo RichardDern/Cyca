@@ -57,7 +57,7 @@
                 "
             ></div>
 
-            <details open>
+            <stateful-details name="feed_item_details">
                 <summary>{{ __("Details") }}</summary>
                 <div class="vertical list striped items-rounded compact">
                     <div class="list-item">
@@ -119,7 +119,7 @@
                         </div>
                     </div>
                 </div>
-            </details>
+            </stateful-details>
         </div>
     </article>
 </template>
@@ -127,9 +127,10 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import DateTime from "../DateTime";
+import StatefulDetails from "../StatefulDetails.vue";
 
 export default {
-    components: { DateTime },
+    components: { DateTime, StatefulDetails },
     /**
      * Computed properties
      */
