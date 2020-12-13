@@ -13,10 +13,6 @@ module.exports = {
     darkMode: "class",
     theme: {
         extend: {
-            fontFamily: {
-                sans:
-                    'Quicksand, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
-            },
             fontSize: {
                 "2xs": ".675rem",
             },
@@ -44,16 +40,5 @@ module.exports = {
             backgroundColor: ["odd"],
         },
     },
-    plugins: [
-        plugin(function ({ addBase }) {
-            const fontUrl = "/fonts/Quicksand-Medium.ttf";
-
-            addBase({
-                "@font-face": {
-                    fontFamily: "Quicksand",
-                    src: "url(" + fontUrl + ")",
-                },
-            });
-        }),
-    ],
+    plugins: [],
 };
