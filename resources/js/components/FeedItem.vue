@@ -19,7 +19,7 @@
                     <div class="icons">
                         <img v-bind:src="feedItem.feeds[0].favicon" />
                     </div>
-                    <div class="sm:hidden lg:inline-block text-xs">
+                    <div class="hidden xl:inline-block text-xs">
                         {{ feedItem.feeds[0].title }}
                     </div>
                 </div>

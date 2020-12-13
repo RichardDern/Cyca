@@ -32,6 +32,6 @@ article {
     }
 
     & .body {
-        @apply flex-grow overflow-auto xl:p-4;
+        @apply flex-grow overflow-auto p-2 xl:p-4;
     }
 }
