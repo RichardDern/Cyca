@@ -95,7 +95,7 @@ trait AnalysesDocument
     {
         // Don't bother if document isn't bookmarked anymore
         if ($this->folders()->count() === 0) {
-            if (!empty($this->checked_at) && $this->checked_at->addDays(config('cyca.maxOrphanAge.document'))->lt(now())) {
+            if (empty($this->checked_at) || $this->checked_at->addDays(config('cyca.maxOrphanAge.document'))->lt(now())) {
                 $this->delete();
             }
 
