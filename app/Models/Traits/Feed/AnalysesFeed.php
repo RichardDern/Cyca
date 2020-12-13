@@ -171,6 +171,10 @@ trait AnalysesFeed
 
         $text = mb_convert_encoding($text, 'HTML-ENTITIES', 'UTF-8');
 
+        if (empty($text)) {
+            return;
+        }
+
         libxml_use_internal_errors(true);
 
         $domDocument = new DomDocument('1.0', 'UTF-8');
