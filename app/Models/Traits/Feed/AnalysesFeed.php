@@ -109,7 +109,12 @@ trait AnalysesFeed
 
                 $feedItem->save();
 
-                Storage::put($feedItem->getStoragePath() . '/data.json', \json_encode($item->data));
+                $data = collect($item->data)->except([
+                    'data',
+                    'child'
+                ]);
+
+                Storage::put($feedItem->getStoragePath() . '/data.json', $data->toJson());
             }
 
             if (!in_array($feedItem->id, $toSync)) {
