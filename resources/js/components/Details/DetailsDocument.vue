@@ -20,6 +20,7 @@
                     v-if="document.feed_item_states_count > 0"
                     class="info"
                     v-on:click="onMarkAsReadClicked"
+                    v-bind:title="__('Mark as read')"
                 >
                     <svg
                         fill="currentColor"
@@ -28,7 +29,7 @@
                     >
                         <use v-bind:xlink:href="icon('unread_items')" />
                     </svg>
-                    <span>
+                    <span class="hidden xl:inline-block">
                         {{ __("Mark as read") }}
                     </span>
                 </button>
@@ -46,6 +47,7 @@
                             document: document,
                         })
                     "
+                    v-bind:title="__('Open')"
                 >
                     <svg
                         fill="currentColor"
@@ -54,11 +56,12 @@
                     >
                         <use v-bind:xlink:href="icon('open')" />
                     </svg>
-                    <span>
+                    <span class="hidden xl:inline-block">
                         {{ __("Open") }}
                     </span>
                 </a>
-                <button class="info" v-on:click="onShareClicked">
+                <button class="info" v-on:click="onShareClicked"
+                    v-bind:title="__('Share')">
                     <svg
                         fill="currentColor"
                         width="16"
@@ -66,7 +69,7 @@
                     >
                         <use v-bind:xlink:href="icon('share')" />
                     </svg>
-                    <span>
+                    <span class="hidden xl:inline-block">
                         {{ __("Share") }}
                     </span>
                 </button>
