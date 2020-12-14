@@ -1,7 +1,7 @@
 <template>
     <div class="flex flex-col">
         <div
-            class="list vertical items-rounded spaced striped flex-none overflow-auto max-h-36 bg-gray-50 dark:bg-gray-800"
+            class="list vertical items-rounded spaced compact striped flex-none overflow-auto max-h-36 bg-gray-50 dark:bg-gray-800"
         >
             <group-item
                 v-for="group in sortedGroups"
@@ -22,7 +22,7 @@
             ></folder-item>
         </div>
         <div
-            class="list vertical items-rounded spaced striped flex-none bg-gray-50 dark:bg-gray-800"
+            class="list vertical items-rounded spaced compact striped flex-none bg-gray-50 dark:bg-gray-800"
         >
             <a v-bind:href="route('account')" class="list-item">
                 <div class="icons">
