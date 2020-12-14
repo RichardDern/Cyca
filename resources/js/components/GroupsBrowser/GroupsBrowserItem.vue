@@ -58,7 +58,7 @@
                 >{{ group.active_users_count }}</span
             >
             <button
-                class="info ml-2"
+                class="info"
                 v-if="group.pivot"
                 v-on:click="$emit('selected', group)"
             >
@@ -68,7 +68,7 @@
                 <span>{{ __("Edit") }} </span>
             </button>
             <button
-                class="success inline ml-2"
+                class="success inline"
                 v-if="!group.pivot"
                 v-on:click="$emit('join', group)"
             >

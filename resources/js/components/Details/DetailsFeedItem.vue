@@ -19,7 +19,7 @@
                     </span>
                 </button>
                 <a
-                    class="button info ml-2"
+                    class="button info"
                     v-bind:href="feedItem.url"
                     rel="noopener noreferrer"
                     v-bind:title="__('Open')"
@@ -32,7 +32,7 @@
                     </span>
                 </a>
                 <button
-                    class="button info ml-2"
+                    class="button info"
                     v-on:click="onShareClicked"
                     v-bind:title="__('Share')"
                 >

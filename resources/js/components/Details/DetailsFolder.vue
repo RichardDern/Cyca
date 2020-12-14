@@ -123,7 +123,9 @@
                     <svg fill="currentColor" width="16" height="16">
                         <use v-bind:xlink:href="icon('trash')" />
                     </svg>
-                    {{ __("Delete") }}
+                    <span>
+                        {{ __("Delete") }}
+                    </span>
                 </button>
             </div>
         </div>

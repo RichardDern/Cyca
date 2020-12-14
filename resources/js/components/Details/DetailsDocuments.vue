@@ -16,7 +16,7 @@
                     </span>
                 </button>
                 <button
-                    class="info ml-2"
+                    class="info"
                     v-on:click.left.stop.prevent="onOpenClicked"
                 >
                     <svg fill="currentColor" width="16" height="16">

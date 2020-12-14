@@ -74,7 +74,7 @@
                         </button>
                         <button
                             v-if="group.pivot.status !== 'own'"
-                            class="danger ml-1"
+                            class="danger"
                             v-on:click.stop.prevent="
                                 $emit('group-deleted', group)
                             "
@@ -142,7 +142,7 @@
                     </span>
                 </button>
                 <button
-                    class="danger ml-2"
+                    class="danger"
                     v-on:click="$emit('invitation-declined', group)"
                 >
                     <svg

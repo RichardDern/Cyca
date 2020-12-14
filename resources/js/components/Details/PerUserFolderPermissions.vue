@@ -78,7 +78,7 @@
                         >
                             <svg fill="currentColor" width="16" height="16">
                                 <use v-bind:xlink:href="icon('cancel')" /></svg
-                            ><span>{{ __("Apply default permissions") }} </span>
+                            ><span>{{ __("Apply default permissions") }}</span>
                         </button>
                     </div>
                 </div>

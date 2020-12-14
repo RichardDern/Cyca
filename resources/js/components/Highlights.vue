@@ -38,7 +38,7 @@
                             </div>
                             <div class="tools">
                                 <button
-                                    class="info ml-2"
+                                    class="info"
                                     v-on:click="selectedHighlight = element"
                                 >
                                     <svg
@@ -143,7 +143,7 @@
                                         height="16"
                                     >
                                         <use
-                                            v-bind:xlink:href="icon('cancel')"
+                                            v-bind:xlink:href="icon('trash')"
                                         />
                                     </svg>
                                     <span>
@@ -161,12 +161,11 @@
 </template>
 
 <script>
-import Highlight from "./Highlight";
 import draggable from "vuedraggable";
 import TEXTColor from "textcolor";
 
 export default {
-    components: { draggable, Highlight },
+    components: { draggable },
     data: function () {
         return {
             positions: [],
