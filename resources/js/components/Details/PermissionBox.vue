@@ -16,7 +16,7 @@
                 })
             "
         />
-        <svg fill="currentColor" width="16" height="16" class="mr-1">
+        <svg fill="currentColor" width="16" height="16">
             <use
                 v-bind:xlink:href="
                     granted

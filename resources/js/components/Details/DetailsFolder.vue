@@ -6,7 +6,6 @@
                     fill="currentColor"
                     width="16"
                     height="16"
-                    class="mr-1"
                     v-bind:class="folder.iconColor"
                 >
                     <use v-bind:xlink:href="icon(folder.icon)" />
@@ -30,7 +29,9 @@
                     <svg fill="currentColor" width="16" height="16">
                         <use v-bind:xlink:href="icon('unread_items')" />
                     </svg>
-                    {{ __("Mark as read") }}
+                    <span>
+                        {{ __("Mark as read") }}
+                    </span>
                 </button>
             </div>
         </header>
@@ -52,7 +53,9 @@
                         <svg fill="currentColor" width="16" height="16">
                             <use v-bind:xlink:href="icon('update')" />
                         </svg>
-                        {{ __("Update folder") }}
+                        <span>
+                            {{ __("Update folder") }}
+                        </span>
                     </button>
                 </div>
             </form>
@@ -68,7 +71,9 @@
                         <svg fill="currentColor" width="16" height="16">
                             <use v-bind:xlink:href="icon('add')" />
                         </svg>
-                        {{ __("Add folder") }}
+                        <span>
+                            {{ __("Add folder") }}
+                        </span>
                     </button>
                 </div>
             </form>
@@ -85,7 +90,9 @@
                         <svg fill="currentColor" width="16" height="16">
                             <use v-bind:xlink:href="icon('add')" />
                         </svg>
-                        {{ __("Add document") }}
+                        <span>
+                            {{ __("Add document") }}
+                        </span>
                     </button>
                 </div>
             </form>

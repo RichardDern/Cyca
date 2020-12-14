@@ -25,11 +25,12 @@
                         fill="currentColor"
                         width="16"
                         height="16"
-                        class="mr-1"
                     >
                         <use v-bind:xlink:href="icon('unread_items')" />
                     </svg>
-                    {{ __("Mark as read") }}
+                    <span>
+                        {{ __("Mark as read") }}
+                    </span>
                 </button>
                 <a
                     class="button info"
@@ -50,22 +51,24 @@
                         fill="currentColor"
                         width="16"
                         height="16"
-                        class="mr-1"
                     >
                         <use v-bind:xlink:href="icon('open')" />
                     </svg>
-                    {{ __("Open") }}
+                    <span>
+                        {{ __("Open") }}
+                    </span>
                 </a>
                 <button class="info" v-on:click="onShareClicked">
                     <svg
                         fill="currentColor"
                         width="16"
                         height="16"
-                        class="mr-1"
                     >
                         <use v-bind:xlink:href="icon('share')" />
                     </svg>
-                    {{ __("Share") }}
+                    <span>
+                        {{ __("Share") }}
+                    </span>
                 </button>
             </div>
         </header>
@@ -181,7 +184,10 @@
                 </div>
             </stateful-details>
 
-            <stateful-details name="feeds_details" v-if="document.feeds.length > 0">
+            <stateful-details
+                name="feeds_details"
+                v-if="document.feeds.length > 0"
+            >
                 <summary>{{ __("Feeds") }}</summary>
 
                 <div class="list vertical striped items-rounded">
@@ -201,11 +207,12 @@
                                         fill="currentColor"
                                         width="16"
                                         height="16"
-                                        class="mr-1"
                                     >
                                         <use v-bind:xlink:href="icon('join')" />
                                     </svg>
-                                    {{ __("Follow") }}
+                                    <span>
+                                        {{ __("Follow") }}
+                                    </span>
                                 </button>
                                 <button
                                     class="danger"
@@ -216,13 +223,14 @@
                                         fill="currentColor"
                                         width="16"
                                         height="16"
-                                        class="mr-1"
                                     >
                                         <use
                                             v-bind:xlink:href="icon('cancel')"
                                         />
                                     </svg>
-                                    {{ __("Ignore") }}
+                                    <span>
+                                        {{ __("Ignore") }}
+                                    </span>
                                 </button>
                             </div>
                         </div>
@@ -268,15 +276,12 @@
                 "
             >
                 <button class="danger" v-on:click="onDeleteDocument">
-                    <svg
-                        fill="currentColor"
-                        width="16"
-                        height="16"
-                        class="mr-1"
-                    >
+                    <svg fill="currentColor" width="16" height="16">
                         <use v-bind:xlink:href="icon('trash')" />
                     </svg>
-                    {{ __("Delete") }}
+                    <span>
+                        {{ __("Delete") }}
+                    </span>
                 </button>
             </div>
         </div>

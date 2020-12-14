@@ -48,22 +48,12 @@
                 v-if="group.pending_users_count > 0"
                 class="badge warning"
                 v-bind:title="__('Pending users')"
-                ><svg
-                    fill="currentColor"
-                    width="16"
-                    height="16"
-                    class="inline mr-2"
-                >
+                ><svg fill="currentColor" width="16" height="16">
                     <use v-bind:xlink:href="icon('group')" /></svg
                 >{{ group.pending_users_count }}</span
             >
             <span class="badge success" v-bind:title="__('Active users')"
-                ><svg
-                    fill="currentColor"
-                    width="16"
-                    height="16"
-                    class="inline mr-2"
-                >
+                ><svg fill="currentColor" width="16" height="16">
                     <use v-bind:xlink:href="icon('group')" /></svg
                 >{{ group.active_users_count }}</span
             >
@@ -72,28 +62,22 @@
                 v-if="group.pivot"
                 v-on:click="$emit('selected', group)"
             >
-                <svg
-                    fill="currentColor"
-                    width="16"
-                    height="16"
-                    class="inline mr-2"
-                >
-                    <use v-bind:xlink:href="icon('update')" /></svg
-                >{{ __("Edit") }}
+                <svg fill="currentColor" width="16" height="16">
+                    <use v-bind:xlink:href="icon('update')" />
+                </svg>
+                <span>{{ __("Edit") }} </span>
             </button>
             <button
                 class="success inline ml-2"
                 v-if="!group.pivot"
                 v-on:click="$emit('join', group)"
             >
-                <svg
-                    fill="currentColor"
-                    width="16"
-                    height="16"
-                    class="inline mr-2"
-                >
-                    <use v-bind:xlink:href="icon('join')" /></svg
-                >{{ group.auto_accept_users ? __("Join") : __("Apply") }}
+                <svg fill="currentColor" width="16" height="16">
+                    <use v-bind:xlink:href="icon('join')" />
+                </svg>
+                <span
+                    >{{ group.auto_accept_users ? __("Join") : __("Apply") }}
+                </span>
             </button>
         </div>
     </div>

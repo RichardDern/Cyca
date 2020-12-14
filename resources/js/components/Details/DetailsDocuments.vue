@@ -8,29 +8,23 @@
                     class="button info"
                     v-on:click="onMarkAsReadClicked"
                 >
-                    <svg
-                        fill="currentColor"
-                        width="16"
-                        height="16"
-                        class="mr-1"
-                    >
+                    <svg fill="currentColor" width="16" height="16">
                         <use v-bind:xlink:href="icon('unread_items')" />
                     </svg>
-                    {{ __("Mark as read") }}
+                    <span>
+                        {{ __("Mark as read") }}
+                    </span>
                 </button>
                 <button
                     class="info ml-2"
                     v-on:click.left.stop.prevent="onOpenClicked"
                 >
-                    <svg
-                        fill="currentColor"
-                        width="16"
-                        height="16"
-                        class="mr-1"
-                    >
+                    <svg fill="currentColor" width="16" height="16">
                         <use v-bind:xlink:href="icon('open')" />
                     </svg>
-                    {{ __("Open") }}
+                    <span>
+                        {{ __("Open") }}
+                    </span>
                 </button>
             </div>
         </h1>
@@ -51,15 +45,12 @@
                 "
             >
                 <button class="danger" v-on:click="onDeleteDocument">
-                    <svg
-                        fill="currentColor"
-                        width="16"
-                        height="16"
-                        class="mr-1"
-                    >
+                    <svg fill="currentColor" width="16" height="16">
                         <use v-bind:xlink:href="icon('trash')" />
                     </svg>
-                    {{ __("Delete") }}
+                    <span>
+                        {{ __("Delete") }}
+                    </span>
                 </button>
             </div>
         </div>

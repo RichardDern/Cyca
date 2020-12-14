@@ -1,9 +1,9 @@
 button,
 a.button {
-    @apply rounded text-left flex-shrink flex items-center whitespace-nowrap;
+    @apply rounded text-left flex-shrink flex items-center whitespace-nowrap space-x-1;
 
     & svg {
-        @apply flex-none mr-1;
+        @apply flex-none;
     }
 
     &[type="submit"],

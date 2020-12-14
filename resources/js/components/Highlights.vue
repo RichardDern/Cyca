@@ -48,8 +48,9 @@
                                     >
                                         <use
                                             v-bind:xlink:href="icon('update')"
-                                        /></svg
-                                    >{{ __("Edit") }}
+                                        />
+                                    </svg>
+                                    <span>{{ __("Edit") }}</span>
                                 </button>
                             </div>
                         </div>
@@ -109,7 +110,9 @@
                                         "
                                     />
                                 </svg>
-                                {{ __("Save") }}
+                                <span>
+                                    {{ __("Save") }}
+                                </span>
                             </button>
                             <div class="flex items-center space-x-1">
                                 <button
@@ -125,7 +128,9 @@
                                             v-bind:xlink:href="icon('cancel')"
                                         />
                                     </svg>
-                                    {{ __("Cancel") }}
+                                    <span>
+                                        {{ __("Cancel") }}
+                                    </span>
                                 </button>
                                 <button
                                     class="danger"
@@ -141,7 +146,9 @@
                                             v-bind:xlink:href="icon('cancel')"
                                         />
                                     </svg>
-                                    {{ __("Delete") }}
+                                    <span>
+                                        {{ __("Delete") }}
+                                    </span>
                                 </button>
                             </div>
                         </div>

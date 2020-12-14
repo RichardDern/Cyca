@@ -56,7 +56,9 @@
                                 v-bind:xlink:href="icon(!id ? 'add' : 'update')"
                             />
                         </svg>
-                        {{ !id ? __("Create group") : __("Update group") }}
+                        <span>
+                            {{ !id ? __("Create group") : __("Update group") }}
+                        </span>
                     </button>
                     <div v-if="id !== null" class="flex items-center">
                         <button
@@ -66,7 +68,9 @@
                             <svg fill="currentColor" width="16" height="16">
                                 <use v-bind:xlink:href="icon('cancel')" />
                             </svg>
-                            {{ __("Cancel") }}
+                            <span>
+                                {{ __("Cancel") }}
+                            </span>
                         </button>
                         <button
                             v-if="group.pivot.status !== 'own'"
@@ -78,7 +82,9 @@
                             <svg fill="currentColor" width="16" height="16">
                                 <use v-bind:xlink:href="icon('trash')" />
                             </svg>
-                            {{ __("Delete") }}
+                            <span>
+                                {{ __("Delete") }}
+                            </span>
                         </button>
                     </div>
                 </div>
@@ -105,11 +111,12 @@
                                 fill="currentColor"
                                 width="16"
                                 height="16"
-                                class="mr-1"
                             >
                                 <use v-bind:xlink:href="icon('join')" />
                             </svg>
-                            {{ __("Invite in group") }}
+                            <span>
+                                {{ __("Invite in group") }}
+                            </span>
                         </button>
                     </div>
                 </div>
@@ -127,11 +134,12 @@
                         fill="currentColor"
                         width="16"
                         height="16"
-                        class="mr-1"
                     >
                         <use v-bind:xlink:href="icon('check')" />
                     </svg>
-                    {{ __("Accept invitation") }}
+                    <span>
+                        {{ __("Accept invitation") }}
+                    </span>
                 </button>
                 <button
                     class="danger ml-2"
@@ -141,11 +149,12 @@
                         fill="currentColor"
                         width="16"
                         height="16"
-                        class="mr-1"
                     >
                         <use v-bind:xlink:href="icon('cancel')" />
                     </svg>
-                    {{ __("Decline invitation") }}
+                    <span>
+                        {{ __("Decline invitation") }}
+                    </span>
                 </button>
             </div>
 
@@ -161,7 +170,9 @@
                     <svg fill="currentColor" width="16" height="16">
                         <use v-bind:xlink:href="icon('logout')" />
                     </svg>
-                    {{ __("Leave the group") }}
+                    <span>
+                        {{ __("Leave the group") }}
+                    </span>
                 </button>
             </div>
         </div>

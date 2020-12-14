@@ -14,11 +14,12 @@
                         fill="currentColor"
                         width="16"
                         height="16"
-                        class="mr-1"
                     >
                         <use v-bind:xlink:href="icon('unread_items')" />
                     </svg>
-                    {{ __("Mark as read") }}
+                    <span>
+                        {{ __("Mark as read") }}
+                    </span>
                 </button>
                 <a
                     class="button info ml-2"
@@ -29,22 +30,24 @@
                         fill="currentColor"
                         width="16"
                         height="16"
-                        class="mr-1"
                     >
                         <use v-bind:xlink:href="icon('open')" />
                     </svg>
-                    {{ __("Open") }}
+                    <span>
+                        {{ __("Open") }}
+                    </span>
                 </a>
                 <button class="button info ml-2" v-on:click="onShareClicked">
                     <svg
                         fill="currentColor"
                         width="16"
                         height="16"
-                        class="mr-1"
                     >
                         <use v-bind:xlink:href="icon('share')" />
                     </svg>
-                    {{ __("Share") }}
+                    <span>
+                        {{ __("Share") }}
+                    </span>
                 </button>
             </div>
         </header>

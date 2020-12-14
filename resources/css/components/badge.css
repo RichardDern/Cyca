@@ -1,5 +1,5 @@
 .badge {
-    @apply rounded-full text-xs flex items-center whitespace-nowrap px-2 py-0.5;
+    @apply rounded-full text-xs flex items-center whitespace-nowrap px-2 py-0.5 space-x-1;
 
     &.default {
         @apply bg-gray-100 text-gray-500;
