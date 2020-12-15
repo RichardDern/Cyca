@@ -7,22 +7,29 @@ use App\Models\Document;
 abstract class Analyzer
 {
     /**
-     * Document being analyzed
+     * Document being analyzed.
      *
      * @var \App\Models\Document
      */
-    protected $document = null;
+    protected $document;
 
     /**
-     * File content
+     * File content.
+     *
      * @var string
      */
-    protected $body = null;
-    
+    protected $body;
+
     /**
-     * Associate Cyca's document being analized
+     * Document details (meta data).
      *
-     * @param \App\Models\Document $document
+     * @var mixed
+     */
+    protected $details;
+
+    /**
+     * Associate Cyca's document being analized.
+     *
      * @return self
      */
     public function setDocument(Document $document)
@@ -33,9 +40,10 @@ abstract class Analyzer
     }
 
     /**
-     * Document's body as fetched by Cyca
+     * Document's body as fetched by Cyca.
      *
      * @param string $body
+     *
      * @return self
      */
     public function setBody($body)
@@ -43,5 +51,35 @@ abstract class Analyzer
         $this->body = $body;
 
         return $this;
+    }
+
+    /**
+     * Store details on disk.
+     */
+    protected function storeDetailsOnDisk()
+    {
+        if (empty($this->details)) {
+            return;
+        }
+
+        $storageRoot  = $this->document->getStoragePath();
+        $metaFilename = sprintf('%s/meta.json', $storageRoot);
+
+        Storage::put($metaFilename, json_encode($this->details));
+    }
+
+    /**
+     * Store some details in database. This method uses an array to map document
+     * properties to metadata properties.
+     *
+     * @param array $mappings
+     */
+    protected function applyDetailsToDocument($mappings)
+    {
+        foreach ($mappings as $documentKey => $detailsKey) {
+            if (!empty($this->details[$detailsKey])) {
+                $this->document->{$documentKey} = $this->details[$detailsKey];
+            }
+        }
     }
 }
