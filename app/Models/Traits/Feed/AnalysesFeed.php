@@ -12,8 +12,6 @@ use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use SimplePie;
 use \ForceUTF8\Encoding as UTF8;
-use HTMLPurifier_Config;
-use HTMLPurifier;
 
 trait AnalysesFeed
 {
@@ -165,14 +163,6 @@ trait AnalysesFeed
         if (empty($text)) {
             return;
         }
-
-        $config = HTMLPurifier_Config::createDefault();
-
-        $config->set('AutoFormat.RemoveEmpty', true);
-        $config->set('Core.EnableIDNA', true);
-
-        $purifier = new HTMLPurifier($config);
-        $text     = $purifier->purify($text);
 
         $text = mb_convert_encoding($text, 'HTML-ENTITIES', 'UTF-8');
 
