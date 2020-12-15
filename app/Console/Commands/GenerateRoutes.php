@@ -7,7 +7,6 @@ use Illuminate\Routing\Router;
 
 class GenerateRoutes extends Command
 {
-
     protected $router;
 
     /**
@@ -26,8 +25,6 @@ class GenerateRoutes extends Command
 
     /**
      * Create a new command instance.
-     *
-     * @return void
      */
     public function __construct(Router $router)
     {
@@ -43,6 +40,24 @@ class GenerateRoutes extends Command
      */
     public function handle()
     {
+        $routes = $this->buildRoutesArray();
+        $json   = $routes->toJson();
+
+        file_put_contents(config('routes.target'), $json);
+
+        $this->info(sprintf('Routes successfully generated in %s', config('routes.target')));
+        $this->comment("Don't forget to rebuild assets using  npm run dev  or  npm run prod  !");
+
+        return 0;
+    }
+
+    /**
+     * Return a list of whitelisted routes as a Laravel Collection.
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    protected function buildRoutesArray()
+    {
         $routes    = [];
         $whitelist = config('routes.whitelist');
 
@@ -54,13 +69,6 @@ class GenerateRoutes extends Command
             $routes[$route->getName()] = $route->uri();
         }
 
-        $json = collect($routes)->toJson();
-
-        file_put_contents(config('routes.target'), $json);
-
-        $this->info(sprintf("Routes successfully generated in %s", config('routes.target')));
-        $this->comment("Don't forget to rebuild assets using  npm run dev  or  npm run prod  !");
-
-        return 0;
+        return collect($routes);
     }
 }
