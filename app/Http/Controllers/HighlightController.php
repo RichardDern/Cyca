@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Highlight;
 use App\Http\Requests\StoreHighlightRequest;
+use App\Models\Highlight;
 use Illuminate\Http\Request;
 
 class HighlightController extends Controller
@@ -11,17 +11,18 @@ class HighlightController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreHighlightRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(StoreHighlightRequest $request)
     {
         $data = $request->validated();
 
-        $highlight             = new Highlight();
+        $highlight = new Highlight();
+
         $highlight->user_id    = $request->user()->id;
         $highlight->expression = $data['expression'];
         $highlight->color      = $data['color'];
+
         $highlight->save();
 
         return $request->user()->highlights()->get();
@@ -30,8 +31,8 @@ class HighlightController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\StoreHighlightRequest  $request
-     * @param  \App\Models\Models\Highlight  $highlight
+     * @param \App\Models\Models\Highlight $highlight
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(StoreHighlightRequest $request, Highlight $highlight)
@@ -44,6 +45,7 @@ class HighlightController extends Controller
 
         $highlight->expression = $data['expression'];
         $highlight->color      = $data['color'];
+
         $highlight->save();
 
         return $request->user()->highlights()->get();
@@ -52,7 +54,8 @@ class HighlightController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Models\Hightlight  $hightlight
+     * @param \App\Models\Models\Hightlight $hightlight
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request, Highlight $highlight)
@@ -62,13 +65,13 @@ class HighlightController extends Controller
         }
 
         $highlight->delete();
+
         return $request->user()->highlights()->get();
     }
 
     /**
-     * Update my groups positions
+     * Update my groups positions.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function updatePositions(Request $request)

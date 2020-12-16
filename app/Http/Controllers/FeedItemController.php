@@ -21,31 +21,30 @@ class FeedItemController extends Controller
             return [];
         }
 
-        $user = $request->user();
-
-        $queryBuilder = FeedItem::with('feeds:feeds.id,title', 'feeds.documents:documents.id')->whereHas('feeds', function ($query) use ($feedIds) {
-            $query->whereIn('feeds.id', $feedIds);
-        });
-
-        $queryBuilder->select(['feed_items.id', 'url', 'title', 'published_at', 'created_at', 'updated_at']);
-
+        $user   = $request->user();
         $folder = $user->selectedFolder();
 
+        $queryBuilder = FeedItem::with('feeds:feeds.id,title', 'feeds.documents:documents.id')->inFeeds($feedIds);
+
+        $queryBuilder->select([
+            'feed_items.id',
+            'url',
+            'title',
+            'published_at',
+            'created_at',
+            'updated_at',
+        ]);
+
         if ($folder->type === 'unread_items') {
-            $queryBuilder->whereHas('feedItemStates', function ($query) use ($user) {
-                $query->where('user_id', $user->id)->where('is_read', false);
-            });
+            $queryBuilder->unreadFor($user);
         }
 
-        return $queryBuilder->withCount(['feedItemStates' => function ($query) use ($user) {
-            $query->where('user_id', $user->id)->where('is_read', false);
-        }])->orderBy('published_at', 'desc')->simplePaginate(15);
+        return $queryBuilder->countStates($user)->orderBy('published_at', 'desc')->simplePaginate(15);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\FeedItem  $feedItem
      * @return \Illuminate\Http\Response
      */
     public function show(Request $request, FeedItem $feedItem)
@@ -60,9 +59,7 @@ class FeedItemController extends Controller
     }
 
     /**
-     * Mark feed items as read
-     *
-     * @param  \Illuminate\Http\Request  $request
+     * Mark feed items as read.
      */
     public function markAsRead(Request $request)
     {
@@ -70,11 +67,14 @@ class FeedItemController extends Controller
 
         if ($request->has('folders')) {
             return $user->markFeedItemsReadInFolders($request->input('folders'));
-        } elseif ($request->has('documents')) {
+        }
+        if ($request->has('documents')) {
             return $user->markFeedItemsReadInDocuments($request->input('documents'));
-        } elseif ($request->has('feeds')) {
+        }
+        if ($request->has('feeds')) {
             return $user->markFeedItemsReadInFeeds($request->input('feeds'));
-        } elseif ($request->has('feed_items')) {
+        }
+        if ($request->has('feed_items')) {
             return $user->markFeedItemsRead($request->input('feed_items'));
         }
     }

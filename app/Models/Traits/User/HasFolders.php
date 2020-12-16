@@ -8,23 +8,23 @@ use App\Models\Permission;
 
 trait HasFolders
 {
-    # --------------------------------------------------------------------------
-    # ----| Properties |--------------------------------------------------------
-    # --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // ----| Properties |-------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
-     * Currently selected folder in each group
+     * Currently selected folder in each group.
      *
      * @var array
      */
     protected $selectedFolders = [];
 
-    # --------------------------------------------------------------------------
-    # ----| Relations |---------------------------------------------------------
-    # --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // ----| Relations |--------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
-     * Folders owned (created) by this user
+     * Folders owned (created) by this user.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -33,9 +33,9 @@ trait HasFolders
         return $this->hasMany(Folder::class);
     }
 
-    # --------------------------------------------------------------------------
-    # ----| Methods |-----------------------------------------------------------
-    # --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // ----| Methods |----------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
      * Return user's folders as a flat tree.
@@ -52,66 +52,9 @@ trait HasFolders
     }
 
     /**
-     * Return the key to access reminded selected folder for this user and
-     * specified group
+     * Return current user's selected folder in specified group.
      *
-     * @return string
-     */
-    protected function selectedFolderStoreKey(Group $group)
-    {
-        if (empty($group)) {
-            $group = $this->selectedGroup();
-        }
-
-        return sprintf('selectedFolder.%d.%d', $this->id, $group->id);
-    }
-
-    /**
-     * Return stored user's selected folder in specified group
-     *
-     * @param \App\Models\Group $group
-     * @return \App\Models\Folder
-     */
-    protected function fetchSelectedFolder(Group $group)
-    {
-        $key = $this->selectedFolderStoreKey($group);
-
-        if (cache()->has($key)) {
-            $folder = $group->folders()->find(cache($key));
-
-            if (!empty($folder)) {
-                return $folder;
-            }
-        }
-
-        return $group->folders()->ofType('root')->first();
-    }
-
-    /**
-     * Save user's selected folder in specified group
-     *
-     * @param \App\Models\Group $group
-     */
-    protected function storeSelectedFolder(Group $group)
-    {
-        if (empty($group)) {
-            $group = $this->selectedGroup();
-        }
-
-        $key    = $this->selectedFolderStoreKey($group);
-        $folder = $this->selectedFolders[$group->id];
-
-        if (!empty($folder)) {
-            cache()->forever($key, $folder->id);
-        } else {
-            cache()->forget($key);
-        }
-    }
-
-    /**
-     * Return current user's selected folder in specified group
-     *
-     * @return \App\Models\Group|null
+     * @return null|\App\Models\Group
      */
     public function selectedFolder(Group $group = null)
     {
@@ -127,10 +70,10 @@ trait HasFolders
     }
 
     /**
-     * Remember user's selected folder in specified (or current) group
+     * Remember user's selected folder in specified (or current) group.
      *
      * @param \App\Models\Folder $folder
-     * @param \App\Models\Group|null $group
+     *
      * @return array
      */
     public function setSelectedFolder(Folder $folder = null, Group $group = null)
@@ -145,32 +88,9 @@ trait HasFolders
     }
 
     /**
-     * Return the key to get specified folder's expanded/collased state in
-     * specified group
+     * Return specified folder's expanded/collapsed state in specified group.
      *
-     * @param \App\Models\Folder|null $folder
-     * @param \App\Models\Group|null $group
-     * @return string
-     */
-    protected function folderExpandedStoreKey(Folder $folder = null, Group $group = null)
-    {
-        if (empty($group)) {
-            $group = $this->selectedGroup();
-        }
-
-        if (empty($folder)) {
-            $folder = $this->selectedFolder($group);
-        }
-
-        return sprintf('folderExpandedState.%d.%d.%d', $this->id, $group->id, $folder->id);
-    }
-
-    /**
-     * Return specified folder's expanded/collapsed state in specified group
-     *
-     * @param \App\Models\Folder|null $folder
-     * @param \App\Models\Group|null $group
-     * @return boolean
+     * @return bool
      */
     public function getFolderExpandedState(Folder $folder = null, Group $group = null)
     {
@@ -184,12 +104,10 @@ trait HasFolders
     }
 
     /**
-     * Set specified folder's expanded/collapsed state in specified group
+     * Set specified folder's expanded/collapsed state in specified group.
      *
-     * @param boolean $expanded
-     * @param \App\Models\Folder|null $folder
-     * @param \App\Models\Group|null $group
-     * @param boolean $recursive Apply new state recursively
+     * @param bool $expanded
+     * @param bool $recursive Apply new state recursively
      */
     public function setFolderExpandedState($expanded, Folder $folder = null, Group $group = null, $recursive = false)
     {
@@ -206,7 +124,7 @@ trait HasFolders
 
     /**
      * Make sure specified folder's ancestor are all expanded, so the folder is
-     * visible
+     * visible.
      *
      * @param \App\Models\Folder $folder
      */
@@ -222,7 +140,10 @@ trait HasFolders
     }
 
     /**
-     * Define this user permission for specified folder and ability
+     * Define this user permission for specified folder and ability.
+     *
+     * @param null|mixed $ability
+     * @param mixed      $grant
      */
     public function setFolderPermissions(Folder $folder, $ability = null, $grant = false)
     {
@@ -246,5 +167,78 @@ trait HasFolders
         }
 
         $permissions->save();
+    }
+
+    /**
+     * Return the key to access reminded selected folder for this user and
+     * specified group.
+     *
+     * @return string
+     */
+    protected function selectedFolderStoreKey(Group $group)
+    {
+        if (empty($group)) {
+            $group = $this->selectedGroup();
+        }
+
+        return sprintf('selectedFolder.%d.%d', $this->id, $group->id);
+    }
+
+    /**
+     * Return stored user's selected folder in specified group.
+     *
+     * @return \App\Models\Folder
+     */
+    protected function fetchSelectedFolder(Group $group)
+    {
+        $key = $this->selectedFolderStoreKey($group);
+
+        if (cache()->has($key)) {
+            $folder = $group->folders()->find(cache($key));
+
+            if (!empty($folder)) {
+                return $folder;
+            }
+        }
+
+        return $group->folders()->ofType('root')->first();
+    }
+
+    /**
+     * Save user's selected folder in specified group.
+     */
+    protected function storeSelectedFolder(Group $group)
+    {
+        if (empty($group)) {
+            $group = $this->selectedGroup();
+        }
+
+        $key    = $this->selectedFolderStoreKey($group);
+        $folder = $this->selectedFolders[$group->id];
+
+        if (!empty($folder)) {
+            cache()->forever($key, $folder->id);
+        } else {
+            cache()->forget($key);
+        }
+    }
+
+    /**
+     * Return the key to get specified folder's expanded/collased state in
+     * specified group.
+     *
+     * @return string
+     */
+    protected function folderExpandedStoreKey(Folder $folder = null, Group $group = null)
+    {
+        if (empty($group)) {
+            $group = $this->selectedGroup();
+        }
+
+        if (empty($folder)) {
+            $folder = $this->selectedFolder($group);
+        }
+
+        return sprintf('folderExpandedState.%d.%d.%d', $this->id, $group->id, $folder->id);
     }
 }

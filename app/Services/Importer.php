@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Contracts\ImportAdapter;
 use App\Models\Document;
 use App\Models\Feed;
 use App\Models\Folder;
@@ -13,50 +12,57 @@ use App\Models\User;
 use Illuminate\Http\Request;
 
 /**
- * Imports data in Cyca
+ * Imports data in Cyca.
  */
 class Importer
 {
     /**
-     * Adapter used to import data
+     * Adapter used to import data.
+     *
      * @var \App\Contracts\ImportAdapter
      */
-    protected $importAdapter = null;
+    protected $importAdapter;
 
     /**
-     * User to import data for
+     * User to import data for.
+     *
      * @var \App\Models\User
      */
-    protected $forUser = null;
+    protected $forUser;
 
     /**
-     * Folder to import bookmarks and feeds to
+     * Folder to import bookmarks and feeds to.
+     *
      * @var \App\Models\Folder
      */
-    protected $inFolder = null;
+    protected $inFolder;
 
     /**
      * Should we import highlights as well ?
-     * @var boolean
+     *
+     * @var bool
      */
     protected $withHighlights = true;
 
     /**
-     * Data to be imported as an array
+     * Data to be imported as an array.
+     *
      * @var array
      */
     protected $dataArray = [];
 
     /**
-     * Group to import data to
+     * Group to import data to.
+     *
      * @var \App\Models\Group
      */
-    protected $inGroup = null;
+    protected $inGroup;
 
     /**
-     * Indicates which adapter to use for importation
+     * Indicates which adapter to use for importation.
      *
      * @param string $adapterName
+     *
      * @return self
      */
     public function using($adapterName)
@@ -76,7 +82,6 @@ class Importer
      * Defines which user to import data for. If not defined, user will be
      * extracted from request.
      *
-     * @param \App\Models\User $user
      * @return self
      */
     public function forUser(User $user)
@@ -87,9 +92,8 @@ class Importer
     }
 
     /**
-     * Defines the group to import data to
+     * Defines the group to import data to.
      *
-     * @param \App\Models\Group $group
      * @return self
      */
     public function inGroup(Group $group)
@@ -103,7 +107,6 @@ class Importer
      * Defines in which folder data will be imported to. If not defined, root
      * folder attached to specified user will be used.
      *
-     * @param \App\Models\Folder $folder
      * @return self
      */
     public function inFolder(Folder $folder)
@@ -115,7 +118,7 @@ class Importer
 
     /**
      * Should we ignore highlights during import ? By default, highlights will
-     * be imported as well
+     * be imported as well.
      *
      * @return self
      */
@@ -131,18 +134,19 @@ class Importer
      * Cyca's architecture point of view.
      *
      * @param string $path Full path to file to import
+     *
      * @return self
      */
     public function fromFile($path)
     {
         if (empty($this->forUser)) {
-            abort(422, "Target user not specified");
+            abort(422, 'Target user not specified');
         }
 
         $contents = file_get_contents($path);
 
         if (empty($contents)) {
-            abort(422, "File does not exists");
+            abort(422, 'File does not exists');
         }
 
         $this->dataArray = json_decode($contents, true);
@@ -151,9 +155,8 @@ class Importer
     }
 
     /**
-     * Import data using current request informations
+     * Import data using current request informations.
      *
-     * @param \Illuminate\Http\Request $request
      * @return self
      */
     public function fromRequest(Request $request)
@@ -163,7 +166,7 @@ class Importer
         }
 
         if (empty($this->importAdapter)) {
-            abort(422, "An import adapter must be specified");
+            abort(422, 'An import adapter must be specified');
         }
 
         if (empty($this->forUser)) {
@@ -176,7 +179,7 @@ class Importer
     }
 
     /**
-     * Perform the import
+     * Perform the import.
      */
     public function import()
     {
@@ -198,7 +201,7 @@ class Importer
     }
 
     /**
-     * Import highlights from specified array
+     * Import highlights from specified array.
      *
      * @param array $highlights
      */
@@ -220,7 +223,7 @@ class Importer
     }
 
     /**
-     * Import bookmarks from specified array
+     * Import bookmarks from specified array.
      *
      * @param array $bookmarks
      */
@@ -231,10 +234,11 @@ class Importer
     }
 
     /**
-     * Import folders
+     * Import folders.
      *
      * @param \App\Models\Folder Destination folder
      * @param array $foldersData Array of sub-folders definitions
+     * @param mixed $folder
      */
     protected function importFolders($folder, $foldersData)
     {
@@ -251,10 +255,11 @@ class Importer
     }
 
     /**
-     * Import documents
+     * Import documents.
      *
      * @param \App\Models\Folder Destination folder
      * @param array $documentsData Array of documents definitions
+     * @param mixed $folder
      */
     protected function importDocuments($folder, $documentsData)
     {
@@ -275,10 +280,10 @@ class Importer
     }
 
     /**
-     * Import feeds
+     * Import feeds.
      *
-     * @param \App\Models\Document $document Destination document
-     * @param array $feedsData Array of feeds definitions
+     * @param \App\Models\Document $document  Destination document
+     * @param array                $feedsData Array of feeds definitions
      */
     protected function importFeeds($document, $feedsData)
     {

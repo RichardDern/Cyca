@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Groups\InviteUserRequest;
 use App\Http\Requests\Groups\StoreRequest;
 use App\Http\Requests\Groups\UpdateRequest;
 use App\Models\Group;
 use App\Models\User;
-use Illuminate\Http\Request;
-use App\Http\Requests\Groups\InviteUserRequest;
-use Notification;
-use App\Notifications\InvitedToJoinGroup;
 use App\Notifications\AsksToJoinGroup;
+use App\Notifications\InvitedToJoinGroup;
+use Illuminate\Http\Request;
+use Notification;
 
 class GroupController extends Controller
 {
@@ -22,7 +22,6 @@ class GroupController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
@@ -36,7 +35,7 @@ class GroupController extends Controller
             ->withCount('activeUsers');
 
         if (!empty($search)) {
-            $query = $query->where('groups.name', 'like', '%' . $search . '%');
+            $query = $query->where('groups.name', 'like', '%'.$search.'%');
         }
 
         return $query
@@ -45,9 +44,8 @@ class GroupController extends Controller
     }
 
     /**
-     * Display a listing of the resource (active groups)
+     * Display a listing of the resource (active groups).
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function indexActive(Request $request)
@@ -58,9 +56,8 @@ class GroupController extends Controller
     }
 
     /**
-     * Display a listing of the resource (my groups)
+     * Display a listing of the resource (my groups).
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function indexMyGroups(Request $request)
@@ -70,7 +67,7 @@ class GroupController extends Controller
         return $user->groups()->withCount('activeUsers', 'pendingUsers')
             ->whereNotIn('status', [
                 Group::$STATUS_REJECTED,
-                Group::$STATUS_LEFT
+                Group::$STATUS_LEFT,
             ])->orderBy('position')->orderBy('id')->get();
     }
 
@@ -78,6 +75,7 @@ class GroupController extends Controller
      * Store a newly created resource in storage.
      *
      * @param \App\Http\Requests\StoreRequest $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(StoreRequest $request)
@@ -97,8 +95,6 @@ class GroupController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Group  $group
      * @return \Illuminate\Http\Response
      */
     public function show(Request $request, Group $group)
@@ -113,8 +109,6 @@ class GroupController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\Groups\UpdateRequest  $request
-     * @param  \App\Models\Group  $group
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateRequest $request, Group $group)
@@ -134,8 +128,6 @@ class GroupController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Group  $group
      * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request, Group $group)
@@ -148,9 +140,8 @@ class GroupController extends Controller
     }
 
     /**
-     * Update my groups positions
+     * Update my groups positions.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function updatePositions(Request $request)
@@ -181,10 +172,10 @@ class GroupController extends Controller
     }
 
     /**
-     * Invite user to join specified group
+     * Invite user to join specified group.
      *
-     * @param  \App\Requests\Groups\InviteUserRequest  $request
-     * @param  \App\Models\Group  $group
+     * @param \App\Requests\Groups\InviteUserRequest $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function inviteUser(InviteUserRequest $request, Group $group)
@@ -205,8 +196,6 @@ class GroupController extends Controller
         Notification::route('mail', $validated['email'])
             ->notify(new InvitedToJoinGroup($request->user(), $group));
 
-        //TODO: Add history entry
-
         return $request->user()->groups()->withCount('activeUsers', 'pendingUsers')->find($group->id);
     }
 
@@ -215,13 +204,11 @@ class GroupController extends Controller
         $user = $request->user();
         $user->updateGroupStatus($group, Group::$STATUS_ACCEPTED);
 
-        //TODO: Add history entry
-
         if ($request->ajax()) {
             return $user->groups()->withCount('activeUsers', 'pendingUsers')->find($group->id);
-        } else {
-            return redirect()->route('account.groups');
         }
+
+        return redirect()->route('account.groups');
     }
 
     public function approveUser(Request $request, Group $group, User $user)
@@ -234,8 +221,6 @@ class GroupController extends Controller
 
         $user->updateGroupStatus($group, Group::$STATUS_ACCEPTED);
 
-        //TODO: Add history entry
-
         return redirect()->route('account.groups');
     }
 
@@ -244,8 +229,6 @@ class GroupController extends Controller
         $user = $request->user();
         $user->updateGroupStatus($group, Group::$STATUS_REJECTED);
 
-        //TODO: Add history entry
-
         return $user->groups()->withCount('activeUsers', 'pendingUsers')->find($group->id);
     }
 
@@ -253,8 +236,6 @@ class GroupController extends Controller
     {
         $user = $request->user();
         $user->groups()->detach($group);
-
-        //TODO: Add history entry
     }
 
     public function join(Request $request, Group $group)
@@ -269,7 +250,5 @@ class GroupController extends Controller
             Notification::route('mail', $group->creator->email)
                 ->notify(new AsksToJoinGroup($request->user(), $group));
         }
-
-        //TODO: Add history entry
     }
 }

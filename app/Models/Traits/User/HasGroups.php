@@ -6,23 +6,23 @@ use App\Models\Group;
 
 trait HasGroups
 {
-    # --------------------------------------------------------------------------
-    # ----| Properties |--------------------------------------------------------
-    # --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // ----| Properties |-------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
-     * Currently selected group
+     * Currently selected group.
      *
      * @var \App\Models\Group
      */
-    protected $selectedGroup = null;
+    protected $selectedGroup;
 
-    # --------------------------------------------------------------------------
-    # ----| Relations |---------------------------------------------------------
-    # --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // ----| Relations |--------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
-     * Groups created by this user
+     * Groups created by this user.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -32,7 +32,7 @@ trait HasGroups
     }
 
     /**
-     * Associated groups
+     * Associated groups.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
@@ -41,12 +41,12 @@ trait HasGroups
         return $this->belongsToMany(Group::class, 'user_groups')->withPivot(['status', 'position']);
     }
 
-    # --------------------------------------------------------------------------
-    # ----| Methods |-----------------------------------------------------------
-    # --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // ----| Methods |----------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
-     * Create and return user's primary group
+     * Create and return user's primary group.
      *
      * @return \App\Models\Group
      */
@@ -66,7 +66,77 @@ trait HasGroups
     }
 
     /**
-     * Return the key to access reminded selected group for this user
+     * Return current user's selected group.
+     *
+     * @return \App\Models\Group
+     */
+    public function selectedGroup()
+    {
+        if ($this->selectedGroup === null) {
+            $this->selectedGroup = $this->fetchSelectedGroup();
+        }
+
+        return $this->selectedGroup;
+    }
+
+    /**
+     * Remember user's selected group.
+     */
+    public function setSelectedGroup(Group $group)
+    {
+        $this->selectedGroup = $group;
+
+        $this->storeSelectedGroup();
+
+        return $this->getFlatTree();
+    }
+
+    /**
+     * Return a list of groups user is active in.
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function listActiveGroups()
+    {
+        $userId = $this->id;
+
+        return $this->groups()
+            ->select([
+                'groups.id',
+                'groups.name',
+            ])->active()
+            ->orderBy('position')->get();
+    }
+
+    /**
+     * Update group status for current user. If group is not associated with
+     * user, association will be made. It won't change user group if it is
+     * marked as being owned or created by current user, unless $force is true.
+     *
+     * @param string $newStatus
+     * @param mixed  $force
+     */
+    public function updateGroupStatus(Group $group, $newStatus, $force = false)
+    {
+        $userGroup = $this->groups()->find($group->id);
+
+        if ($userGroup) {
+            if (in_array($userGroup->pivot->status, [Group::$STATUS_OWN, Group::$STATUS_CREATED]) && !$force) {
+                return;
+            }
+
+            $this->groups()->updateExistingPivot($group->id, [
+                'status' => $newStatus,
+            ]);
+        } else {
+            $this->groups()->save($group, [
+                'status' => $newStatus,
+            ]);
+        }
+    }
+
+    /**
+     * Return the key to access reminded selected group for this user.
      *
      * @return string
      */
@@ -76,7 +146,7 @@ trait HasGroups
     }
 
     /**
-     * Return stored user's selected group
+     * Return stored user's selected group.
      *
      * @return \App\Models\Group
      */
@@ -96,86 +166,12 @@ trait HasGroups
     }
 
     /**
-     * Save user's selected group
+     * Save user's selected group.
      */
     protected function storeSelectedGroup()
     {
         $key = $this->selectedGroupStoreKey();
 
         cache()->forever($key, $this->selectedGroup->id);
-    }
-
-    /**
-     * Return current user's selected group
-     *
-     * @return \App\Models\Group
-     */
-    public function selectedGroup()
-    {
-        if ($this->selectedGroup === null) {
-            $this->selectedGroup = $this->fetchSelectedGroup();
-        }
-
-        return $this->selectedGroup;
-    }
-
-    /**
-     * Remember user's selected group
-     *
-     * @param \App\Models\Group $group
-     */
-    public function setSelectedGroup(Group $group)
-    {
-        $this->selectedGroup = $group;
-
-        $this->storeSelectedGroup();
-
-        return $this->getFlatTree();
-    }
-
-    /**
-     * Return a list of groups user is active in
-     *
-     * @return \Illuminate\Support\Collection
-     */
-    public function listActiveGroups()
-    {
-        $userId = $this->id;
-
-        $groups = $this->groups()
-            ->select([
-                'groups.id',
-                'groups.name',
-            ])->active()
-            ->orderBy('position')->get();
-
-        return $groups;
-    }
-
-    /**
-     * Update group status for current user. If group is not associated with
-     * user, association will be made. It won't change user group if it is
-     * marked as being owned or created by current user, unless $force is true
-     *
-     * @param \App\Models\Group $group
-     * @param string $newStatus
-     */
-    public function updateGroupStatus(Group $group, $newStatus, $force = false)
-    {
-        $userGroup = $this->groups()->find($group->id);
-
-        if ($userGroup) {
-            if (in_array($userGroup->pivot->status, [Group::$STATUS_OWN, Group::$STATUS_CREATED]) && !$force) {
-                return;
-            }
-
-            $this->groups()->updateExistingPivot($group->id, [
-                'status' => $newStatus
-            ]);
-        } else {
-            $this->groups()->save($group, [
-                'status' => $newStatus
-            ]);
-        }
     }
 }

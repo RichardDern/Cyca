@@ -8,12 +8,12 @@ class IgnoredFeed extends Model
 {
     public $timestamps = false;
 
-    # --------------------------------------------------------------------------
-    # ----| Relations |---------------------------------------------------------
-    # --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // ----| Relations |--------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
-     * Ignored feed
+     * Ignored feed.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -23,7 +23,7 @@ class IgnoredFeed extends Model
     }
 
     /**
-     * User ignoring feed
+     * User ignoring feed.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

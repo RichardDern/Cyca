@@ -2,19 +2,19 @@
 
 namespace App\Models\Traits\User;
 
+use App\Models\Document;
 use App\Models\FeedItemState;
 use App\Models\Folder;
 use App\Models\Group;
-use App\Models\Document;
 
 trait HasFeeds
 {
-    # --------------------------------------------------------------------------
-    # ----| Relations |---------------------------------------------------------
-    # --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // ----| Relations |--------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
-     * Associated feed item state
+     * Associated feed item state.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -23,12 +23,12 @@ trait HasFeeds
         return $this->hasMany(FeedItemState::class);
     }
 
-    # --------------------------------------------------------------------------
-    # ----| Methods |-----------------------------------------------------------
-    # --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // ----| Methods |----------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
-     * Mark feed items as read in specified folders, as an array of folder ids
+     * Mark feed items as read in specified folders, as an array of folder ids.
      *
      * @param array $folders
      */
@@ -45,25 +45,25 @@ trait HasFeeds
         if (!in_array($unreadItemsFolder->id, $folders)) {
             $query = $query->whereIn('folders.id', $folders);
         }
-        
+
         $folders     = $query->get();
         $documentIds = $query->get()->pluck('documents')->flatten()->pluck('id')->unique();
-        
+
         $query       = $this->feedItemStates()->unread()->whereIn('document_id', $documentIds);
         $feedItemIds = $query->pluck('feed_item_id')->unique();
-        
+
         $query->update(['is_read' => true]);
 
         return $this->countUnreadItems([
             'folders'            => $folders,
             'documents'          => $documentIds,
-            'updated_feed_items' => $feedItemIds
+            'updated_feed_items' => $feedItemIds,
         ]);
     }
 
     /**
      * Mark feed items as read in specified documents, as an array of document
-     * ids
+     * ids.
      *
      * @param array $documents
      */
@@ -71,17 +71,17 @@ trait HasFeeds
     {
         $query       = $this->feedItemStates()->unread()->whereIn('document_id', $documents);
         $feedItemIds = $query->pluck('feed_item_id')->unique();
-        
+
         $query->update(['is_read' => true]);
 
         return $this->countUnreadItems([
             'documents'          => $documents,
-            'updated_feed_items' => $feedItemIds
+            'updated_feed_items' => $feedItemIds,
         ]);
     }
 
     /**
-     * Mark feed items as read in specified feeds, as an array of feed ids
+     * Mark feed items as read in specified feeds, as an array of feed ids.
      *
      * @param array $feeds
      */
@@ -91,7 +91,7 @@ trait HasFeeds
     }
 
     /**
-     * Mark specified feed items as read, as an array of feed item ids
+     * Mark specified feed items as read, as an array of feed item ids.
      *
      * @param array $feedItems
      */
@@ -100,12 +100,12 @@ trait HasFeeds
         $query       = $this->feedItemStates()->unread()->whereIn('feed_item_id', $feedItems);
         $feedItemIds = $query->pluck('feed_item_id')->unique();
         $documentIds = $query->pluck('document_id')->unique();
-        
+
         $query->update(['is_read' => true]);
 
         return $this->countUnreadItems([
             'documents'          => $documentIds,
-            'updated_feed_items' => $feedItemIds
+            'updated_feed_items' => $feedItemIds,
         ]);
     }
 
@@ -119,6 +119,7 @@ trait HasFeeds
      * of unread items count for each group and folders of type "unread_items".
      *
      * @param array $for
+     *
      * @return array
      */
     public function countUnreadItems($for)
@@ -143,7 +144,7 @@ trait HasFeeds
 
             if (empty($for['folders'])) {
                 $folderIds = Document::with('folders')->find($for['documents'])->pluck('folders')->flatten()->pluck('id');
-            
+
                 $for['folders'] = Folder::find($folderIds);
             }
         }
@@ -160,13 +161,11 @@ trait HasFeeds
             $countPerGroup[$group->id]            = $totalUnreadItems;
         }
 
-        $data = [
+        return [
             'documents'          => $countPerDocument,
             'folders'            => $countPerFolder,
             'groups'             => $countPerGroup,
-            'updated_feed_items' => !empty($for['updated_feed_items']) ? $for['updated_feed_items'] : null
+            'updated_feed_items' => !empty($for['updated_feed_items']) ? $for['updated_feed_items'] : null,
         ];
-
-        return $data;
     }
 }

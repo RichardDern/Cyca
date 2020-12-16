@@ -11,7 +11,7 @@ class UnreadItemsChanged extends Notification
     use Queueable;
 
     /**
-     * Feed items, feeds, documents or folders to recalculate unread items for
+     * Feed items, feeds, documents or folders to recalculate unread items for.
      *
      * @var array
      */
@@ -20,9 +20,9 @@ class UnreadItemsChanged extends Notification
     /**
      * Create a new notification instance.
      *
-     * @param array|null Feed items, feeds, documents or folders to recalculate
+     * @param null|array Feed items, feeds, documents or folders to recalculate
      * unread items for
-     * @return void
+     * @param null|mixed $data
      */
     public function __construct($data = null)
     {
@@ -32,7 +32,8 @@ class UnreadItemsChanged extends Notification
     /**
      * Get the notification's delivery channels.
      *
-     * @param  mixed  $notifiable
+     * @param mixed $notifiable
+     *
      * @return array
      */
     public function via($notifiable)
@@ -43,7 +44,8 @@ class UnreadItemsChanged extends Notification
     /**
      * Get the array representation of the notification.
      *
-     * @param  mixed  $notifiable
+     * @param mixed $notifiable
+     *
      * @return array
      */
     public function toArray($notifiable)
@@ -54,7 +56,8 @@ class UnreadItemsChanged extends Notification
     /**
      * Get the broadcastable representation of the notification.
      *
-     * @param  mixed  $notifiable
+     * @param mixed $notifiable
+     *
      * @return BroadcastMessage
      */
     public function toBroadcast($notifiable)

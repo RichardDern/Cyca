@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests\Folders;
 
-use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class SetPermissionsRequest extends FormRequest
 {
@@ -32,17 +32,17 @@ class SetPermissionsRequest extends FormRequest
                     'can_update_folder',
                     'can_delete_folder',
                     'can_create_document',
-                    'can_delete_document'
-                ])
+                    'can_delete_document',
+                ]),
             ],
             'granted' => [
                 'nullable',
-                'boolean'
+                'boolean',
             ],
             'user_id' => [
                 'nullable',
-                Rule::exists('users', 'id')
-            ]
+                Rule::exists('users', 'id'),
+            ],
         ];
     }
 }

@@ -26,8 +26,8 @@ class InviteUserRequest extends FormRequest
         return [
             'email' => [
                 'required',
-                'email'
-            ]
+                'email',
+            ],
         ];
     }
 }

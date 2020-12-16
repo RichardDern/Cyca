@@ -13,11 +13,14 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable implements MustVerifyEmail, HasLocalePreference
 {
-    use Notifiable,  HasGroups, HasFolders, HasFeeds;
+    use Notifiable;
+    use HasGroups;
+    use HasFolders;
+    use HasFeeds;
 
-    # --------------------------------------------------------------------------
-    # ----| Properties |--------------------------------------------------------
-    # --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // ----| Properties |-------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
      * The attributes that are mass assignable.
@@ -46,16 +49,12 @@ class User extends Authenticatable implements MustVerifyEmail, HasLocalePreferen
         'email_verified_at' => 'datetime',
     ];
 
-    # --------------------------------------------------------------------------
-    # ----| Attributes |--------------------------------------------------------
-    # --------------------------------------------------------------------------
-
-    # --------------------------------------------------------------------------
-    # ----| Relations |---------------------------------------------------------
-    # --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // ----| Relations |--------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
-     * Documents added to user's collection
+     * Documents added to user's collection.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
@@ -65,7 +64,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasLocalePreferen
     }
 
     /**
-     * Highlights registered by this user
+     * Highlights registered by this user.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -75,7 +74,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasLocalePreferen
     }
 
     /**
-     * Associated history entries
+     * Associated history entries.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -85,7 +84,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasLocalePreferen
     }
 
     /**
-     * Permissions affected to this user
+     * Permissions affected to this user.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -94,9 +93,9 @@ class User extends Authenticatable implements MustVerifyEmail, HasLocalePreferen
         return $this->hasMany(Permission::class);
     }
 
-    # --------------------------------------------------------------------------
-    # ----| Methods |-----------------------------------------------------------
-    # --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // ----| Methods |----------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
      * Get the user's preferred locale.
@@ -109,7 +108,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasLocalePreferen
     }
 
     /**
-     * Import initial set of data
+     * Import initial set of data.
      */
     public function importInitialData(Group $group)
     {

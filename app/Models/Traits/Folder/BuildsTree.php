@@ -7,7 +7,7 @@ use App\Models\User;
 use Arr;
 
 /**
- * Constructs tree representation
+ * Constructs tree representation.
  */
 trait BuildsTree
 {
@@ -53,11 +53,12 @@ trait BuildsTree
     }
 
     /**
-     * Construct a flat array of sub-folders for specified parent folder
+     * Construct a flat array of sub-folders for specified parent folder.
      *
-     * @param \App\Models\Folder $folder Parent folder for the branch
+     * @param \App\Models\Folder             $folder     Parent folder for the branch
      * @param \Illuminate\Support\Collection $allFolders All folders associated to the same user as the parent folder
-     * @param integer $depth Current depth
+     * @param int                            $depth      Current depth
+     *
      * @return array
      */
     public static function buildBranch(self $folder, $allFolders, $depth)

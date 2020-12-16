@@ -2,27 +2,27 @@
 
 namespace App\Notifications;
 
+use App\Models\Group;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\URL;
-use App\Models\User;
-use App\Models\Group;
 
 class AsksToJoinGroup extends Notification implements ShouldQueue
 {
     use Queueable;
 
     /**
-     * Inviting user
+     * Inviting user.
      *
      * @var \App\Models\User
      */
     protected $user;
 
     /**
-     * Group to invite a user in
+     * Group to invite a user in.
      *
      * @var \App\Models\Group
      */
@@ -32,8 +32,6 @@ class AsksToJoinGroup extends Notification implements ShouldQueue
      * Create a new notification instance.
      *
      * @param \App\Models\User $user User asking to join group
-     * @param \App\Models\Group $group
-     * @return void
      */
     public function __construct(User $user, Group $group)
     {
@@ -44,7 +42,8 @@ class AsksToJoinGroup extends Notification implements ShouldQueue
     /**
      * Get the notification's delivery channels.
      *
-     * @param  mixed  $notifiable
+     * @param mixed $notifiable
+     *
      * @return array
      */
     public function via($notifiable)
@@ -55,12 +54,13 @@ class AsksToJoinGroup extends Notification implements ShouldQueue
     /**
      * Get the mail representation of the notification.
      *
-     * @param  mixed  $notifiable
+     * @param mixed $notifiable
+     *
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
+        return (new MailMessage())
             ->from(env('MAIL_FROM_ADDRESS'))
             ->line(sprintf('Hello there ! %s wants to join a group you created in Cyca: %s.', $this->user->name, $this->group->name))
             ->action(sprintf('Accept %s in %s', $this->user->name, $this->group->name), URL::signedRoute('group.signed_approve_user', ['user' => $this->user->id, 'group' => $this->group->id]))
@@ -71,13 +71,13 @@ class AsksToJoinGroup extends Notification implements ShouldQueue
     /**
      * Get the array representation of the notification.
      *
-     * @param  mixed  $notifiable
+     * @param mixed $notifiable
+     *
      * @return array
      */
     public function toArray($notifiable)
     {
         return [
-            //
         ];
     }
 }

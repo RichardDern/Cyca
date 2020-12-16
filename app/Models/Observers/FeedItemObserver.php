@@ -9,11 +9,8 @@ class FeedItemObserver
 {
     /**
      * Handle the feed item "deleted" event.
-     *
-     * @param  \App\Models\FeedItem  $feedItem
-     * @return void
      */
-    public function deleted(FeedItem  $feedItem)
+    public function deleted(FeedItem $feedItem)
     {
         Storage::deleteDirectory($feedItem->getStoragePath());
     }

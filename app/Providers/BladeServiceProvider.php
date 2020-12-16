@@ -8,18 +8,13 @@ class BladeServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
-     *
-     * @return void
      */
     public function register()
     {
-        //
     }
 
     /**
      * Bootstrap services.
-     *
-     * @return void
      */
     public function boot()
     {
@@ -27,7 +22,7 @@ class BladeServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register user's highlights into view
+     * Register user's highlights into view.
      */
     protected function registerHighlights()
     {

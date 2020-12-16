@@ -3,16 +3,17 @@
 namespace App\Models;
 
 use App\Models\Traits\Feed\AnalysesFeed;
-use Illuminate\Database\Eloquent\Model;
 use App\Models\Traits\HasUrl;
+use Illuminate\Database\Eloquent\Model;
 
 class Feed extends Model
 {
-    use AnalysesFeed,  HasUrl;
+    use AnalysesFeed;
+    use HasUrl;
 
-    # --------------------------------------------------------------------------
-    # ----| Properties |--------------------------------------------------------
-    # --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // ----| Properties |-------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
      * The attributes that are mass assignable.
@@ -24,20 +25,6 @@ class Feed extends Model
     ];
 
     /**
-     * Hash of URL
-     *
-     * @var string
-     */
-    private $hash = null;
-
-    /**
-     * Path to storage
-     *
-     * @var string
-     */
-    private $storagePath = null;
-
-    /**
      * The accessors to append to the model's array form.
      *
      * @var array
@@ -45,7 +32,7 @@ class Feed extends Model
     protected $appends = [
         'favicon',
         'is_ignored',
-        'ascii_url'
+        'ascii_url',
     ];
 
     /**
@@ -57,12 +44,26 @@ class Feed extends Model
         'checked_at',
     ];
 
-    # --------------------------------------------------------------------------
-    # ----| Attributes |--------------------------------------------------------
-    # --------------------------------------------------------------------------
+    /**
+     * Hash of URL.
+     *
+     * @var string
+     */
+    private $hash;
 
     /**
-     * Return feed's title, or url if empty
+     * Path to storage.
+     *
+     * @var string
+     */
+    private $storagePath;
+
+    // -------------------------------------------------------------------------
+    // ----| Attributes |-------------------------------------------------------
+    // -------------------------------------------------------------------------
+
+    /**
+     * Return feed's title, or url if empty.
      *
      * @return string
      */
@@ -76,14 +77,14 @@ class Feed extends Model
     }
 
     /**
-     * Return full URL to favicon
+     * Return full URL to favicon.
      *
      * @return string
      */
     public function getFaviconAttribute()
     {
         if (!empty($this->attributes['favicon_path'])) {
-            return asset('storage/' . str_replace('public/', '', $this->attributes['favicon_path']));
+            return asset('storage/'.str_replace('public/', '', $this->attributes['favicon_path']));
         }
 
         $document = $this->documents()->first();
@@ -96,9 +97,9 @@ class Feed extends Model
     }
 
     /**
-     * Return a boolean value indicating if auth'ed user has ignored this feed
+     * Return a boolean value indicating if auth'ed user has ignored this feed.
      *
-     * @return boolean
+     * @return bool
      */
     public function getIsIgnoredAttribute()
     {
@@ -109,12 +110,12 @@ class Feed extends Model
         return false;
     }
 
-    # --------------------------------------------------------------------------
-    # ----| Relations |---------------------------------------------------------
-    # --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // ----| Relations |--------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
-     * Documents referenced by this feed
+     * Documents referenced by this feed.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
@@ -124,7 +125,7 @@ class Feed extends Model
     }
 
     /**
-     * Feed items referenced by this feed
+     * Feed items referenced by this feed.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
@@ -134,7 +135,7 @@ class Feed extends Model
     }
 
     /**
-     * Associated unread feed items
+     * Associated unread feed items.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -144,7 +145,7 @@ class Feed extends Model
     }
 
     /**
-     * Users ignoring this feed
+     * Users ignoring this feed.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -153,9 +154,27 @@ class Feed extends Model
         return $this->hasMany(IgnoredFeed::class);
     }
 
-    # --------------------------------------------------------------------------
-    # ----| Methods |-----------------------------------------------------------
-    # --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // ----| Scopes |-----------------------------------------------------------
+    // -------------------------------------------------------------------------
+
+    /**
+     * Scope a query to only include feeds than were updated before specifed
+     * date.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param mixed                                 $date
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeNeedingUpdate($query, $date)
+    {
+        return $query->where('checked_at', '<', $date)->orWhereNull('checked_at');
+    }
+
+    // -------------------------------------------------------------------------
+    // ----| Methods |----------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
      * Build a hash for document's URL. Used to build path for storing assets
@@ -179,7 +198,7 @@ class Feed extends Model
     public function getHash()
     {
         if (empty($this->hash)) {
-            $this->hash = md5($this->url . $this->created_at);
+            $this->hash = md5($this->url.$this->created_at);
         }
 
         return $this->hash;
@@ -189,7 +208,7 @@ class Feed extends Model
      * Return path to root folder for storing this document's assets. This path
      * can then be used to store and retrieve files using the Storage facade, so
      * it does not return the full path of a directory rather than the path
-     * related to configured storage disk
+     * related to configured storage disk.
      *
      * @return string
      */
@@ -198,9 +217,31 @@ class Feed extends Model
         if (empty($this->storagePath)) {
             $hash = $this->getHash();
 
-            $this->storagePath = 'public/feeds/' . implode('/', str_split(($hash)));
+            $this->storagePath = 'public/feeds/'.implode('/', str_split(($hash)));
         }
 
         return $this->storagePath;
+    }
+
+    /**
+     * Return a boolean value indicating if this feed still belongs to any
+     * document.
+     *
+     * @return true
+     */
+    public function isOrphan()
+    {
+        return $this->documents()->count() === 0;
+    }
+
+    /**
+     * Return a boolean value indicating if this feed was orphan for
+     * specified days.
+     *
+     * @return true
+     */
+    public function wasOrphanFor(int $days)
+    {
+        return empty($this->checked_at) || $this->checked_at->addDays($days)->lt(now());
     }
 }

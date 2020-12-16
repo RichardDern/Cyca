@@ -10,9 +10,6 @@ class BookmarkObserver
 {
     /**
      * Handle the bookmark "created" event.
-     *
-     * @param  \App\Models\Bookmark  $bookmark
-     * @return void
      */
     public function created(Bookmark $bookmark)
     {
@@ -21,12 +18,8 @@ class BookmarkObserver
 
     /**
      * Handle the bookmark "deleting" event.
-     *
-     * @param  \App\Models\Bookmark  $bookmark
-     * @return void
      */
     public function deleting(Bookmark $bookmark)
     {
-        
     }
 }

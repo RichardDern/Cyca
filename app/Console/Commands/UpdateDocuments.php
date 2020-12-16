@@ -24,8 +24,6 @@ class UpdateDocuments extends Command
 
     /**
      * Create a new command instance.
-     *
-     * @return void
      */
     public function __construct()
     {
@@ -39,17 +37,12 @@ class UpdateDocuments extends Command
      */
     public function handle()
     {
-        $oldest = now()->subMinute(config('cyca.maxAge.document'));
-
-        $documents = Document::where('checked_at', '<', $oldest)->orWhereNull('checked_at')->get();
-        $count     = 0;
+        $oldest    = now()->subMinute(config('cyca.maxAge.document'));
+        $documents = Document::needingUpdate($oldest)->get();
 
         foreach ($documents as $document) {
             EnqueueDocumentUpdate::dispatch($document);
-            $count++;
         }
-
-        $this->line(sprintf('%s document(s) queued for update', $count));
 
         return 0;
     }

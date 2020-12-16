@@ -7,32 +7,31 @@ use App\Models\User;
 
 trait CreatesDefaultFolders
 {
-
-    # --------------------------------------------------------------------------
-    # ----| Constants |---------------------------------------------------------
-    # --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // ----| Constants |---------------------------------------------------------
+    // --------------------------------------------------------------------------
 
     /**
-     * Position of the unread items folder in the folders hierarchy
+     * Position of the unread items folder in the folders hierarchy.
      */
     private static $POSITION_UNREAD_ITEMS = 0;
 
     /**
-     * Position of the root folder in the folders hierarchy
+     * Position of the root folder in the folders hierarchy.
      */
     private static $POSITION_ROOT = 1;
 
-    # --------------------------------------------------------------------------
-    # ----| Methods |-----------------------------------------------------------
-    # --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // ----| Methods |-----------------------------------------------------------
+    // --------------------------------------------------------------------------
 
     /**
      * Create default folders for specified group. This method should be called
      * only once when group is created.
      *
-     * @throws \App\Exceptions\UserDoesNotExistsException
      * @param \App\Models\User $user User creating the folders
-     * @param \App\Models\Group $group
+     *
+     * @throws \App\Exceptions\UserDoesNotExistsException
      */
     public static function createDefaultFoldersFor(User $user, Group $group)
     {
@@ -52,8 +51,7 @@ trait CreatesDefaultFolders
         ]);
 
         session([
-            sprintf('selectedFolder.%d', $group->id) =>
-            $group->folders()->ofType('root')->first()->id,
+            sprintf('selectedFolder.%d', $group->id) => $group->folders()->ofType('root')->first()->id,
         ]);
     }
 }

@@ -6,5 +6,4 @@ use Exception;
 
 class UserDoesNotExistsException extends Exception
 {
-    //
 }

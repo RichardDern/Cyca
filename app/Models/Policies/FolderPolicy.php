@@ -5,7 +5,6 @@ namespace App\Models\Policies;
 use App\Models\Folder;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use App\Models\Permission;
 
 class FolderPolicy
 {
@@ -14,7 +13,6 @@ class FolderPolicy
     /**
      * Determine whether the user can view any models.
      *
-     * @param  \App\Models\User  $user
      * @return mixed
      */
     public function viewAny(User $user)
@@ -25,8 +23,6 @@ class FolderPolicy
     /**
      * Determine whether the user can view the model.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Folder  $folder
      * @return mixed
      */
     public function view(User $user, Folder $folder)
@@ -37,7 +33,6 @@ class FolderPolicy
     /**
      * Determine whether the user can create models.
      *
-     * @param  \App\Models\User  $user
      * @return mixed
      */
     public function create(User $user)
@@ -51,8 +46,6 @@ class FolderPolicy
     /**
      * Determine whether the user can create models.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Folder  $folder
      * @return mixed
      */
     public function createIn(User $user, Folder $folder)
@@ -61,22 +54,12 @@ class FolderPolicy
             return false;
         }
 
-        $permissions = $this->checkFolderAuthorization($user, $folder);
-        
-        if (!$permissions) {
-            return false;
-        } elseif ($permissions === true) {
-            return true;
-        }
-
-        return $permissions->can_create_folder;
+        return $this->checkFolderAuthorization($user, $folder, 'can_create_folder');
     }
 
     /**
      * Determine whether the user can create a bookmark in specified folder.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Folder  $folder
      * @return mixed
      */
     public function createBookmarkIn(User $user, Folder $folder)
@@ -85,22 +68,12 @@ class FolderPolicy
             return false;
         }
 
-        $permissions = $this->checkFolderAuthorization($user, $folder);
-        
-        if (!$permissions) {
-            return false;
-        } elseif ($permissions === true) {
-            return true;
-        }
-        
-        return $permissions->can_create_document;
+        return $this->checkFolderAuthorization($user, $folder, 'can_create_document');
     }
 
     /**
      * Determine whether the user can remove a bookmark from specified folder.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Folder  $folder
      * @return mixed
      */
     public function deleteBookmarkFrom(User $user, Folder $folder)
@@ -108,43 +81,23 @@ class FolderPolicy
         if ($folder->type === 'unread_items') {
             return false;
         }
-        
-        $permissions = $this->checkFolderAuthorization($user, $folder);
-        
-        if (!$permissions) {
-            return false;
-        } elseif ($permissions === true) {
-            return true;
-        }
-        
-        return $permissions->can_delete_document;
+
+        return $this->checkFolderAuthorization($user, $folder, 'can_delete_document');
     }
 
     /**
      * Determine whether the user can update the model.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Folder  $folder
      * @return mixed
      */
     public function update(User $user, Folder $folder)
     {
-        $permissions = $this->checkFolderAuthorization($user, $folder);
-        
-        if (!$permissions) {
-            return false;
-        } elseif ($permissions === true) {
-            return true;
-        }
-
-        return $permissions->can_update_folder;
+        return $this->checkFolderAuthorization($user, $folder, 'can_update_folder');
     }
 
     /**
      * Determine whether the user can delete the model.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Folder  $folder
      * @return mixed
      */
     public function delete(User $user, Folder $folder)
@@ -153,22 +106,12 @@ class FolderPolicy
             return false;
         }
 
-        $permissions = $this->checkFolderAuthorization($user, $folder);
-        
-        if (!$permissions) {
-            return false;
-        } elseif ($permissions === true) {
-            return true;
-        }
-        
-        return $permissions->can_delete_folder;
+        return $this->checkFolderAuthorization($user, $folder, 'can_delete_folder');
     }
 
     /**
      * Determine whether the user can restore the model.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Folder  $folder
      * @return mixed
      */
     public function restore(User $user, Folder $folder)
@@ -179,8 +122,6 @@ class FolderPolicy
     /**
      * Determine whether the user can permanently delete the model.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Folder  $folder
      * @return mixed
      */
     public function forceDelete(User $user, Folder $folder)
@@ -191,8 +132,6 @@ class FolderPolicy
     /**
      * Determine whether the user can update model's permissions.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Folder  $folder
      * @return mixed
      */
     public function setPermission(User $user, Folder $folder)
@@ -201,26 +140,42 @@ class FolderPolicy
     }
 
     /**
-     * Perform common authorization tests for specified user and folder
+     * Check if specified user is the creator of specified folder.
      *
-     * @param \App\Models\User $user
-     * @param \App\Models\Folder $folder
-     * @return boolean
+     * @return bool
      */
-    private function checkFolderAuthorization(User $user, Folder $folder)
+    private function hasCreatedFolder(User $user, Folder $folder)
     {
-        // Specified user is folder's creator
-        if ((int) $folder->user_id === (int) $user->id) {
+        return (int) $folder->user_id === (int) $user->id;
+    }
+
+    /**
+     * Return a boolean value indicating if specified user has created the group
+     * specified folder belongs to.
+     */
+    private function userCreatedFolderGroup(User $user, Folder $folder)
+    {
+        $group = $this->folderBelongsToActiveUserGroup($user, $folder);
+
+        if (!empty($group)) {
+            return $group->user_id === $user->id;
+        }
+
+        return false;
+    }
+
+    /**
+     * Perform common authorization tests for specified user and folder.
+     *
+     * @return array
+     */
+    private function checkFolderAuthorization(User $user, Folder $folder, string $ability = null)
+    {
+        if ($this->hasCreatedFolder($user, $folder)) {
             return true;
         }
 
-        $group = $this->folderBelongsToActiveUserGroup($user, $folder);
-
-        if (empty($group)) {
-            return false;
-        }
-
-        if ($group->user_id === $user->id) {
+        if ($this->userCreatedFolderGroup($user, $folder)) {
             return true;
         }
 
@@ -230,31 +185,24 @@ class FolderPolicy
             $defaultPermissions = $folder->permissions()->whereNull('user_id')->first();
 
             if (empty($defaultPermissions)) {
-                $defaultPermissions = new Permission();
-
-                $defaultPermissions->folder_id           = $folder->id;
-                $defaultPermissions->can_create_folder   = false;
-                $defaultPermissions->can_update_folder   = false;
-                $defaultPermissions->can_delete_folder   = false;
-                $defaultPermissions->can_create_document = false;
-                $defaultPermissions->can_delete_document = false;
-
-                $defaultPermissions->save();
+                $defaultPermissions = $folder->setDefaultPermission();
             }
 
-            return $defaultPermissions;
+            $permissions = $defaultPermissions;
         }
 
-        return $permissions;
+        if ($ability) {
+            return $permissions->{$ability};
+        }
+
+        return false;
     }
 
     /**
      * Determine if specified folder belongs to a group in which specified user
-     * is active
+     * is active.
      *
-     * @param \App\Models\User $user
-     * @param \App\Models\Folder $folder
-     * @return boolean
+     * @return \App\Models\Group
      */
     private function folderBelongsToActiveUserGroup(User $user, Folder $folder)
     {

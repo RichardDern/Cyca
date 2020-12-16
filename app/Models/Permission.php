@@ -9,9 +9,9 @@ class Permission extends Model
 {
     use HasFactory;
 
-    # --------------------------------------------------------------------------
-    # ----| Properties |--------------------------------------------------------
-    # --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // ----| Properties |-------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
      * The attributes that are mass assignable.
@@ -23,9 +23,9 @@ class Permission extends Model
         'can_update_folder',
         'can_delete_folder',
         'can_create_document',
-        'can_delete_document'
+        'can_delete_document',
     ];
- 
+
     /**
      * The attributes that should be cast to native types.
      *
@@ -39,12 +39,12 @@ class Permission extends Model
         'can_delete_document' => 'boolean',
     ];
 
-    # --------------------------------------------------------------------------
-    # ----| Relations |---------------------------------------------------------
-    # --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // ----| Relations |--------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
-     * Related user
+     * Related user.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -54,7 +54,7 @@ class Permission extends Model
     }
 
     /**
-     * Related folder
+     * Related folder.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

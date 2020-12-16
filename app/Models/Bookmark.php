@@ -5,16 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 /**
- * Link between a folder (belonging to a user) and a document
+ * Link between a folder (belonging to a user) and a document.
  */
 class Bookmark extends Pivot
 {
-    # --------------------------------------------------------------------------
-    # ----| Properties |--------------------------------------------------------
-    # --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // ----| Properties |-------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
-     * Name of the table storing bookmarks
+     * Name of the table storing bookmarks.
      *
      * @var string
      */
@@ -27,21 +27,23 @@ class Bookmark extends Pivot
      */
     public $incrementing = true;
 
-    # --------------------------------------------------------------------------
-    # ----| Relations |---------------------------------------------------------
-    # --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // ----| Relations |--------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
-     * Associated document
+     * Associated document.
      */
-    public function document() {
+    public function document()
+    {
         return $this->belongsTo(Document::class);
     }
 
     /**
-     * Associated folder
+     * Associated folder.
      */
-    public function folder() {
+    public function folder()
+    {
         return $this->belongsTo(Folder::class);
     }
 }

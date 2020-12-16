@@ -4,40 +4,39 @@ namespace App\Models\Traits\Feed;
 
 use App\Models\FeedItem;
 use App\Models\FeedItemState;
-use App\Models\IgnoredFeed;
 use App\Notifications\UnreadItemsChanged;
 use DomDocument;
 use DOMXPath;
+use ForceUTF8\Encoding as UTF8;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use SimplePie;
-use \ForceUTF8\Encoding as UTF8;
 
 trait AnalysesFeed
 {
-    # --------------------------------------------------------------------------
-    # ----| Properties |--------------------------------------------------------
-    # --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // ----| Properties |--------------------------------------------------------
+    // --------------------------------------------------------------------------
 
     /**
-     * SimplePie client
+     * SimplePie client.
      *
      * @var SimplePie
      */
-    private $client = null;
+    private $client;
 
-    # --------------------------------------------------------------------------
-    # ----| Methods |-----------------------------------------------------------
-    # --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // ----| Methods |-----------------------------------------------------------
+    // --------------------------------------------------------------------------
 
     /**
-     * Begin feed analysis
+     * Begin feed analysis.
      */
     public function analyze()
     {
         // Don't bother if feed isn't attached to any document anymore
-        if ($this->documents()->count() === 0) {
-            if (!empty($this->checked_at) && $this->checked_at->addDays(config('cyca.maxOrphanAge.feed'))->lt(now())) {
+        if ($this->isOrphan()) {
+            if ($this->wasOrphanFor(config('cyca.maxOrphanAge.feed'))->lt(now())) {
                 $this->delete();
             }
 
@@ -48,6 +47,7 @@ trait AnalysesFeed
 
         if (!$this->client->init()) {
             $this->error = $this->client->error();
+
             return;
         }
 
@@ -65,21 +65,21 @@ trait AnalysesFeed
     }
 
     /**
-     * Prepare the client
+     * Prepare the client.
      */
     protected function prepareClient()
     {
         $this->client = new SimplePie();
 
-        Storage::makeDirectory($this->getStoragePath() . '/cache');
+        Storage::makeDirectory($this->getStoragePath().'/cache');
 
         $this->client->force_feed(true);
-        $this->client->set_cache_location(storage_path('app/' . $this->getStoragePath() . '/cache'));
+        $this->client->set_cache_location(storage_path('app/'.$this->getStoragePath().'/cache'));
         $this->client->set_feed_url($this->url);
     }
 
     /**
-     * Store feed items in database
+     * Store feed items in database.
      *
      * @param array $items
      */
@@ -109,10 +109,10 @@ trait AnalysesFeed
 
                 $data = collect($item->data)->except([
                     'data',
-                    'child'
+                    'child',
                 ]);
 
-                Storage::put($feedItem->getStoragePath() . '/data.json', $data->toJson());
+                Storage::put($feedItem->getStoragePath().'/data.json', $data->toJson());
             }
 
             if (!in_array($feedItem->id, $toSync)) {
@@ -127,11 +127,12 @@ trait AnalysesFeed
     }
 
     /**
-     * Perform various formatting on specified string
+     * Perform various formatting on specified string.
      *
      * @param string $string
-     * @param boolean $stripTags If true, HTML tags will be suppressed
-     * @param boolean $removeExtraSpaces If true, a regex will be applied to remove unnecessary white-spaces
+     * @param bool   $stripTags         If true, HTML tags will be suppressed
+     * @param bool   $removeExtraSpaces If true, a regex will be applied to remove unnecessary white-spaces
+     *
      * @return string
      */
     protected function cleanupString($string, $stripTags = false, $removeExtraSpaces = false)
@@ -147,15 +148,14 @@ trait AnalysesFeed
             $string = strip_tags(trim($string));
         }
 
-        $string = trim($string);
-
-        return $string;
+        return trim($string);
     }
 
     /**
-     * Apply various transformations to specified text
+     * Apply various transformations to specified text.
      *
      * @param string $text
+     *
      * @return string
      */
     protected function formatText($text)
@@ -188,9 +188,8 @@ trait AnalysesFeed
         }
 
         $text = $domDocument->saveHTML();
-        $text = $this->cleanupString($text);
 
-        return $text;
+        return $this->cleanupString($text);
     }
 
     protected function createUnreadItems($feedItems)
@@ -199,7 +198,7 @@ trait AnalysesFeed
         $documentsChanged = [];
         $foldersChanged   = [];
         $usersToNotify    = [];
-        
+
         foreach ($this->documents()->get() as $document) {
             $folders = $document->folders()->get();
 
@@ -214,13 +213,13 @@ trait AnalysesFeed
                     if (!array_key_exists($user->id, $usersToNotify)) {
                         $usersToNotify[$user->id] = $user;
                     }
-                    
+
                     foreach ($feedItems as $feedItem) {
                         $feedItemStateData = [
                             'document_id'  => $document->id,
                             'feed_id'      => $this->id,
                             'user_id'      => $user->id,
-                            'feed_item_id' => $feedItem->id
+                            'feed_item_id' => $feedItem->id,
                         ];
 
                         $feedItemState = FeedItemState::where('user_id', $user->id)

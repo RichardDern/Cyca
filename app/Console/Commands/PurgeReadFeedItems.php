@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Models\FeedItem;
+use Illuminate\Console\Command;
 
 class PurgeReadFeedItems extends Command
 {
@@ -23,8 +23,6 @@ class PurgeReadFeedItems extends Command
 
     /**
      * Create a new command instance.
-     *
-     * @return void
      */
     public function __construct()
     {
@@ -38,18 +36,13 @@ class PurgeReadFeedItems extends Command
      */
     public function handle()
     {
-        $oldest = now()->subDays(config('cyca.maxOrphanAge.feeditems'));
-
-        $oldFeedItems = FeedItem::whereDoesntHave('feedItemStates', function($query) {
-                $query->where('is_read', false);
-            })->where('published_at', '<', $oldest)
-            ->orWhereNull('published_at')
-            ->get();
+        $oldest       = now()->subDays(config('cyca.maxOrphanAge.feeditems'));
+        $oldFeedItems = FeedItem::allRead()->olderThan($oldest)->get();
 
         // We need to do this individually to take advantage of the
         // FeedItemObserver and automatically delete associated files that may
         // have been locally stored
-        foreach($oldFeedItems as $item) {
+        foreach ($oldFeedItems as $item) {
             $item->delete();
         }
 

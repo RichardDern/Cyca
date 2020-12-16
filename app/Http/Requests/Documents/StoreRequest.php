@@ -22,18 +22,6 @@ class StoreRequest extends FormRequest
     }
 
     /**
-     * Prepare the data for validation.
-     *
-     * @return void
-     */
-    protected function prepareForValidation()
-    {
-        $this->merge([
-            'url' => urldecode($this->url),
-        ]);
-    }
-
-    /**
      * Get the validation rules that apply to the request.
      *
      * @return array
@@ -54,5 +42,15 @@ class StoreRequest extends FormRequest
                 Rule::exists(Folder::class, 'id'),
             ],
         ];
+    }
+
+    /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'url' => urldecode($this->url),
+        ]);
     }
 }

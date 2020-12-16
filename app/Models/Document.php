@@ -2,17 +2,18 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Models\Traits\Document\AnalysesDocument;
 use App\Models\Traits\HasUrl;
+use Illuminate\Database\Eloquent\Model;
 
 class Document extends Model
 {
-    use AnalysesDocument, HasUrl;
+    use AnalysesDocument;
+    use HasUrl;
 
-    # --------------------------------------------------------------------------
-    # ----| Properties |--------------------------------------------------------
-    # --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // ----| Properties |-------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
      * The attributes that are mass assignable.
@@ -37,7 +38,7 @@ class Document extends Model
     protected $appends = [
         'dupplicates',
         'favicon',
-        'ascii_url'
+        'ascii_url',
     ];
 
     /**
@@ -50,25 +51,25 @@ class Document extends Model
     ];
 
     /**
-     * Hash of URL
+     * Hash of URL.
      *
      * @var string
      */
-    private $hash = null;
+    private $hash;
 
     /**
-     * Path to storage
+     * Path to storage.
      *
      * @var string
      */
-    private $storagePath = null;
+    private $storagePath;
 
-    # --------------------------------------------------------------------------
-    # ----| Attributes |--------------------------------------------------------
-    # --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // ----| Attributes |-------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
-     * Return document's title, or url if empty
+     * Return document's title, or url if empty.
      *
      * @return string
      */
@@ -82,7 +83,7 @@ class Document extends Model
     }
 
     /**
-     * Return array of folders containing a bookmark to this document
+     * Return array of folders containing a bookmark to this document.
      *
      * @return array
      */
@@ -92,13 +93,13 @@ class Document extends Model
     }
 
     /**
-     * Return full URL to favicon
+     * Return full URL to favicon.
      *
      * @return string
      */
     public function getFaviconAttribute()
     {
-        if (empty($this->attributes['favicon_path']) || !file_exists(storage_path('app/' . $this->attributes['favicon_path']))) {
+        if (empty($this->attributes['favicon_path']) || !file_exists(storage_path('app/'.$this->attributes['favicon_path']))) {
             if ($this->mimetype) {
                 $filename = str_replace('/', '-', $this->mimetype);
                 $path     = sprintf('images/icons/mimetypes/%s.svg', $filename);
@@ -111,7 +112,7 @@ class Document extends Model
             return asset('images/icons/mimetypes/unknown.svg');
         }
 
-        return asset('storage/' . str_replace('public/', '', $this->attributes['favicon_path']));
+        return asset('storage/'.str_replace('public/', '', $this->attributes['favicon_path']));
     }
 
     public function getHttpStatusTextAttribute()
@@ -129,12 +130,12 @@ class Document extends Model
         }
     }
 
-    # --------------------------------------------------------------------------
-    # ----| Relations |---------------------------------------------------------
-    # --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // ----| Relations |--------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
-     * Bookmarks referencing this document
+     * Bookmarks referencing this document.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
@@ -144,7 +145,7 @@ class Document extends Model
     }
 
     /**
-     * Folders referencing this document
+     * Folders referencing this document.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
@@ -154,7 +155,7 @@ class Document extends Model
     }
 
     /**
-     * Feeds referenced by this document
+     * Feeds referenced by this document.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
@@ -164,7 +165,7 @@ class Document extends Model
     }
 
     /**
-     * Associated feed items states
+     * Associated feed items states.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -173,12 +174,30 @@ class Document extends Model
         return $this->hasMany(FeedItemState::class);
     }
 
-    # --------------------------------------------------------------------------
-    # ----| Methods |-----------------------------------------------------------
-    # --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // ----| Scopes |-----------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
-     * Find dupplicates of this document in specified user's folders
+     * Scope a query to only include documents than were updated before specifed
+     * date.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param mixed                                 $date
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeNeedingUpdate($query, $date)
+    {
+        return $query->where('checked_at', '<', $date)->orWhereNull('checked_at');
+    }
+
+    // -------------------------------------------------------------------------
+    // ----| Methods |----------------------------------------------------------
+    // -------------------------------------------------------------------------
+
+    /**
+     * Find dupplicates of this document in specified user's folders.
      */
     public function findDupplicatesFor(User $user)
     {
@@ -190,7 +209,7 @@ class Document extends Model
             $this->dupplicates[] = [
                 'id'          => $folder->id,
                 'group_id'    => $folder->group->id,
-                'breadcrumbs' => $folder->breadcrumbs
+                'breadcrumbs' => $folder->breadcrumbs,
             ];
         }
 
@@ -219,7 +238,7 @@ class Document extends Model
     public function getHash()
     {
         if (empty($this->hash)) {
-            $this->hash = md5($this->url . $this->created_at);
+            $this->hash = md5($this->url.$this->created_at);
         }
 
         return $this->hash;
@@ -229,7 +248,7 @@ class Document extends Model
      * Return path to root folder for storing this document's assets. This path
      * can then be used to store and retrieve files using the Storage facade, so
      * it does not return the full path of a directory rather than the path
-     * related to configured storage disk
+     * related to configured storage disk.
      *
      * @return string
      */
@@ -238,9 +257,31 @@ class Document extends Model
         if (empty($this->storagePath)) {
             $hash = $this->getHash();
 
-            $this->storagePath = 'public/documents/' . implode('/', str_split(($hash)));
+            $this->storagePath = 'public/documents/'.implode('/', str_split(($hash)));
         }
 
         return $this->storagePath;
+    }
+
+    /**
+     * Return a boolean value indicating if this document still belongs to any
+     * folder.
+     *
+     * @return true
+     */
+    public function isOrphan()
+    {
+        return $this->folders()->count() === 0;
+    }
+
+    /**
+     * Return a boolean value indicating if this document was orphan for
+     * specified days.
+     *
+     * @return true
+     */
+    public function wasOrphanFor(int $days)
+    {
+        return empty($this->checked_at) || $this->checked_at->addDays($days)->lt(now());
     }
 }

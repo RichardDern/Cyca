@@ -24,8 +24,6 @@ class UpdateFeeds extends Command
 
     /**
      * Create a new command instance.
-     *
-     * @return void
      */
     public function __construct()
     {
@@ -40,8 +38,7 @@ class UpdateFeeds extends Command
     public function handle()
     {
         $oldest = now()->subMinute(config('cyca.maxAge.feed'));
-
-        $feeds = Feed::where('checked_at', '<', $oldest)->orWhereNull('checked_at')->get();
+        $feeds  = Feed::needingUpdate($oldest)->get();
 
         foreach ($feeds as $feed) {
             EnqueueFeedUpdate::dispatch($feed);

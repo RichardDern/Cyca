@@ -13,7 +13,6 @@ class GroupPolicy
     /**
      * Determine whether the user can view any models.
      *
-     * @param  \App\Models\User  $user
      * @return mixed
      */
     public function viewAny(User $user)
@@ -24,21 +23,18 @@ class GroupPolicy
     /**
      * Determine whether the user can view the model.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Group  $group
      * @return mixed
      */
     public function view(User $user, Group $group)
     {
         return $this->checkGroupAuthorization($user, $group, [
-            Group::$STATUS_ACCEPTED
+            Group::$STATUS_ACCEPTED,
         ]);
     }
 
     /**
      * Determine whether the user can create models.
      *
-     * @param  \App\Models\User  $user
      * @return mixed
      */
     public function create(User $user)
@@ -49,8 +45,6 @@ class GroupPolicy
     /**
      * Determine whether the user can update the model.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Group  $group
      * @return mixed
      */
     public function update(User $user, Group $group)
@@ -61,8 +55,6 @@ class GroupPolicy
     /**
      * Determine whether the user can invite someone into specified group.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Group  $group
      * @return mixed
      */
     public function invite(User $user, Group $group)
@@ -76,8 +68,6 @@ class GroupPolicy
     /**
      * Determine whether the user can approve someone to join specified group.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Group  $group
      * @return mixed
      */
     public function approve(User $user, Group $group)
@@ -91,8 +81,6 @@ class GroupPolicy
     /**
      * Determine whether the user can delete the model.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Group  $group
      * @return mixed
      */
     public function delete(User $user, Group $group)
@@ -103,33 +91,27 @@ class GroupPolicy
     /**
      * Determine whether the user can restore the model.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Group  $group
      * @return mixed
      */
     public function restore(User $user, Group $group)
     {
-        //
     }
 
     /**
      * Determine whether the user can permanently delete the model.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Group  $group
      * @return mixed
      */
     public function forceDelete(User $user, Group $group)
     {
-        //
     }
 
     /**
-     * Perform common authorization tests for specified user and group
+     * Perform common authorization tests for specified user and group.
      *
-     * @param \App\Models\User $user
-     * @param \App\Models\Group $group
-     * @return boolean
+     * @param mixed $statuses
+     *
+     * @return bool
      */
     private function checkGroupAuthorization(User $user, Group $group, $statuses = [])
     {
@@ -139,11 +121,11 @@ class GroupPolicy
         }
 
         $userGroup = $user->groups()->active()->find($group->id);
-        
+
         if (!$userGroup) {
             return false;
         }
-        
+
         if (!empty($statuses) && $userGroup->pivot && in_array($userGroup->pivot->status, $statuses)) {
             return true;
         }

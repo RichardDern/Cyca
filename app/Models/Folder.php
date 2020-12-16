@@ -8,11 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Folder extends Model
 {
-    use BuildsTree, CreatesDefaultFolders;
+    use BuildsTree;
+    use CreatesDefaultFolders;
 
-    # --------------------------------------------------------------------------
-    # ----| Properties |--------------------------------------------------------
-    # --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // ----| Properties |-------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
      * The attributes that are mass assignable.
@@ -40,9 +41,9 @@ class Folder extends Model
         'is_expanded',
     ];
 
-    # --------------------------------------------------------------------------
-    # ----| Attributes |--------------------------------------------------------
-    # --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // ----| Attributes |-------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
      * Return folder's title.
@@ -58,11 +59,9 @@ class Folder extends Model
             // Unspecified type of folder
             default:
                 return $this->attributes['title'];
-
             // Unread items
             case 'unread_items':
                 return __('Unread items');
-
             // Root folder
             case 'root':
                 return __('Root');
@@ -80,11 +79,9 @@ class Folder extends Model
             // Unspecified type of folder
             default:
                 return 'folder';
-
             // Unread items
             case 'unread_items':
                 return 'unread_items';
-
             // Root folder
             case 'root':
                 return 'house';
@@ -92,7 +89,7 @@ class Folder extends Model
     }
 
     /**
-     * Return icon's color as a CSS class
+     * Return icon's color as a CSS class.
      *
      * @return string
      */
@@ -102,7 +99,6 @@ class Folder extends Model
             // Unspecified type of folder
             default:
                 return 'folder-common';
-
             // Unread items
             case 'unread_items':
                 if ($this->feed_item_states_count > 0) {
@@ -110,7 +106,6 @@ class Folder extends Model
                 }
 
                 return 'folder-unread';
-
             // Root folder
             case 'root':
                 return 'folder-root';
@@ -118,7 +113,7 @@ class Folder extends Model
     }
 
     /**
-     * Return a formatted path to the folder, using every ascendant's title
+     * Return a formatted path to the folder, using every ascendant's title.
      *
      * @return string
      */
@@ -142,9 +137,9 @@ class Folder extends Model
 
     /**
      * Return a boolean value indicating if this folder is selected by current
-     * user
+     * user.
      *
-     * @return boolean
+     * @return bool
      */
     public function getIsSelectedAttribute()
     {
@@ -157,9 +152,9 @@ class Folder extends Model
 
     /**
      * Return a boolean value indicating if folder is expanded for specified
-     * user
+     * user.
      *
-     * @return boolean
+     * @return bool
      */
     public function getIsExpandedAttribute()
     {
@@ -170,12 +165,12 @@ class Folder extends Model
         return auth()->user()->getFolderExpandedState($this);
     }
 
-    # --------------------------------------------------------------------------
-    # ----| Relations |---------------------------------------------------------
-    # --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // ----| Relations |--------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
-     * Parent folder
+     * Parent folder.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -185,7 +180,7 @@ class Folder extends Model
     }
 
     /**
-     * Children folders
+     * Children folders.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -195,7 +190,7 @@ class Folder extends Model
     }
 
     /**
-     * Creator of this folder
+     * Creator of this folder.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -205,7 +200,7 @@ class Folder extends Model
     }
 
     /**
-     * Group this folder belongs to
+     * Group this folder belongs to.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -215,7 +210,7 @@ class Folder extends Model
     }
 
     /**
-     * Documents in this folder
+     * Documents in this folder.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
@@ -225,7 +220,7 @@ class Folder extends Model
     }
 
     /**
-     * Associated unread feed items
+     * Associated unread feed items.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -235,7 +230,7 @@ class Folder extends Model
     }
 
     /**
-     * Folder's permissions
+     * Folder's permissions.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -244,15 +239,16 @@ class Folder extends Model
         return $this->hasMany(Permission::class);
     }
 
-    # --------------------------------------------------------------------------
-    # ----| Scopes |------------------------------------------------------------
-    # --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // ----| Scopes |-----------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
      * Scope a query to only include folders of a given type.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  mixed  $type
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param mixed                                 $type
+     *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeOfType($query, $type)
@@ -260,9 +256,9 @@ class Folder extends Model
         return $query->where('type', $type);
     }
 
-    # --------------------------------------------------------------------------
-    # ----| Methods |-----------------------------------------------------------
-    # --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // ----| Methods |----------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     public static function listDocumentIds($folders, $group)
     {
@@ -273,12 +269,12 @@ class Folder extends Model
         if (!in_array($unreadItemsFolder->id, $folders)) {
             $query = $query->whereIn('id', $folders);
         }
-        
+
         return $query->get()->pluck('documents')->flatten()->pluck('id')->unique();
     }
 
     /**
-     * Return a list of ids of documents present in this folder
+     * Return a list of ids of documents present in this folder.
      *
      * @return array
      */
@@ -288,9 +284,10 @@ class Folder extends Model
     }
 
     /**
-     * Return a list of documents built for front-end for specified user
+     * Return a list of documents built for front-end for specified user.
      *
      * @param \App\Models\User $user
+     *
      * @return \Illuminate\Support\Collection
      */
     public function listDocuments(User $user)
@@ -327,7 +324,7 @@ class Folder extends Model
 
     /**
      * Return folder's permissions that applies to any user without explicit
-     * permissions
+     * permissions.
      *
      * @return array
      */
@@ -355,7 +352,7 @@ class Folder extends Model
     }
 
     /**
-     * Return user's permission specific to this folder
+     * Return user's permission specific to this folder.
      *
      * @return array
      */
@@ -379,10 +376,10 @@ class Folder extends Model
         ];
     }
 
-    public function setDefaultPermission($ability = null, $granted = null)
+    public function setDefaultPermission($ability = null, $granted = false)
     {
         $permissions = $this->permissions()->whereNull('user_id')->first();
-        
+
         if (!$permissions) {
             $permissions = new Permission();
 
@@ -395,8 +392,12 @@ class Folder extends Model
             $permissions->can_delete_document     = false;
         }
 
-        $permissions->$ability = $granted;
+        if ($ability) {
+            $permissions->{$ability} = $granted;
+        }
 
         $permissions->save();
+
+        return $permissions;
     }
 }

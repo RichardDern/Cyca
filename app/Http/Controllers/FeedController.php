@@ -3,16 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Feed;
-use Illuminate\Http\Request;
 use App\Models\IgnoredFeed;
+use Illuminate\Http\Request;
 
 class FeedController extends Controller
 {
     /**
-     * Ignore specified feed
+     * Ignore specified feed.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Feed  $feed
      * @return \Illuminate\Http\Response
      */
     public function ignore(Request $request, Feed $feed)
@@ -30,10 +28,8 @@ class FeedController extends Controller
     }
 
     /**
-     * Follow specified feed
+     * Follow specified feed.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Feed  $feed
      * @return \Illuminate\Http\Response
      */
     public function follow(Request $request, Feed $feed)

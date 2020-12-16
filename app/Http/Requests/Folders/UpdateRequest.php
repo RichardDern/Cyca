@@ -16,7 +16,7 @@ class UpdateRequest extends FormRequest
     public function authorize()
     {
         if (empty($this->parent_id)) {
-            return $this->folder->type === 'root';
+            return 'root' === $this->folder->type;
         }
 
         $parent = Folder::find($this->parent_id);
@@ -58,27 +58,26 @@ class UpdateRequest extends FormRequest
     /**
      * Configure the validator instance.
      *
-     * @param  \Illuminate\Validation\Validator  $validator
-     * @return void
+     * @param \Illuminate\Validation\Validator $validator
      */
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
             if ($this->isMoving()) {
-                if ($this->folder->type !== 'folder') {
+                if ('folder' !== $this->folder->type) {
                     // Trying to move a "special" folder like root
-                    $validator->errors()->add('parent_id', __("You cannot move this folder"));
-                } else if ($this->targetParentIsDescendant()) {
-                    $validator->errors()->add('parent_id', __("You cannot move this folder to a descendant"));
+                    $validator->errors()->add('parent_id', __('You cannot move this folder'));
+                } elseif ($this->targetParentIsDescendant()) {
+                    $validator->errors()->add('parent_id', __('You cannot move this folder to a descendant'));
                 }
             }
         });
     }
 
     /**
-     * Return a boolean value indicating if we're moving a folder
+     * Return a boolean value indicating if we're moving a folder.
      *
-     * @return boolean
+     * @return bool
      */
     private function isMoving()
     {
@@ -87,9 +86,9 @@ class UpdateRequest extends FormRequest
 
     /**
      * Return a boolean value indicating if we're trying to move a folder into
-     * one of its descendants
+     * one of its descendants.
      *
-     * @return boolean
+     * @return bool
      */
     private function targetParentIsDescendant()
     {

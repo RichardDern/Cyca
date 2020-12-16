@@ -4,15 +4,18 @@ namespace App\Jobs;
 
 use App\Models\Document;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 
 class EnqueueDocumentUpdate implements ShouldQueue, ShouldBeUnique
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * Delete the job if its models no longer exist.
@@ -22,16 +25,14 @@ class EnqueueDocumentUpdate implements ShouldQueue, ShouldBeUnique
     public $deleteWhenMissingModels = true;
 
     /**
-     * Document to update
+     * Document to update.
      *
      * @var \App\Models\Document
      */
-    protected $document = null;
+    protected $document;
 
     /**
      * Create a new job instance.
-     *
-     * @return void
      */
     public function __construct(Document $document)
     {
@@ -40,8 +41,6 @@ class EnqueueDocumentUpdate implements ShouldQueue, ShouldBeUnique
 
     /**
      * Execute the job.
-     *
-     * @return void
      */
     public function handle()
     {
@@ -49,10 +48,10 @@ class EnqueueDocumentUpdate implements ShouldQueue, ShouldBeUnique
     }
 
     /**
-    * The unique ID of the job.
-    *
-    * @return string
-    */
+     * The unique ID of the job.
+     *
+     * @return string
+     */
     public function uniqueId()
     {
         return $this->document->id;

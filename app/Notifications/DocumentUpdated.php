@@ -2,28 +2,23 @@
 
 namespace App\Notifications;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Notification;
 use App\Models\Document;
+use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Notification;
 
 class DocumentUpdated extends Notification
 {
     use Queueable;
 
     /**
-     * Updated document
+     * Updated document.
      *
      * @var \App\Models\Document
      */
-    public $document = null;
+    public $document;
 
     /**
      * Create a new notification instance.
-     *
-     * @param \App\Models\Document $document
-     * @return void
      */
     public function __construct(Document $document)
     {
@@ -33,7 +28,8 @@ class DocumentUpdated extends Notification
     /**
      * Get the notification's delivery channels.
      *
-     * @param  mixed  $notifiable
+     * @param mixed $notifiable
+     *
      * @return array
      */
     public function via($notifiable)
@@ -44,7 +40,8 @@ class DocumentUpdated extends Notification
     /**
      * Get the array representation of the notification.
      *
-     * @param  mixed  $notifiable
+     * @param mixed $notifiable
+     *
      * @return array
      */
     public function toArray($notifiable)

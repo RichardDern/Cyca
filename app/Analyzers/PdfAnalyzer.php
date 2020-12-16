@@ -7,7 +7,7 @@ use Smalot\PdfParser\Parser;
 /**
  * Extract information from a PDF file.
  */
-class PDF extends Analyzer
+class PdfAnalyzer extends Analyzer
 {
     /**
      * PDF parser.
@@ -21,6 +21,10 @@ class PDF extends Analyzer
      */
     public function analyze()
     {
+        if (empty($this->body)) {
+            return;
+        }
+
         $this->extractDetails();
         $this->storeDetailsOnDisk();
         $this->applyDetailsToDocument();

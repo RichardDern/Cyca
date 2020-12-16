@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Highlight;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreHighlightRequest extends FormRequest

@@ -12,9 +12,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
     /**
      * Validate and update the given user's profile information.
      *
-     * @param  mixed  $user
-     * @param  array  $input
-     * @return void
+     * @param mixed $user
      */
     public function update($user, array $input)
     {
@@ -31,13 +29,13 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
 
             'lang' => [
                 'required',
-                Rule::in(array_keys(config('lang')))
+                Rule::in(array_keys(config('lang'))),
             ],
 
             'theme' => [
                 'nullable',
-                Rule::in(['light', 'dark', 'auto'])
-            ]
+                Rule::in(['light', 'dark', 'auto']),
+            ],
         ])->validateWithBag('updateProfileInformation');
 
         if ($input['email'] !== $user->email &&
@@ -48,7 +46,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
                 'name'  => $input['name'],
                 'email' => $input['email'],
                 'lang'  => $input['lang'],
-                'theme' => $input['theme']
+                'theme' => $input['theme'],
             ])->save();
         }
     }
@@ -56,9 +54,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
     /**
      * Update the given verified user's profile information.
      *
-     * @param  mixed  $user
-     * @param  array  $input
-     * @return void
+     * @param mixed $user
      */
     protected function updateVerifiedUser($user, array $input)
     {

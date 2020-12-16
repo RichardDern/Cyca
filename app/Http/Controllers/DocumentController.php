@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Documents\StoreRequest;
 use App\Models\Document;
-use App\Models\FeedItemState;
 use App\Models\Folder;
 use App\Notifications\UnreadItemsChanged;
 use Illuminate\Http\Request;
@@ -20,7 +19,8 @@ class DocumentController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  App\Http\Requests\Documents\StoreRequest  $request
+     * @param App\Http\Requests\Documents\StoreRequest $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(StoreRequest $request)
@@ -41,8 +41,6 @@ class DocumentController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Document  $document
      * @return \Illuminate\Http\Response
      */
     public function show(Request $request, Document $document)
@@ -59,10 +57,10 @@ class DocumentController extends Controller
     }
 
     /**
-     * Move document into specified folder
+     * Move document into specified folder.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  Folder $folder
+     * @param Folder $folder
+     *
      * @return \Illuminate\Http\Response
      */
     public function move(Request $request, Folder $sourceFolder, Folder $targetFolder)
@@ -94,10 +92,8 @@ class DocumentController extends Controller
     }
 
     /**
-     * Remove documents from specified folder
+     * Remove documents from specified folder.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  Folder $folder
      * @return \Illuminate\Http\Response
      */
     public function destroyBookmarks(Request $request, Folder $folder)
@@ -117,15 +113,13 @@ class DocumentController extends Controller
     }
 
     /**
-     * Increment visits for specified document in specified folder
+     * Increment visits for specified document in specified folder.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  Document $document
      * @return \Illuminate\Http\Response
      */
     public function visit(Request $request, Document $document)
     {
-        $document->visits++;
+        ++$document->visits;
         $document->save();
 
         return $this->show($request, $document);

@@ -5,11 +5,13 @@ namespace App\Providers;
 use App\Models\Bookmark;
 use App\Models\Document;
 use App\Models\Feed;
+use App\Models\FeedItem;
 use App\Models\Folder;
 use App\Models\Group;
 use App\Models\IgnoredFeed;
 use App\Models\Observers\BookmarkObserver;
 use App\Models\Observers\DocumentObserver;
+use App\Models\Observers\FeedItemObserver;
 use App\Models\Observers\FeedObserver;
 use App\Models\Observers\FolderObserver;
 use App\Models\Observers\GroupObserver;
@@ -17,15 +19,11 @@ use App\Models\Observers\IgnoredFeedObserver;
 use App\Models\Observers\UserObserver;
 use App\Models\User;
 use Illuminate\Support\ServiceProvider;
-use App\Models\FeedItem;
-use App\Models\Observers\FeedItemObserver;
 
 class ObserversServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap services.
-     *
-     * @return void
      */
     public function boot()
     {

@@ -6,37 +6,41 @@ use App\Models\Folder;
 use App\Models\User;
 
 /**
- * Exports data from Cyca
+ * Exports data from Cyca.
  */
 class Exporter
 {
     /**
      * Should we include highlights in the export ?
-     * @var boolean
+     *
+     * @var bool
      */
     protected $withHighlights = true;
 
     /**
      * Should we include bookmarks in the export ?
-     * @var boolean
+     *
+     * @var bool
      */
     protected $withBookmarks = true;
 
     /**
-     * User to import data for
+     * User to import data for.
+     *
      * @var \App\Models\User
      */
-    protected $forUser = null;
+    protected $forUser;
 
     /**
-     * Folder to export bookmarks and feeds from
+     * Folder to export bookmarks and feeds from.
+     *
      * @var \App\Models\Folder
      */
-    protected $fromFolder = null;
+    protected $fromFolder;
 
     /**
      * Should we ignore highlights during export ? By default, highlights will
-     * be exported as well
+     * be exported as well.
      *
      * @return self
      */
@@ -49,7 +53,7 @@ class Exporter
 
     /**
      * Should we ignore bookmarks during export ? By default, bookmarks will
-     * be exported as well
+     * be exported as well.
      *
      * @return self
      */
@@ -64,7 +68,6 @@ class Exporter
      * Defines which user to export data for. If not defined, user will be
      * extracted from request.
      *
-     * @param \App\Models\User $user
      * @return self
      */
     public function forUser(User $user)
@@ -78,7 +81,6 @@ class Exporter
      * Defines from which folder data will be exported. If not defined, root
      * folder attached to specified user will be used.
      *
-     * @param \App\Models\Folder $folder
      * @return self
      */
     public function fromFolder(Folder $folder)
@@ -89,7 +91,7 @@ class Exporter
     }
 
     /**
-     * Export specified user's data into a PHP array
+     * Export specified user's data into a PHP array.
      *
      * @return array
      */
@@ -127,7 +129,9 @@ class Exporter
     }
 
     /**
-     * Export a single tree branch
+     * Export a single tree branch.
+     *
+     * @param mixed $folders
      */
     protected function exportTree($folders)
     {

@@ -10,8 +10,6 @@ class HomeController extends Controller
 {
     /**
      * Create a new controller instance.
-     *
-     * @return void
      */
     public function __construct()
     {
@@ -39,7 +37,7 @@ class HomeController extends Controller
     }
 
     /**
-     * Show user's account page
+     * Show user's account page.
      */
     public function account()
     {
@@ -47,7 +45,7 @@ class HomeController extends Controller
     }
 
     /**
-     * Show user's password update page
+     * Show user's password update page.
      */
     public function password()
     {
@@ -55,7 +53,7 @@ class HomeController extends Controller
     }
 
     /**
-     * Manage user's highlights
+     * Manage user's highlights.
      */
     public function highlights()
     {
@@ -63,7 +61,7 @@ class HomeController extends Controller
     }
 
     /**
-     * Show the import form
+     * Show the import form.
      */
     public function showImportForm()
     {
@@ -71,7 +69,7 @@ class HomeController extends Controller
     }
 
     /**
-     * Import a file
+     * Import a file.
      */
     public function import(Request $request)
     {
@@ -81,7 +79,7 @@ class HomeController extends Controller
     }
 
     /**
-     * Export user's data
+     * Export user's data.
      */
     public function export(Request $request)
     {
@@ -95,7 +93,7 @@ class HomeController extends Controller
     }
 
     /**
-     * Manage groups
+     * Manage groups.
      */
     public function groups()
     {

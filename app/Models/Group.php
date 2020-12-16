@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\FeedItemState;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,48 +9,48 @@ class Group extends Model
 {
     use HasFactory;
 
-    # --------------------------------------------------------------------------
-    # ----| Constants |---------------------------------------------------------
-    # --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // ----| Constants |--------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
-     * Group is owned by related user
+     * Group is owned by related user.
      */
     public static $STATUS_OWN = 'own';
 
     /**
-     * Group was created by related user
+     * Group was created by related user.
      */
     public static $STATUS_CREATED = 'created';
 
     /**
-     * User has been invited in the group
+     * User has been invited in the group.
      */
     public static $STATUS_INVITED = 'invited';
 
     /**
-     * User accepted to join the group
+     * User accepted to join the group.
      */
     public static $STATUS_ACCEPTED = 'accepted';
 
     /**
-     * User declined joining the group
+     * User declined joining the group.
      */
     public static $STATUS_REJECTED = 'rejected';
 
     /**
-     * User asked to join a group
+     * User asked to join a group.
      */
     public static $STATUS_JOINING = 'joining';
 
     /**
-     * User has left the group
+     * User has left the group.
      */
     public static $STATUS_LEFT = 'left';
 
-    # --------------------------------------------------------------------------
-    # ----| Properties |--------------------------------------------------------
-    # --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // ----| Properties |-------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
      * The attributes that are mass assignable.
@@ -63,7 +62,7 @@ class Group extends Model
         'description',
         'user_id',
         'invite_only',
-        'auto_accept_users'
+        'auto_accept_users',
     ];
 
     /**
@@ -87,17 +86,17 @@ class Group extends Model
         'feed_item_states_count',
     ];
 
-    protected $feedItemStatesCount = null;
+    protected $feedItemStatesCount;
 
-    # --------------------------------------------------------------------------
-    # ----| Attributes |--------------------------------------------------------
-    # --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // ----| Attributes |-------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
      * Return a boolean value indicating if this group is selected by current
-     * user
+     * user.
      *
-     * @return boolean
+     * @return bool
      */
     public function getIsSelectedAttribute()
     {
@@ -109,9 +108,9 @@ class Group extends Model
     }
 
     /**
-     * Return the number of unread feed items for this group and current user
+     * Return the number of unread feed items for this group and current user.
      *
-     * @return integer
+     * @return int
      */
     public function getFeedItemStatesCountAttribute()
     {
@@ -126,12 +125,12 @@ class Group extends Model
         return $this->getUnreadFeedItemsCountFor(auth()->user());
     }
 
-    # --------------------------------------------------------------------------
-    # ----| Relations |---------------------------------------------------------
-    # --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // ----| Relations |--------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
-     * Creator of the group
+     * Creator of the group.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -141,7 +140,7 @@ class Group extends Model
     }
 
     /**
-     * Associated users
+     * Associated users.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
@@ -151,7 +150,7 @@ class Group extends Model
     }
 
     /**
-     * Associated users
+     * Associated users.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
@@ -166,7 +165,7 @@ class Group extends Model
 
     /**
      * Associated users in a pending state (either invited or asking to join,
-     * without an answer yet)
+     * without an answer yet).
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
@@ -174,12 +173,12 @@ class Group extends Model
     {
         return $this->belongsToMany(User::class, 'user_groups')->withPivot(['status'])->whereIn('status', [
             self::$STATUS_INVITED,
-            self::$STATUS_JOINING
+            self::$STATUS_JOINING,
         ]);
     }
 
     /**
-     * Associated folders
+     * Associated folders.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -189,7 +188,7 @@ class Group extends Model
     }
 
     /**
-     * Associated bookmarks
+     * Associated bookmarks.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -198,14 +197,15 @@ class Group extends Model
         return $this->hasManyThrough(Bookmark::class, Folder::class);
     }
 
-    # --------------------------------------------------------------------------
-    # ----| Scopes |------------------------------------------------------------
-    # --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // ----| Scopes |-----------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
-     * Scope a query to only include user's own group
+     * Scope a query to only include user's own group.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeOwn($query)
@@ -214,9 +214,10 @@ class Group extends Model
     }
 
     /**
-     * Scope a query to only include groups the user is active
+     * Scope a query to only include groups the user is active.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeActive($query)
@@ -229,9 +230,10 @@ class Group extends Model
     }
 
     /**
-     * Scope a query to only include visible groups
+     * Scope a query to only include visible groups.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeVisible($query)
@@ -239,14 +241,12 @@ class Group extends Model
         return $query->where('invite_only', false);
     }
 
-    # --------------------------------------------------------------------------
-    # ----| Methods |-----------------------------------------------------------
-    # --------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // ----| Methods |----------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     /**
      * Create default folders for this group.
-     *
-     * @return void
      */
     public function createDefaultFolders()
     {
