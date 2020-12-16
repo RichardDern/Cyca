@@ -183,7 +183,7 @@ trait AnalysesDocument
             if ($document) {
                 Bookmark::where('document_id', $this->id)->update(['document_id' => $document->id]);
 
-                $allBookmarks = Bookmark::where('document_id', $this->id)->groupBy('folder_id')->get();
+                $allBookmarks = Bookmark::where('document_id', $this->id)->get()->groupBy('folder_id');
 
                 foreach ($allBookmarks as $folderId => $bookmarks) {
                     if ($bookmarks->count() > 1) {
