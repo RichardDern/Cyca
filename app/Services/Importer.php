@@ -271,7 +271,9 @@ class Importer
             $url      = urldecode($docData['url']);
             $document = Document::firstOrCreate(['url' => $url]);
 
-            $this->importFeeds($document, $docData['feeds']);
+            if (array_key_exists('feeds', $docData)) {
+                $this->importFeeds($document, $docData['feeds']);
+            }
 
             $folder->documents()->save($document, [
                 'initial_url' => $url,
