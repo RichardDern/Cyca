@@ -4,6 +4,7 @@ namespace App\Analyzers;
 
 use App\Models\Document;
 use Illuminate\Http\Client\Response;
+use Storage;
 
 abstract class Analyzer
 {
@@ -94,7 +95,7 @@ abstract class Analyzer
      *
      * @param array $mappings
      */
-    protected function applyDetailsToDocument($mappings)
+    protected function applyDetailsToDocument($mappings = [])
     {
         foreach ($mappings as $documentKey => $detailsKey) {
             if (!empty($this->details[$detailsKey])) {

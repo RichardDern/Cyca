@@ -36,7 +36,7 @@ class PdfAnalyzer extends Analyzer
      *
      * @param mixed $mappings
      */
-    protected function applyDetailsToDocument($mappings)
+    protected function applyDetailsToDocument($mappings = [])
     {
         $mappings = [
             'title' => 'Title',
