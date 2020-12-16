@@ -7,10 +7,7 @@ use DomDocument;
 use DOMElement;
 use DOMXPath;
 use Elphin\IcoFileLoader\IcoFileService;
-use ForceUTF8\Encoding as UTF8;
 use Illuminate\Support\Facades\Http;
-use League\Uri\Http as UriHttp;
-use League\Uri\UriResolver;
 use SimplePie;
 use Storage;
 use Str;
@@ -56,50 +53,6 @@ class HtmlAnalyzer extends Analyzer
         $this->findLinkTags();
         $this->findBestFavicon();
         $this->discoverFeeds();
-    }
-
-    /**
-     * Ensure specified url is absolute by using a base URL defined earlier.
-     *
-     * @param string $source
-     *
-     * @return string
-     */
-    protected function makeUrlAbsolute($source)
-    {
-        $baseUri     = UriHttp::createFromString((string) $this->response->effectiveUri());
-        $relativeUri = UriHttp::createFromString($source);
-        $newUri      = UriResolver::resolve($relativeUri, $baseUri);
-
-        return (string) $newUri;
-    }
-
-    /**
-     * Ensures string doesn't contain any "undesirable" characters, such as
-     * extra-spaces or line-breaks. This is not a purifying method. Only basic
-     * cleanup is done here.
-     *
-     * @param string $string
-     * @param mixed  $stripTags
-     *
-     * @return string
-     */
-    protected function cleanupString($string, $stripTags = true)
-    {
-        if (empty($string)) {
-            return null;
-        }
-
-        $string = UTF8::toUTF8($string, UTF8::ICONV_TRANSLIT);
-        $string = preg_replace('#[\s\t\r\n]+#', ' ', $string);
-        $string = html_entity_decode($string, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-        $string = str_replace('&apos;', "'", $string);
-
-        if ($stripTags) {
-            $string = strip_tags(trim($string));
-        }
-
-        return trim($string);
     }
 
     /**
@@ -186,7 +139,7 @@ class HtmlAnalyzer extends Analyzer
             }
 
             try {
-                $url = $this->makeUrlAbsolute($alternateLink['href']);
+                $url = \App\Helpers\Url::makeUrlAbsolute($this->response->effectiveUri(), $alternateLink['href']);
             } catch (\Exception $ex) {
                 // Malformed URL
                 continue;
@@ -224,7 +177,7 @@ class HtmlAnalyzer extends Analyzer
 
         foreach ($node->attributes as $attribute) {
             $key   = Str::slug($attribute->localName);
-            $value = $this->cleanupString($attribute->nodeValue);
+            $value = \App\Helpers\Cleaner::cleanupString($attribute->nodeValue);
 
             $data[$key] = $value;
         }
@@ -243,7 +196,7 @@ class HtmlAnalyzer extends Analyzer
             return null;
         }
 
-        $this->document->title = $this->cleanupString($node->nodeValue);
+        $this->document->title = \App\Helpers\Cleaner::cleanupString($node->nodeValue, true, true);
     }
 
     /**
@@ -364,7 +317,7 @@ class HtmlAnalyzer extends Analyzer
      */
     private function findBestFavicon()
     {
-        $defaultFaviconUrl = $this->makeUrlAbsolute('/favicon.ico');
+        $defaultFaviconUrl = \App\Helpers\Url::makeUrlAbsolute($this->response->effectiveUri(), '/favicon.ico');
         $potentialIcons    = [];
 
         $links = $this->linkTags;
@@ -383,7 +336,7 @@ class HtmlAnalyzer extends Analyzer
         $selectedIcon = null;
 
         foreach ($potentialIcons as $potentialIcon) {
-            $url = $this->makeUrlAbsolute($potentialIcon);
+            $url = \App\Helpers\Url::makeUrlAbsolute($this->response->effectiveUri(), $potentialIcon);
 
             try {
                 $response = Http::timeout(10)->get($url);
@@ -421,7 +374,7 @@ class HtmlAnalyzer extends Analyzer
         }
 
         if (!empty($selectedIcon)) {
-            $this->favicon_path = $selectedIcon;
+            $this->document->favicon_path = $selectedIcon;
         }
     }
 
