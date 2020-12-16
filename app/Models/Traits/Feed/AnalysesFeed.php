@@ -7,7 +7,6 @@ use App\Models\FeedItemState;
 use App\Notifications\UnreadItemsChanged;
 use DomDocument;
 use DOMXPath;
-use ForceUTF8\Encoding as UTF8;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use SimplePie;
@@ -55,8 +54,8 @@ trait AnalysesFeed
             $this->url = $this->client->subscribe_url();
         }
 
-        $this->title       = $this->cleanupString($this->client->get_title(), true, true);
-        $this->description = $this->cleanupString($this->client->get_description());
+        $this->title       = \App\Helpers\Cleaner::cleanupString($this->client->get_title(), true, true);
+        $this->description = \App\Helpers\Cleaner::cleanupString($this->client->get_description());
         $this->checked_at  = now();
 
         $this->save();
@@ -95,7 +94,7 @@ trait AnalysesFeed
                 $feedItem = new FeedItem();
 
                 $feedItem->hash         = $item->get_id(true);
-                $feedItem->title        = $this->cleanupString($item->get_title(), true, true);
+                $feedItem->title        = \App\Helpers\Cleaner::cleanupString($item->get_title(), true, true);
                 $feedItem->url          = $item->get_permalink();
                 $feedItem->description  = $this->formatText($item->get_description(true));
                 $feedItem->content      = $this->formatText($item->get_content(true));
@@ -124,31 +123,6 @@ trait AnalysesFeed
 
         $this->feedItems()->sync($toSync);
         $this->createUnreadItems($newItems);
-    }
-
-    /**
-     * Perform various formatting on specified string.
-     *
-     * @param string $string
-     * @param bool   $stripTags         If true, HTML tags will be suppressed
-     * @param bool   $removeExtraSpaces If true, a regex will be applied to remove unnecessary white-spaces
-     *
-     * @return string
-     */
-    protected function cleanupString($string, $stripTags = false, $removeExtraSpaces = false)
-    {
-        $string = UTF8::toUTF8($string, UTF8::ICONV_TRANSLIT);
-        $string = html_entity_decode($string, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-
-        if ($removeExtraSpaces) {
-            $string = preg_replace('#[\s\t\r\n]+#', ' ', $string);
-        }
-
-        if ($stripTags) {
-            $string = strip_tags(trim($string));
-        }
-
-        return trim($string);
     }
 
     /**
@@ -189,7 +163,7 @@ trait AnalysesFeed
 
         $text = $domDocument->saveHTML();
 
-        return $this->cleanupString($text);
+        return \App\Helpers\Cleaner::cleanupString($text);
     }
 
     protected function createUnreadItems($feedItems)
