@@ -36,7 +36,7 @@ trait AnalysesFeed
     {
         // Don't bother if feed isn't attached to any document anymore
         if ($this->isOrphan()) {
-            if ($this->wasOrphanFor(config('cyca.maxOrphanAge.feed'))->lt(now())) {
+            if ($this->wasOrphanFor(config('cyca.maxOrphanAge.feed'))) {
                 $this->delete();
             }
 
