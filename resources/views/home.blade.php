@@ -11,9 +11,9 @@
 <documents-list class="sm:w-4/12 xl:w-3/12 h-screen overflow-auto bg-gray-100 dark:bg-gray-850"
     v-on:selected-documents-changed="onSelectedDocumentsChanged"></documents-list>
 <div class="sm:w-5/12 xl:w-7/12 h-screen flex flex-col bg-gray-50 dark:bg-gray-800">
-    <feed-items-list class="h-2/6 overflow-auto" v-on:selected-feeditems-changed="onSelectedFeedItemsChanged">
+    <feed-items-list class="h-2/6 overflow-auto" v-on:selected-feeditems-changed="onSelectedFeedItemsChanged" v-if="feedItems.length > 0">
     </feed-items-list>
-    <div class="h-4/6">
+    <div v-bind:class="{'h-full': feedItems.length === 0, 'h-4/6': feedItems.length > 0 }">
         <component v-bind:is="detailsViewComponent" v-on:feeditems-read="onFeedItemsRead"
             v-on:folder-selected="onSelectedFolderChanged" v-on:document-added="onDocumentAdded"
             v-on:documents-deleted="onDocumentsDeleted"></component>
