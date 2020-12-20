@@ -13,6 +13,7 @@ import DetailsFolder from "./components/Details/DetailsFolder.vue";
 import DocumentsList from "./components/DocumentsList.vue";
 import FeedItemsList from "./components/FeedItemsList.vue";
 import FoldersTree from "./components/FoldersTree.vue";
+import { collect } from "collect.js";
 
 createApp({
     components: {
@@ -27,6 +28,7 @@ createApp({
     data: function () {
         return {
             detailsViewComponent: null,
+            showFeedItemsList: false,
         };
     },
     mounted: function () {
@@ -86,6 +88,9 @@ createApp({
                     self.detailsViewComponent = "details-folder";
                 }
             }
+        },
+        feedItems: function (value) {
+            this.showFeedItemsList = value && collect(value).count() > 0;
         },
     },
     methods: {
@@ -197,7 +202,9 @@ createApp({
 
             self.selectDocuments({ documents: documents });
 
-            document.getElementById("feed-items-list").scrollTop = 0;
+            if (self.feedItems.length > 0) {
+                document.getElementById("feed-items-list").scrollTop = 0;
+            }
         },
 
         /**
