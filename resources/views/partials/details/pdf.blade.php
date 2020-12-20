@@ -1,10 +1,11 @@
-<img src="{{ $url }}" alt="{{ $url }}" />
+<div class="w-full h-96">
+    <embed src="{{ $url }}" type="application/pdf" height="100%" width="100%" />
+</div>
 
-@foreach(collect($exif)->sortKeys() as $section => $data)
 <details>
-    <summary>{{ $section }}</summary>
+    <summary>{{ __("Details") }}</summary>
     <div class="vertical list striped items-rounded compact">
-        @foreach(collect($data)->sortKeys() as $key => $value)
+        @foreach(collect($details)->sortKeys() as $key => $value)
         <div class="list-item">
             <div class="list-item-title">{{ $key }}</div>
             <div class="list-item-value">
@@ -22,4 +23,3 @@
         @endforeach
     </div>
 </details>
-@endforeach

@@ -28,6 +28,11 @@ class PdfAnalyzer extends Analyzer
         $this->extractDetails();
         $this->storeDetailsOnDisk();
         $this->applyDetailsToDocument();
+
+        $this->document->description = (string) view('partials.details.pdf')->with([
+            'details' => $this->details,
+            'url'     => asset(str_replace('public', 'storage', $this->document->getStoragePath()).'/body'),
+        ]);
     }
 
     /**

@@ -23,7 +23,7 @@ class ExifAnalyzer extends Analyzer
             return;
         }
 
-        $this->document->description = (string) view('partials.image')->with([
+        $this->document->description = (string) view('partials.details.image')->with([
             'exif' => $this->details,
             'url'  => asset(str_replace('public', 'storage', $this->document->getStoragePath()).'/body'),
         ]);
