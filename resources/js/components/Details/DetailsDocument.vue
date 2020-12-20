@@ -22,11 +22,7 @@
                     v-on:click="onMarkAsReadClicked"
                     v-bind:title="__('Mark as read')"
                 >
-                    <svg
-                        fill="currentColor"
-                        width="16"
-                        height="16"
-                    >
+                    <svg fill="currentColor" width="16" height="16">
                         <use v-bind:xlink:href="icon('unread_items')" />
                     </svg>
                     <span class="hidden xl:inline-block">
@@ -49,24 +45,19 @@
                     "
                     v-bind:title="__('Open')"
                 >
-                    <svg
-                        fill="currentColor"
-                        width="16"
-                        height="16"
-                    >
+                    <svg fill="currentColor" width="16" height="16">
                         <use v-bind:xlink:href="icon('open')" />
                     </svg>
                     <span class="hidden xl:inline-block">
                         {{ __("Open") }}
                     </span>
                 </a>
-                <button class="info" v-on:click="onShareClicked"
-                    v-bind:title="__('Share')">
-                    <svg
-                        fill="currentColor"
-                        width="16"
-                        height="16"
-                    >
+                <button
+                    class="info"
+                    v-on:click="onShareClicked"
+                    v-bind:title="__('Share')"
+                >
+                    <svg fill="currentColor" width="16" height="16">
                         <use v-bind:xlink:href="icon('share')" />
                     </svg>
                     <span class="hidden xl:inline-block">
@@ -142,6 +133,14 @@
                             ></div>
                         </div>
                     </div>
+                </div>
+                <div class="list-item" v-if="document.meta_data">
+                    <stateful-details name="document_meta_data_details">
+                        <summary>{{ __("Metadata") }}</summary>
+                        <meta-data-browser
+                            v-bind:meta-data="document.meta_data"
+                        ></meta-data-browser>
+                    </stateful-details>
                 </div>
                 <div class="list-item">
                     <stateful-details name="http_response_details">
@@ -295,9 +294,10 @@
 import { mapGetters, mapActions } from "vuex";
 import DateTime from "../DateTime";
 import StatefulDetails from "../StatefulDetails.vue";
+import MetaDataBrowser from "../MetaDataBrowser.vue";
 
 export default {
-    components: { DateTime, StatefulDetails },
+    components: { DateTime, StatefulDetails, MetaDataBrowser },
     data: function () {
         return {
             dupplicateInFolders: [],
@@ -361,6 +361,10 @@ export default {
             }
 
             return icon;
+        },
+
+        metaData: function () {
+            return collect(this.document.meta_data);
         },
     },
     watch: {

@@ -8,6 +8,7 @@ use App\Models\Folder;
 use App\Notifications\UnreadItemsChanged;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
+use Storage;
 
 class DocumentController extends Controller
 {
@@ -52,6 +53,10 @@ class DocumentController extends Controller
         $document->loadMissing('feeds')->loadCount(['feedItemStates' => function ($query) use ($user) {
             $query->where('is_read', false)->where('user_id', $user->id);
         }]);
+
+        if (Storage::exists($document->getStoragePath().'/meta.json')) {
+            $document->meta_data = \json_decode(Storage::get($document->getStoragePath().'/meta.json'));
+        }
 
         return $document;
     }
