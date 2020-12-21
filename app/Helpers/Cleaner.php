@@ -31,12 +31,12 @@ class Cleaner
         $string = html_entity_decode($string, ENT_QUOTES | ENT_HTML5, 'UTF-8');
         $string = str_replace('&apos;', "'", $string);
 
-        if ($stripTags) {
-            $string = strip_tags(trim($string));
-        }
-
         if ($removeExtraSpaces) {
             $string = preg_replace('/[[:space:]]+/', ' ', $string);
+        }
+
+        if ($stripTags) {
+            return strip_tags(trim($string));
         }
 
         return self::sanitize($string);
