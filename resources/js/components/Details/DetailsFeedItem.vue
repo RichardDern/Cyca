@@ -54,7 +54,7 @@
                 "
             ></div>
 
-            <stateful-details name="feed_item_details">
+            <stateful-details name="feed_item_details" class="details-block">
                 <summary>{{ __("Details") }}</summary>
                 <div class="vertical list striped items-rounded compact">
                     <div class="list-item">
