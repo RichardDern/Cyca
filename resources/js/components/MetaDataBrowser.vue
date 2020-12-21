@@ -5,35 +5,42 @@
             v-for="(value, item) in metaData"
             v-bind:key="item"
         >
-            <details v-if="typeof value !== 'string'" class="w-full">
+            <stateful-details
+                v-if="isArrayOrObject(value)"
+                class="list-item-text"
+                v-bind:name="getStatefulDetailsName(item)"
+            >
                 <summary>{{ item }}</summary>
-                <div class="vertical list striped items-rounded compact">
-                    <div
-                        class="list-item"
-                        v-for="(itemValue, itemName) in value"
-                        v-bind:key="itemName"
-                    >
-                        <div class="list-item-title">
-                            {{ itemName }}
-                        </div>
-                        <div class="list-item-value">
-                            {{ itemValue }}
-                        </div>
-                    </div>
-                </div>
-            </details>
-            <div class="list-item-title" v-if="typeof value === 'string'">
+                <browser
+                    v-bind:meta-data="value"
+                    v-bind:parent-name="getStatefulDetailsName(item)"
+                ></browser>
+            </stateful-details>
+            <div class="list-item-title" v-if="!isArrayOrObject(value)">
                 {{ item }}
             </div>
-            <div class="list-item-value" v-if="typeof value === 'string'">
-                {{ value }}
+            <div class="list-item-value" v-if="!isArrayOrObject(value)">
+                <code>{{ value }}</code>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import StatefulDetails from "./StatefulDetails.vue";
 export default {
-    props: ["metaData"],
+    components: { StatefulDetails },
+    name: "browser",
+    props: ["metaData", "parentName"],
+    methods: {
+        getStatefulDetailsName: function (name) {
+            const self = this;
+
+            return collect(["details", self.parentName, name]).join("_");
+        },
+        isArrayOrObject: function (variable) {
+            return typeof variable === "array" || typeof variable === "object";
+        },
+    },
 };
 </script>

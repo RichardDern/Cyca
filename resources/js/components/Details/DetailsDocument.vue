@@ -93,12 +93,14 @@
                             ></a>
                         </div>
                     </div>
+
                     <div class="list-item" v-if="document.visits">
                         <div class="list-item-title">{{ __("Visits") }}</div>
                         <div class="list-item-value">
                             {{ document.visits }}
                         </div>
                     </div>
+
                     <div class="list-item">
                         <div class="list-item-title">
                             {{ __("Date of document's last check") }}
@@ -110,6 +112,7 @@
                             ></date-time>
                         </div>
                     </div>
+
                     <div
                         class="list-item"
                         v-if="dupplicateInFolders.length > 0"
@@ -133,17 +136,22 @@
                             ></div>
                         </div>
                     </div>
-                </div>
-                <div class="list-item" v-if="document.meta_data">
-                    <stateful-details name="document_meta_data_details">
+
+                    <stateful-details
+                        name="document_meta_data_details"
+                        class="list-item"
+                        v-if="document.meta_data"
+                    >
                         <summary>{{ __("Metadata") }}</summary>
                         <meta-data-browser
                             v-bind:meta-data="document.meta_data"
                         ></meta-data-browser>
                     </stateful-details>
-                </div>
-                <div class="list-item">
-                    <stateful-details name="http_response_details">
+
+                    <stateful-details
+                        name="http_response_details"
+                        class="list-item"
+                    >
                         <summary>{{ __("HTTP response") }}</summary>
                         <div
                             class="vertical list striped items-rounded compact"
@@ -173,6 +181,7 @@
                                     <span>{{ document.http_status_text }}</span>
                                 </div>
                             </div>
+
                             <div class="list-item" v-if="document.mimetype">
                                 <div class="list-item-title">
                                     {{ __("MIME type") }}
@@ -181,6 +190,17 @@
                                     {{ document.mimetype }}
                                 </div>
                             </div>
+
+                            <stateful-details
+                                name="document_response_details"
+                                class="list-item"
+                            >
+                                <summary>{{ __("Response details") }}</summary>
+                                <meta-data-browser
+                                    v-bind:meta-data="document.response"
+                                    parent-name="document_response"
+                                ></meta-data-browser>
+                            </stateful-details>
                         </div>
                     </stateful-details>
                 </div>

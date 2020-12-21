@@ -1,5 +1,5 @@
 details {
-    @apply mb-1 rounded;
+    @apply mb-1 rounded w-full;
     @apply bg-gray-100;
     @apply dark:bg-gray-700;
 

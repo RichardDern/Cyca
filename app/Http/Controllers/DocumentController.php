@@ -58,6 +58,10 @@ class DocumentController extends Controller
             $document->meta_data = \json_decode(Storage::get($document->getStoragePath().'/meta.json'));
         }
 
+        if (Storage::exists($document->getStoragePath().'/response.json')) {
+            $document->response = \json_decode(Storage::get($document->getStoragePath().'/response.json'));
+        }
+
         return $document;
     }
 

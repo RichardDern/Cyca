@@ -46,6 +46,10 @@
 
             & .list-item-value {
                 @apply w-3/4;
+
+                & code {
+                    @apply break-all;
+                }
             }
         }
 
