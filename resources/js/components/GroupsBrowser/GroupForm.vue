@@ -60,7 +60,7 @@
                             {{ !id ? __("Create group") : __("Update group") }}
                         </span>
                     </button>
-                    <div v-if="id !== null" class="flex items-center">
+                    <div v-if="id !== null" class="flex items-center space-x-2">
                         <button
                             class="secondary"
                             v-on:click.stop.prevent="$emit('unselect')"
@@ -107,11 +107,7 @@
                             v-bind:placeholder="__('E-Mail Address')"
                         />
                         <button type="submit" class="info">
-                            <svg
-                                fill="currentColor"
-                                width="16"
-                                height="16"
-                            >
+                            <svg fill="currentColor" width="16" height="16">
                                 <use v-bind:xlink:href="icon('join')" />
                             </svg>
                             <span>
@@ -130,11 +126,7 @@
                     class="success"
                     v-on:click="$emit('invitation-accepted', group)"
                 >
-                    <svg
-                        fill="currentColor"
-                        width="16"
-                        height="16"
-                    >
+                    <svg fill="currentColor" width="16" height="16">
                         <use v-bind:xlink:href="icon('check')" />
                     </svg>
                     <span>
@@ -145,11 +137,7 @@
                     class="danger"
                     v-on:click="$emit('invitation-declined', group)"
                 >
-                    <svg
-                        fill="currentColor"
-                        width="16"
-                        height="16"
-                    >
+                    <svg fill="currentColor" width="16" height="16">
                         <use v-bind:xlink:href="icon('cancel')" />
                     </svg>
                     <span>

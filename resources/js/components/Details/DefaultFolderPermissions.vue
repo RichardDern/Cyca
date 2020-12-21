@@ -1,5 +1,5 @@
 <template>
-    <stateful-details name="default_folder_permissions_details" class="mt-4">
+    <stateful-details name="default_folder_permissions_details">
         <summary>{{ __("Users without explicit permissions can") }}:</summary>
 
         <div class="body flex items-center mt-2 space-x-2">

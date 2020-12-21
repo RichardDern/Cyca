@@ -192,7 +192,7 @@
                         </div>
 
                         <div
-                            class="vertical list striped items-rounded compact mt-2 bg-gray-100 dark:bg-gray-800 rounded"
+                            class="vertical list striped items-rounded compact mt-2 alt"
                         >
                             <div class="list-item" v-if="feed.description">
                                 <div v-html="feed.description"></div>

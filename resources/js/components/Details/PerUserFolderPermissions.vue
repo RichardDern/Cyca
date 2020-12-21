@@ -1,7 +1,6 @@
 <template>
     <stateful-details
         name="per_user_folders_permissions_details"
-        class="mt-4"
         v-on:toggle="onToggle"
     >
         <summary>{{ __("Per-user permissions") }}:</summary>
@@ -35,10 +34,10 @@
                 <div class="list-item">
                     <div>
                         {{ user.name }}
-                        <small class="feed-item-meta inline ml-22">{{
+                        <small class="feed-item-meta inline ml-2">{{
                             user.email
                         }}</small>
-                        <div class="flex items-center space-x-2">
+                        <div class="flex items-center space-x-2 mt-2">
                             <permission-box
                                 v-bind:text="__('Create folder')"
                                 ability="can_create_folder"

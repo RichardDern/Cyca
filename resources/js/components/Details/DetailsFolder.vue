@@ -102,6 +102,7 @@
                 class="mb-6"
             >
                 <default-folder-permissions
+                    class="details-block"
                     v-bind:folder="folder"
                     v-if="
                         can('can_change_permissions') &&
@@ -110,6 +111,7 @@
                 ></default-folder-permissions>
 
                 <per-user-folder-permissions
+                    class="details-block"
                     v-bind:folder="folder"
                     v-if="
                         can('can_change_permissions') &&

@@ -68,7 +68,7 @@
                 <span>{{ __("Edit") }} </span>
             </button>
             <button
-                class="success inline"
+                class="success"
                 v-if="!group.pivot"
                 v-on:click="$emit('join', group)"
             >
