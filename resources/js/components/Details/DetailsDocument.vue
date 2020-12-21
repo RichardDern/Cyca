@@ -74,7 +74,7 @@
                 v-html="document.description"
             ></div>
 
-            <stateful-details name="document_details">
+            <stateful-details name="document_details" class="details-block">
                 <summary>{{ __("Details") }}</summary>
                 <div class="vertical list striped items-rounded compact">
                     <div class="list-item">
@@ -136,78 +136,12 @@
                             ></div>
                         </div>
                     </div>
-
-                    <stateful-details
-                        name="document_meta_data_details"
-                        class="list-item"
-                        v-if="document.meta_data"
-                    >
-                        <summary>{{ __("Metadata") }}</summary>
-                        <meta-data-browser
-                            v-bind:meta-data="document.meta_data"
-                        ></meta-data-browser>
-                    </stateful-details>
-
-                    <stateful-details
-                        name="http_response_details"
-                        class="list-item"
-                    >
-                        <summary>{{ __("HTTP response") }}</summary>
-                        <div
-                            class="vertical list striped items-rounded compact"
-                        >
-                            <div class="list-item">
-                                <div class="list-item-title">
-                                    {{ __("HTTP Status Code") }}
-                                </div>
-                                <div
-                                    class="list-item-value flex items-center space-x-2"
-                                    v-bind:class="statusClass"
-                                >
-                                    <span v-if="statusIcon">
-                                        <svg
-                                            fill="currentColor"
-                                            width="16"
-                                            height="16"
-                                        >
-                                            <use
-                                                v-bind:xlink:href="
-                                                    icon(statusIcon)
-                                                "
-                                            />
-                                        </svg>
-                                    </span>
-                                    <span>{{ document.http_status_code }}</span>
-                                    <span>{{ document.http_status_text }}</span>
-                                </div>
-                            </div>
-
-                            <div class="list-item" v-if="document.mimetype">
-                                <div class="list-item-title">
-                                    {{ __("MIME type") }}
-                                </div>
-                                <div class="list-item-value">
-                                    {{ document.mimetype }}
-                                </div>
-                            </div>
-
-                            <stateful-details
-                                name="document_response_details"
-                                class="list-item"
-                            >
-                                <summary>{{ __("Response details") }}</summary>
-                                <meta-data-browser
-                                    v-bind:meta-data="document.response"
-                                    parent-name="document_response"
-                                ></meta-data-browser>
-                            </stateful-details>
-                        </div>
-                    </stateful-details>
                 </div>
             </stateful-details>
 
             <stateful-details
                 name="feeds_details"
+                class="details-block"
                 v-if="document.feeds.length > 0"
             >
                 <summary>{{ __("Feeds") }}</summary>
@@ -287,6 +221,67 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </stateful-details>
+
+            <stateful-details
+                class="details-block"
+                name="document_meta_data_details"
+                v-if="document.meta_data"
+            >
+                <summary>{{ __("Metadata") }}</summary>
+                <meta-data-browser
+                    class="vertical list striped items-rounded compact"
+                    v-bind:meta-data="document.meta_data"
+                ></meta-data-browser>
+            </stateful-details>
+
+            <stateful-details
+                name="http_response_details"
+                class="details-block"
+            >
+                <summary class="list-item">{{ __("HTTP response") }}</summary>
+                <div class="vertical list striped items-rounded compact">
+                    <div class="list-item">
+                        <div class="list-item-title">
+                            {{ __("HTTP Status Code") }}
+                        </div>
+                        <div
+                            class="list-item-value flex items-center space-x-2"
+                            v-bind:class="statusClass"
+                        >
+                            <span v-if="statusIcon">
+                                <svg fill="currentColor" width="16" height="16">
+                                    <use v-bind:xlink:href="icon(statusIcon)" />
+                                </svg>
+                            </span>
+                            <span>{{ document.http_status_code }}</span>
+                            <span>{{ document.http_status_text }}</span>
+                        </div>
+                    </div>
+
+                    <div class="list-item" v-if="document.mimetype">
+                        <div class="list-item-title">
+                            {{ __("MIME type") }}
+                        </div>
+                        <div class="list-item-value">
+                            {{ document.mimetype }}
+                        </div>
+                    </div>
+
+                    <stateful-details
+                        name="document_response_details"
+                        class="list-item"
+                    >
+                        <summary>
+                            {{ __("Response details") }}
+                        </summary>
+                        <meta-data-browser
+                            class="vertical list striped items-rounded compact alt"
+                            v-bind:meta-data="document.response"
+                            parent-name="document_response"
+                        ></meta-data-browser>
+                    </stateful-details>
                 </div>
             </stateful-details>
 

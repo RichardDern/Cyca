@@ -19,6 +19,10 @@
         @apply py-1;
     }
 
+    &.alt {
+        @apply bg-gray-850 rounded;
+    }
+
     & > * {
         @apply px-2 py-2 flex-none;
 
@@ -41,11 +45,11 @@
             }
 
             & .list-item-title {
-                @apply w-1/4 mr-2;
+                @apply mr-2 whitespace-nowrap;
             }
 
             & .list-item-value {
-                @apply w-3/4;
+                @apply text-right;
 
                 & code {
                     @apply break-all;
