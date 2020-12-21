@@ -20,7 +20,9 @@
     }
 
     &.alt {
-        @apply bg-gray-850 rounded;
+        @apply rounded;
+        @apply bg-gray-50;
+        @apply dark:bg-gray-850;
     }
 
     & > * {
