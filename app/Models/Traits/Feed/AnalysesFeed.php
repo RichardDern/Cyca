@@ -45,7 +45,10 @@ trait AnalysesFeed
         $this->prepareClient();
 
         if (!$this->client->init()) {
-            $this->error = $this->client->error();
+            $this->error       = $this->client->error();
+            $this->checked_at  = now();
+
+            $this->save();
 
             return;
         }
