@@ -219,6 +219,14 @@
                                     ></date-time>
                                 </div>
                             </div>
+                            <div class="list-item" v-if="feed.error">
+                                <div class="list-item-title">
+                                    {{ __("Error") }}
+                                </div>
+                                <div class="list-item-value text-red-500">
+                                    {{ feed.error }}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
