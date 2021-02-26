@@ -1,3 +1,5 @@
+> Project moved to https://git.athaliasoft.com/richard/cyca !
+
 # Cyca
 
 ![](https://www.getcyca.com/images/covers/cyca-1.0-cover.png)
